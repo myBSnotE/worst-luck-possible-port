@@ -1,46 +1,83 @@
-import json, os, re, sys, urllib.request, zipfile, io
+import json, os, re, urllib.request, zipfile, io
 
 OUT = "probe"
 os.makedirs(OUT, exist_ok=True)
+YARN = "1.21.11+build.6"
 
 def get(url):
     with urllib.request.urlopen(url) as r:
         return r.read()
 
-# 1) Fabric meta: game versions, yarn, loader
-game = json.loads(get("https://meta.fabricmc.net/v2/versions/game"))
-stable = [g["version"] for g in game if g["stable"]][:40]
-loader = json.loads(get("https://meta.fabricmc.net/v2/versions/loader"))
-loader_stable = [l["version"] for l in loader if l["stable"]][:5]
+# fabric-api versions for 1.21.11
+meta = get("https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/maven-metadata.xml").decode()
+vers = [v for v in re.findall(r"<version>([^<]+)</version>", meta) if v.endswith("+1.21.11")]
+with open(os.path.join(OUT, "fabric_api_1_21_11.txt"), "w") as f:
+    f.write("\n".join(vers[-10:]))
 
-summary = {"stable_game_versions": stable, "loader": loader_stable}
+# yarn mappings
+url = "https://maven.fabricmc.net/net/fabricmc/yarn/%s/yarn-%s-v2.jar" % (urllib.parse.quote(YARN), urllib.parse.quote(YARN))
+data = get(url)
+z = zipfile.ZipFile(io.BytesIO(data))
+name = [n for n in z.namelist() if n.endswith("mappings.tiny")][0]
+lines = z.read(name).decode("utf-8").split("\n")
 
-# yarn versions for the newest few stable game versions
-yarn_by_version = {}
-for v in stable[:8]:
-    try:
-        y = json.loads(get("https://meta.fabricmc.net/v2/versions/yarn/" + urllib.parse.quote(v)))
-        yarn_by_version[v] = [e["version"] for e in y[:3]]
-    except Exception as e:
-        yarn_by_version[v] = ["ERR " + str(e)]
-summary["yarn"] = yarn_by_version
+# parse tiny v2
+classes = {}  # named -> {"inter":..., "members":[str]}
+cur = None
+header = lines[0]
+for ln in lines:
+    if ln.startswith("c\t"):
+        p = ln.split("\t")
+        cur = {"official": p[1], "inter": p[2] if len(p) > 2 else "", "named": p[3] if len(p) > 3 else "", "members": []}
+        classes[cur["named"]] = cur
+    elif ln.startswith("\tm\t") or ln.startswith("\tf\t"):
+        if cur is not None:
+            p = ln.split("\t")
+            kind = p[1]
+            desc = p[2]
+            inter = p[4] if len(p) > 4 else ""
+            named = p[5] if len(p) > 5 else ""
+            cur["members"].append("%s %s %s %s" % (kind, named, inter, desc))
 
-# fabric-api versions
-try:
-    meta = get("https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/maven-metadata.xml").decode()
-    versions = re.findall(r"<version>([^<]+)</version>", meta)
-    summary["fabric_api_latest"] = versions[-25:]
-except Exception as e:
-    summary["fabric_api_latest"] = ["ERR " + str(e)]
+WANT_FULL = [
+    "world/gen/WorldGenerationProgressListener",
+]
 
-# loom versions
-try:
-    meta = get("https://maven.fabricmc.net/fabric-loom/fabric-loom.gradle.plugin/maven-metadata.xml").decode()
-    summary["loom"] = re.findall(r"<version>([^<]+)</version>", meta)[-10:]
-except Exception as e:
-    summary["loom"] = ["ERR " + str(e)]
+# classes to dump fully (small/medium)
+FULL = [
+    "WorldOptions", "GeneratorOptions", "SpawnHelper", "ZombieEntity", "DrownedEntity",
+    "PiglinBrain", "EndermanEntity", "SpiderEntity", "ItemEntity", "RandomChanceLootCondition",
+    "RandomChanceWithEnchantedBonusLootCondition", "TableBonusLootCondition", "UniformLootNumberProvider",
+    "WanderAroundGoal", "WanderAroundFarGoal", "NoPenaltyTargeting", "AbstractPhase",
+    "HoldingPhase", "StrafePlayerPhase", "ServerWorldProperties", "LevelProperties",
+    "EntityAttributeModifier", "SpawnSettings", "SpawnGroup", "LocalDifficulty",
+]
+FILTER = {
+    "MobEntity": ["equip", "enchant", "drop", "initialize", "Goal", "goal", "random", "Random"],
+    "ServerWorld": ["tick", "Weather", "weather", "rain", "thunder", "Lightning", "random"],
+    "LivingEntity": ["Attribute", "attribute", "StatusEffect", "Equipment", "equip"],
+    "World": ["ClosestPlayer", "closest", "random", "Random"],
+    "ProjectileEntity": ["setVelocity", "velocity"],
+    "Biome": ["spawn", "Spawn"],
+    "EnderDragonEntity": ["phase", "Phase"],
+    "PiglinEntity": ["barter", "Barter"],
+}
 
-with open(os.path.join(OUT, "versions.json"), "w") as f:
-    json.dump(summary, f, indent=2)
+out = []
+for named, c in classes.items():
+    simple = named.split("/")[-1].split("$")[-1]
+    if simple in FULL:
+        out.append("=== %s   (%s)" % (named, c["inter"]))
+        out.extend("   " + m for m in c["members"])
+    elif simple in FILTER:
+        kws = FILTER[simple]
+        out.append("=== %s   (%s)" % (named, c["inter"]))
+        for m in c["members"]:
+            if any(k in m for k in kws):
+                out.append("   " + m)
 
-print(json.dumps(summary, indent=2)[:4000])
+with open(os.path.join(OUT, "mappings.txt"), "w") as f:
+    f.write("yarn %s\n" % YARN)
+    f.write("\n".join(out))
+print("classes:", len(classes), "outlines:", len(out))
+print("fabric-api:", vers[-5:])
