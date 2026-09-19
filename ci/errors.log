@@ -1,0 +1,5 @@
+FAILURE: Build failed with an exception.
+Caused by: org.gradle.api.internal.artifacts.ivyservice.TypedResolveException: Could not resolve all artifacts for configuration 'classpath'.
+Caused by: org.gradle.internal.resolve.ModuleVersionResolveException: Could not resolve net.fabricmc:fabric-loom:1.18.2.
+Caused by: org.gradle.internal.component.resolution.failure.exception.VariantSelectionByAttributesException: Dependency requires at least JVM runtime version 25. This build uses a Java 21 JVM.
+BUILD FAILED in 8s
