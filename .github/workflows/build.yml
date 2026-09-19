@@ -1,0 +1,75 @@
+name: build
+
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle.properties'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.14'
+      - name: Build
+        id: build
+        run: |
+          mkdir -p ci
+          set +e
+          gradle build --stacktrace --no-daemon > ci/build.log 2>&1
+          echo "status=$?" >> $GITHUB_OUTPUT
+          tail -n 60 ci/build.log
+      - name: Trim build log
+        if: always()
+        run: |
+          grep -E "error:|warning:|FAILURE|Caused by|BUILD" ci/build.log | head -n 200 > ci/errors.log || true
+          tail -n 150 ci/build.log > ci/build-tail.log || true
+          ls -la build/libs || true
+      - name: Run dedicated server smoke test
+        if: steps.build.outputs.status == '0'
+        run: |
+          set -e
+          MC=1.21.11
+          LOADER=0.19.5
+          INSTALLER=$(curl -s https://meta.fabricmc.net/v2/versions/installer | python3 -c "import sys,json;print(json.load(sys.stdin)[0]['version'])")
+          mkdir -p server/mods
+          curl -sL -o server/server.jar "https://meta.fabricmc.net/v2/versions/loader/$MC/$LOADER/$INSTALLER/server/jar"
+          cp build/libs/worst-luck-possible-*.jar server/mods/ 2>/dev/null || true
+          rm -f server/mods/*-sources.jar
+          echo "eula=true" > server/eula.txt
+          printf 'level-type=minecraft\\:normal\\nonline-mode=false\\nmax-tick-time=-1\\n' > server/server.properties
+          cd server
+          set +e
+          timeout 420 java -Xmx2G -jar server.jar nogui > server.log 2>&1
+          echo "server exit: $?"
+          cd ..
+          mkdir -p ci
+          tail -n 200 server/server.log > ci/server-tail.log
+          grep -E "Done \\(|Mixin apply|Caused by|Exception|crash" server/server.log | head -n 120 > ci/server-errors.log
+          ls server/crash-reports 2>/dev/null && cat server/crash-reports/* | head -n 120 >> ci/server-errors.log
+          grep -q 'Done (' server/server.log && echo "SERVER_STARTED=yes" >> ci/server-errors.log || echo "SERVER_STARTED=no" >> ci/server-errors.log
+      - name: Publish artifacts and logs
+        if: always()
+        run: |
+          mkdir -p dist
+          cp build/libs/worst-luck-possible-*.jar dist/ 2>/dev/null || true
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -A ci dist
+          git commit -m "ci: build + server logs" || echo "nothing to commit"
+          git pull --rebase --autostash || true
+          git push || true

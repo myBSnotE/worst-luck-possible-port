@@ -1,0 +1,27 @@
+{
+	"required": true,
+	"package": "com.worstluckpossible.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"behavior.WanderTowardPlayerMixin",
+		"equipment.ProjectileInaccuracyMixin",
+		"loot.MobEntityDropEquipmentMixin",
+		"loot.RandomChanceLootConditionMixin",
+		"loot.RandomChanceWithEnchantedBonusLootConditionMixin",
+		"loot.TableBonusLootConditionMixin",
+		"loot.UniformLootNumberProviderMixin",
+		"mob.DrownedTridentMixin",
+		"mob.EndermanTeleportMixin",
+		"mob.MobEquipmentRngMixin",
+		"mob.PiglinBarterMixin",
+		"mob.SpiderJockeyMixin",
+		"mob.ZombieAlwaysBabyMixin",
+		"mob.ZombieIronSwordMixin",
+		"mob.ZombieLeaderMixin",
+		"weather.AlwaysStormMixin",
+		"weather.LightningMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

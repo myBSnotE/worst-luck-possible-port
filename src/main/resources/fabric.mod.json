@@ -1,0 +1,20 @@
+{
+	"schemaVersion": 1,
+	"id": "worst-luck-possible",
+	"version": "${version}",
+	"name": "Worst luck possible",
+	"description": "Mod that mostly removes randomness from Minecraft and gives you the worst possible outcome every time",
+	"authors": ["Heppe"],
+	"license": "CC0-1.0",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["com.worstluckpossible.WorstLuckPossible"],
+		"client": ["com.worstluckpossible.WorstLuckPossibleClient"]
+	},
+	"mixins": ["worst-luck-possible.mixins.json"],
+	"depends": {
+		"fabricloader": ">=0.16.0",
+		"minecraft": ">=1.21.11",
+		"java": ">=21"
+	}
+}
