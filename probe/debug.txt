@@ -1,0 +1,9 @@
+entries: 179078
+header: 'tiny\t2\t0\tintermediary\tnamed'
+'c\tnet/minecraft/class_3720\tnet/minecraft/block/entity/BlastFurnaceBlockEntity'
+'\tf\tLnet/minecraft/class_2561;\tfield_63037\tCONTAINER_NAME_TEXT'
+'\tm\t(Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V\t<init>\t<init>'
+'\t\tp\t1\t\tpos'
+'\t\tp\t2\t\tstate'
+'c\tnet/minecraft/class_3721\tnet/minecraft/block/entity/BellBlockEntity'
+'\tf\tJ\tfield_19155\tlastRingTime'
