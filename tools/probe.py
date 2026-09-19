@@ -1,4 +1,4 @@
-import json, os, re, urllib.request, zipfile, io
+import json, os, re, urllib.request, urllib.parse, zipfile, io
 
 OUT = "probe"
 os.makedirs(OUT, exist_ok=True)
@@ -14,10 +14,6 @@ z = zipfile.ZipFile(io.BytesIO(data))
 name = [n for n in z.namelist() if n.endswith("mappings.tiny")][0]
 lines = z.read(name).decode("utf-8").split("\n")
 
-dbg = ["entries: %d" % len(lines), "header: %r" % lines[0]] + ["%r" % l for l in lines[1:8]]
-with open(os.path.join(OUT, "debug.txt"), "w") as f:
-    f.write("\n".join(dbg))
-
 classes = []
 cur = None
 for ln in lines:
@@ -29,19 +25,16 @@ for ln in lines:
         p = ln.rstrip("\n").split("\t")
         cur["members"].append("%s %s | %s | %s" % (p[1], p[-1], p[3], p[2]))
 
-FULL = set("""WorldOptions GeneratorOptions SpawnHelper ZombieEntity DrownedEntity PiglinBrain
-EndermanEntity SpiderEntity ItemEntity RandomChanceLootCondition TableBonusLootCondition
-RandomChanceWithEnchantedBonusLootCondition UniformLootNumberProvider WanderAroundGoal
-WanderAroundFarGoal NoPenaltyTargeting AbstractPhase HoldingPhase StrafePlayerPhase
-ServerWorldProperties LevelProperties EntityAttributeModifier LocalDifficulty SpawnSettings""".split())
+FULL = set("""SpawnHelper SpawnSettings SpawnEntry SpawnDensity PhaseManager PhaseType AbstractPhase
+HoldingPhase LandingApproachPhase LandingPhase SittingPhase StrafePlayerPhase ChargingPlayerPhase
+SpawnRestriction SpawnGroup ServerChunkManager""".split())
 FILTER = {
-    "MobEntity": ["quip", "nchant", "rop", "nitialize", "oal", "andom"],
-    "ServerWorld": ["tick", "eather", "ain", "hunder", "ightning"],
-    "LivingEntity": ["ttribute", "tatusEffect", "quip"],
-    "World": ["losestPlayer", "andom"],
-    "ProjectileEntity": ["elocity"],
-    "PiglinEntity": ["arter"],
-    "EnderDragonEntity": ["hase"],
+    "MobEntity": ["espawn", "ersistent", "panwable", "pawn"],
+    "EnderDragonEntity": ["hase", "erch", "arget"],
+    "Entity": ["emove", "iscard"],
+    "EntityType": ["reate", "pawn", "GHAST", "STRIDER", "ZOMBIFIED"],
+    "WorldChunk": ["pawn"],
+    "Biome": ["pawn"],
 }
 
 out = []
@@ -54,7 +47,7 @@ for c in classes:
         out.append("=== %s" % c["named"])
         out.extend("   " + m for m in c["members"] if any(k in m for k in FILTER[simple]))
 
-with open(os.path.join(OUT, "mappings.txt"), "w") as f:
+with open(os.path.join(OUT, "mappings2.txt"), "w") as f:
     f.write("yarn %s\nclasses=%d\n" % (YARN, len(classes)))
     f.write("\n".join(out))
 print("classes", len(classes), "out", len(out))
