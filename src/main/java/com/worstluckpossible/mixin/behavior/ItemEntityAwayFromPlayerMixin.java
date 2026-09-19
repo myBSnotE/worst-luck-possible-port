@@ -45,6 +45,5 @@ public class ItemEntityAwayFromPlayerMixin {
 		}
 
 		self.setVelocity(velocity);
-		self.scheduleVelocityUpdate();
 	}
 }
