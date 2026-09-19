@@ -18,11 +18,11 @@ public class WanderTowardPlayerMixin {
 
 	@Inject(method = "getWanderTarget", at = @At("HEAD"), cancellable = true, require = 0)
 	private void worstluck$wanderTowardPlayer(CallbackInfoReturnable<Vec3d> cir) {
-		PlayerEntity player = this.mob.getWorld().getClosestPlayer(this.mob, 64.0);
+		PlayerEntity player = this.mob.getEntityWorld().getClosestPlayer(this.mob, 64.0);
 		if (player == null) {
 			return;
 		}
-		Vec3d target = NoPenaltyTargeting.findTo(this.mob, 10, 7, player.getPos(), Math.PI / 2.0);
+		Vec3d target = NoPenaltyTargeting.findTo(this.mob, 10, 7, player.getEntityPos(), Math.PI / 2.0);
 		if (target != null) {
 			cir.setReturnValue(target);
 		}
