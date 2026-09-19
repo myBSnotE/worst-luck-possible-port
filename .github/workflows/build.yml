@@ -26,7 +26,7 @@ jobs:
             25
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.14'
+          gradle-version: 'current'
       - name: Build
         id: build
         env:
@@ -35,6 +35,7 @@ jobs:
           mkdir -p ci
           set +e
           "$JAVA_HOME/bin/java" -version
+          gradle --version
           gradle build --stacktrace --no-daemon > ci/build.log 2>&1
           echo "status=$?" >> $GITHUB_OUTPUT
           tail -n 60 ci/build.log
