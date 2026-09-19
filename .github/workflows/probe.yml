@@ -19,7 +19,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: Run probe
-        run: python tools/probe.py > probe/probe.log 2>&1 || true
+        run: |
+          mkdir -p probe
+          python tools/probe.py > probe/probe.log 2>&1 || true
+          tail -c 2000 probe/probe.log
       - name: Commit results
         if: always()
         run: |
@@ -27,5 +30,4 @@ jobs:
           git config user.email github-actions@github.com
           git add -A probe
           git commit -m "probe results" || echo "nothing to commit"
-          git pull --rebase || true
           git push
