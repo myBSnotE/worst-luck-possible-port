@@ -8,76 +8,53 @@ def get(url):
     with urllib.request.urlopen(url) as r:
         return r.read()
 
-# fabric-api versions for 1.21.11
-meta = get("https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/maven-metadata.xml").decode()
-vers = [v for v in re.findall(r"<version>([^<]+)</version>", meta) if v.endswith("+1.21.11")]
-with open(os.path.join(OUT, "fabric_api_1_21_11.txt"), "w") as f:
-    f.write("\n".join(vers[-10:]))
-
-# yarn mappings
 url = "https://maven.fabricmc.net/net/fabricmc/yarn/%s/yarn-%s-v2.jar" % (urllib.parse.quote(YARN), urllib.parse.quote(YARN))
 data = get(url)
 z = zipfile.ZipFile(io.BytesIO(data))
 name = [n for n in z.namelist() if n.endswith("mappings.tiny")][0]
 lines = z.read(name).decode("utf-8").split("\n")
 
-# parse tiny v2
-classes = {}  # named -> {"inter":..., "members":[str]}
+dbg = ["entries: %d" % len(lines), "header: %r" % lines[0]] + ["%r" % l for l in lines[1:8]]
+with open(os.path.join(OUT, "debug.txt"), "w") as f:
+    f.write("\n".join(dbg))
+
+classes = []
 cur = None
-header = lines[0]
 for ln in lines:
     if ln.startswith("c\t"):
-        p = ln.split("\t")
-        cur = {"official": p[1], "inter": p[2] if len(p) > 2 else "", "named": p[3] if len(p) > 3 else "", "members": []}
-        classes[cur["named"]] = cur
-    elif ln.startswith("\tm\t") or ln.startswith("\tf\t"):
-        if cur is not None:
-            p = ln.split("\t")
-            kind = p[1]
-            desc = p[2]
-            inter = p[4] if len(p) > 4 else ""
-            named = p[5] if len(p) > 5 else ""
-            cur["members"].append("%s %s %s %s" % (kind, named, inter, desc))
+        p = ln.rstrip("\n").split("\t")
+        cur = {"named": p[-1], "first": p[1], "members": []}
+        classes.append(cur)
+    elif (ln.startswith("\tm\t") or ln.startswith("\tf\t")) and cur is not None:
+        p = ln.rstrip("\n").split("\t")
+        cur["members"].append("%s %s | %s | %s" % (p[1], p[-1], p[3], p[2]))
 
-WANT_FULL = [
-    "world/gen/WorldGenerationProgressListener",
-]
-
-# classes to dump fully (small/medium)
-FULL = [
-    "WorldOptions", "GeneratorOptions", "SpawnHelper", "ZombieEntity", "DrownedEntity",
-    "PiglinBrain", "EndermanEntity", "SpiderEntity", "ItemEntity", "RandomChanceLootCondition",
-    "RandomChanceWithEnchantedBonusLootCondition", "TableBonusLootCondition", "UniformLootNumberProvider",
-    "WanderAroundGoal", "WanderAroundFarGoal", "NoPenaltyTargeting", "AbstractPhase",
-    "HoldingPhase", "StrafePlayerPhase", "ServerWorldProperties", "LevelProperties",
-    "EntityAttributeModifier", "SpawnSettings", "SpawnGroup", "LocalDifficulty",
-]
+FULL = set("""WorldOptions GeneratorOptions SpawnHelper ZombieEntity DrownedEntity PiglinBrain
+EndermanEntity SpiderEntity ItemEntity RandomChanceLootCondition TableBonusLootCondition
+RandomChanceWithEnchantedBonusLootCondition UniformLootNumberProvider WanderAroundGoal
+WanderAroundFarGoal NoPenaltyTargeting AbstractPhase HoldingPhase StrafePlayerPhase
+ServerWorldProperties LevelProperties EntityAttributeModifier LocalDifficulty SpawnSettings""".split())
 FILTER = {
-    "MobEntity": ["equip", "enchant", "drop", "initialize", "Goal", "goal", "random", "Random"],
-    "ServerWorld": ["tick", "Weather", "weather", "rain", "thunder", "Lightning", "random"],
-    "LivingEntity": ["Attribute", "attribute", "StatusEffect", "Equipment", "equip"],
-    "World": ["ClosestPlayer", "closest", "random", "Random"],
-    "ProjectileEntity": ["setVelocity", "velocity"],
-    "Biome": ["spawn", "Spawn"],
-    "EnderDragonEntity": ["phase", "Phase"],
-    "PiglinEntity": ["barter", "Barter"],
+    "MobEntity": ["quip", "nchant", "rop", "nitialize", "oal", "andom"],
+    "ServerWorld": ["tick", "eather", "ain", "hunder", "ightning"],
+    "LivingEntity": ["ttribute", "tatusEffect", "quip"],
+    "World": ["losestPlayer", "andom"],
+    "ProjectileEntity": ["elocity"],
+    "PiglinEntity": ["arter"],
+    "EnderDragonEntity": ["hase"],
 }
 
 out = []
-for named, c in classes.items():
-    simple = named.split("/")[-1].split("$")[-1]
+for c in classes:
+    simple = c["named"].split("/")[-1].split("$")[-1]
     if simple in FULL:
-        out.append("=== %s   (%s)" % (named, c["inter"]))
+        out.append("=== %s" % c["named"])
         out.extend("   " + m for m in c["members"])
     elif simple in FILTER:
-        kws = FILTER[simple]
-        out.append("=== %s   (%s)" % (named, c["inter"]))
-        for m in c["members"]:
-            if any(k in m for k in kws):
-                out.append("   " + m)
+        out.append("=== %s" % c["named"])
+        out.extend("   " + m for m in c["members"] if any(k in m for k in FILTER[simple]))
 
 with open(os.path.join(OUT, "mappings.txt"), "w") as f:
-    f.write("yarn %s\n" % YARN)
+    f.write("yarn %s\nclasses=%d\n" % (YARN, len(classes)))
     f.write("\n".join(out))
-print("classes:", len(classes), "outlines:", len(out))
-print("fabric-api:", vers[-5:])
+print("classes", len(classes), "out", len(out))
