@@ -1,18 +1,1 @@
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/mob/EndermanTeleportMixin.java:20: error: cannot find symbol
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/mob/EndermanTeleportMixin.java:23: error: cannot find symbol
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/mob/EndermanTeleportMixin.java:27: error: cannot find symbol
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/behavior/WanderTowardPlayerMixin.java:21: error: cannot find symbol
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/behavior/WanderTowardPlayerMixin.java:25: error: cannot find symbol
-FAILURE: Build failed with an exception.
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/mob/EndermanTeleportMixin.java:20: error: cannot find symbol
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/mob/EndermanTeleportMixin.java:23: error: cannot find symbol
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/mob/EndermanTeleportMixin.java:27: error: cannot find symbol
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/behavior/WanderTowardPlayerMixin.java:21: error: cannot find symbol
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/behavior/WanderTowardPlayerMixin.java:25: error: cannot find symbol
-Caused by: org.gradle.api.internal.tasks.compile.CompilationFailedException: Compilation failed; see the compiler output below.
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/mob/EndermanTeleportMixin.java:20: error: cannot find symbol
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/mob/EndermanTeleportMixin.java:23: error: cannot find symbol
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/mob/EndermanTeleportMixin.java:27: error: cannot find symbol
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/behavior/WanderTowardPlayerMixin.java:21: error: cannot find symbol
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/behavior/WanderTowardPlayerMixin.java:25: error: cannot find symbol
-BUILD FAILED in 47s
+BUILD SUCCESSFUL in 26s
