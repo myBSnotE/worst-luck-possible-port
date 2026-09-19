@@ -34,17 +34,14 @@ jobs:
         run: |
           mkdir -p ci
           set +e
-          "$JAVA_HOME/bin/java" -version
-          gradle --version
           gradle build --stacktrace --no-daemon > ci/build.log 2>&1
           echo "status=$?" >> $GITHUB_OUTPUT
-          tail -n 60 ci/build.log
+          tail -n 40 ci/build.log
       - name: Trim build log
         if: always()
         run: |
           grep -E "error:|FAILURE|Caused by|BUILD|Mixin" ci/build.log | head -n 200 > ci/errors.log || true
           tail -n 150 ci/build.log > ci/build-tail.log || true
-          ls -la build/libs || true
       - name: Run dedicated server smoke test
         if: steps.build.outputs.status == '0'
         run: |
@@ -57,22 +54,24 @@ jobs:
           cp build/libs/worst-luck-possible-*.jar server/mods/ 2>/dev/null || true
           rm -f server/mods/*-sources.jar
           echo "eula=true" > server/eula.txt
-          printf 'online-mode=false\nmax-tick-time=-1\n' > server/server.properties
+          printf 'online-mode=false\nmax-tick-time=-1\nsync-chunk-writes=false\n' > server/server.properties
           cd server
           set +e
-          timeout 480 "$JAVA_HOME_21_X64/bin/java" -Xmx2G -jar server.jar nogui > server.log 2>&1
+          # Feed "stop" on stdin so the dedicated server shuts down instead of running forever.
+          ( sleep 150; echo stop; sleep 30 ) | timeout 300 "$JAVA_HOME_21_X64/bin/java" -Xmx2G -jar server.jar nogui > server.log 2>&1
           echo "server exit: $?"
           cd ..
           mkdir -p ci
-          tail -n 200 server/server.log > ci/server-tail.log
-          grep -E "Done \(|Mixin apply|Caused by|Exception|crash" server/server.log | head -n 120 > ci/server-errors.log
+          tail -n 120 server/server.log > ci/server-tail.log
+          grep -E "Done \\(|Mixin apply|Caused by|Exception|crash|Stopping server" server/server.log | head -n 120 > ci/server-errors.log
           cat server/crash-reports/* 2>/dev/null | head -n 120 >> ci/server-errors.log
-          grep -q 'Done (' server/server.log && echo "SERVER_STARTED=yes" >> ci/server-errors.log || echo "SERVER_STARTED=no" >> ci/server-errors.log
+          if grep -q 'Done (' server/server.log; then echo "SERVER_STARTED=yes" >> ci/server-errors.log; else echo "SERVER_STARTED=no" >> ci/server-errors.log; fi
       - name: Publish artifacts and logs
         if: always()
         run: |
           mkdir -p dist
           cp build/libs/worst-luck-possible-*.jar dist/ 2>/dev/null || true
+          rm -f dist/*-sources.jar dist/*-dev.jar
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add -A ci dist
