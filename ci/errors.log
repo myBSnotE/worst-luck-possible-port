@@ -1,1 +1,6 @@
-BUILD SUCCESSFUL in 19s
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/behavior/ItemEntityAwayFromPlayerMixin.java:48: error: scheduleVelocityUpdate() has protected access in Entity
+FAILURE: Build failed with an exception.
+  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/behavior/ItemEntityAwayFromPlayerMixin.java:48: error: scheduleVelocityUpdate() has protected access in Entity
+Caused by: org.gradle.api.internal.tasks.compile.CompilationFailedException: Compilation failed; see the compiler output below.
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/behavior/ItemEntityAwayFromPlayerMixin.java:48: error: scheduleVelocityUpdate() has protected access in Entity
+BUILD FAILED in 13s
