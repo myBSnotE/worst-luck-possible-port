@@ -8,17 +8,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Dropped items actively slide away from nearby players, making pickups harder. */
+/** Gives a newly dropped item one impulse away from the nearest player. */
 @Mixin(ItemEntity.class)
 public class ItemEntityAwayFromPlayerMixin {
 	private static final double WORSTLUCK_RANGE = 8.0;
-	private static final double WORSTLUCK_ACCELERATION = 0.08;
+	private static final double WORSTLUCK_IMPULSE = 0.08;
 	private static final double WORSTLUCK_MAX_HORIZONTAL_SPEED = 0.45;
 
 	@Inject(method = "tick", at = @At("TAIL"))
-	private void worstluck$moveAwayFromPlayer(CallbackInfo ci) {
+	private void worstluck$moveAwayFromPlayerOnce(CallbackInfo ci) {
 		ItemEntity self = (ItemEntity) (Object) this;
-		if (self.getEntityWorld().isClient() || self.isRemoved()) {
+		if (self.getEntityWorld().isClient()
+				|| self.isRemoved()
+				|| self.getItemAge() != 1) {
 			return;
 		}
 
@@ -36,7 +38,7 @@ public class ItemEntityAwayFromPlayerMixin {
 			distanceSquared = 2.0;
 		}
 
-		double scale = WORSTLUCK_ACCELERATION / Math.sqrt(distanceSquared);
+		double scale = WORSTLUCK_IMPULSE / Math.sqrt(distanceSquared);
 		Vec3d velocity = self.getVelocity().add(dx * scale, 0.0, dz * scale);
 		double horizontalSpeedSquared = velocity.x * velocity.x + velocity.z * velocity.z;
 		if (horizontalSpeedSquared > WORSTLUCK_MAX_HORIZONTAL_SPEED * WORSTLUCK_MAX_HORIZONTAL_SPEED) {
