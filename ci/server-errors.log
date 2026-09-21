@@ -1,8 +1,3 @@
-[21:04:03] [main/ERROR]: Mixin apply for mod worst-luck-possible failed worst-luck-possible.mixins.json:behavior.WanderTowardPlayerMixin from mod worst-luck-possible -> net.minecraft.class_1314: org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException @Shadow field field_6201 was not located in the target class net.minecraft.class_1314. No refMap loaded.
-org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException: @Shadow field field_6201 was not located in the target class net.minecraft.class_1314. No refMap loaded.
-java.lang.ExceptionInInitializerError
-Caused by: java.lang.RuntimeException: Mixin transformation of net.minecraft.class_1314 failed
-Caused by: org.spongepowered.asm.mixin.transformer.throwables.MixinTransformerError: An unexpected critical error was encountered
-Caused by: org.spongepowered.asm.mixin.throwables.MixinApplyError: Mixin [worst-luck-possible.mixins.json:behavior.WanderTowardPlayerMixin from mod worst-luck-possible] from phase [DEFAULT] in config [worst-luck-possible.mixins.json] FAILED during APPLY
-Caused by: org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException: @Shadow field field_6201 was not located in the target class net.minecraft.class_1314. No refMap loaded.
-SERVER_STARTED=no
+[21:10:08] [Server thread/INFO]: Done (5.431s)! For help, type "help"
+[21:12:12] [Server thread/INFO]: Stopping server
+SERVER_STARTED=yes
