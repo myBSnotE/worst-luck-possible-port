@@ -1,39 +1,26 @@
 package com.worstluckpossible.mixin.weather;
 
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.ServerWorldProperties;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Starts an Overworld thunderstorm every ten real-time minutes. */
+/** Matches the original: clear rain/thunder timers are capped at ten minutes. */
 @Mixin(ServerWorld.class)
 public class AlwaysStormMixin {
-	@Unique
-	private static final long WORSTLUCK_STORM_INTERVAL = 12_000L;
-	@Unique
-	private static final int WORSTLUCK_STORM_DURATION = 6_000;
-	@Unique
-	private long worstluck$nextStormTime = Long.MIN_VALUE;
+	@Shadow @Final private ServerWorldProperties worldProperties;
 
-	@Inject(method = "tickWeather", at = @At("TAIL"))
-	private void worstluck$scheduleStorm(CallbackInfo ci) {
-		ServerWorld self = (ServerWorld) (Object) this;
-		if (!self.getRegistryKey().equals(World.OVERWORLD)) {
-			return;
+	@Inject(method = "tickWeather", at = @At("HEAD"))
+	private void worstluck$capClearWeatherTimers(CallbackInfo ci) {
+		if (!worldProperties.isThundering() && worldProperties.getThunderTime() > 12_000) {
+			worldProperties.setThunderTime(12_000);
 		}
-
-		long time = self.getTime();
-		if (worstluck$nextStormTime == Long.MIN_VALUE) {
-			worstluck$nextStormTime = time + WORSTLUCK_STORM_INTERVAL;
-			return;
-		}
-
-		if (time >= worstluck$nextStormTime) {
-			self.setWeather(0, WORSTLUCK_STORM_DURATION, true, true);
-			worstluck$nextStormTime = time + WORSTLUCK_STORM_INTERVAL;
+		if (!worldProperties.isRaining() && worldProperties.getRainTime() > 12_000) {
+			worldProperties.setRainTime(12_000);
 		}
 	}
 }

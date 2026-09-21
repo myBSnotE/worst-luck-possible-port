@@ -1,25 +1,30 @@
 package com.worstluckpossible.mixin.spawns;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Restores the original early hostile despawn beyond 64 blocks. */
+/** Matches the original early hostile despawn beyond 64 blocks. */
 @Mixin(MobEntity.class)
 public class MobNeverDespawnMixin {
-	@Inject(method = "canImmediatelyDespawn", at = @At("HEAD"), cancellable = true, require = 0)
-	private void worstluck$earlyMonsterDespawn(double distanceSquared, CallbackInfoReturnable<Boolean> cir) {
+	@Inject(method = "checkDespawn", at = @At("HEAD"), cancellable = true)
+	private void worstluck$earlyMonsterDespawn(CallbackInfo ci) {
 		MobEntity self = (MobEntity) (Object) this;
-		if (self.getType().getSpawnGroup() == SpawnGroup.MONSTER
-				&& distanceSquared >= 4096.0
-				&& !self.isPersistent()
-				&& !self.cannotDespawn()
-				&& !(self.getTarget() instanceof PlayerEntity)) {
-			cir.setReturnValue(true);
+		if (self.getType().getSpawnGroup() != SpawnGroup.MONSTER
+				|| self.isPersistent() || self.cannotDespawn()
+				|| self.getTarget() instanceof PlayerEntity) {
+			return;
+		}
+		Entity closest = self.getEntityWorld().getClosestPlayer(self, -1.0);
+		if (closest != null && closest.squaredDistanceTo(self) >= 4096.0) {
+			self.remove(RemovalReason.DISCARDED);
+			ci.cancel();
 		}
 	}
 }

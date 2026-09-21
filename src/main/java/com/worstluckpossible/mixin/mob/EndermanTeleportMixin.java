@@ -29,12 +29,13 @@ public abstract class EndermanTeleportMixin {
 			return;
 		}
 		Vec3d look = player.getRotationVec(1.0F);
+		Vec3d eye = player.getEyePos();
 		for (int attempt = 0; attempt < 16; attempt++) {
 			double distance = 10.0 + self.getRandom().nextDouble() * 40.0;
 			if (worstluck$teleportTo(
-					player.getX() + look.x * distance,
-					player.getY() + player.getStandingEyeHeight(),
-					player.getZ() + look.z * distance)) {
+					eye.x + look.x * distance,
+					eye.y + look.y * distance,
+					eye.z + look.z * distance)) {
 				cir.setReturnValue(true);
 				return;
 			}

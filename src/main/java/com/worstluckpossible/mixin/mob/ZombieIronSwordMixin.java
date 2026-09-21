@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ZombieIronSwordMixin {
 	@Inject(method = "initEquipment", at = @At("TAIL"), require = 0)
 	private void worstluck$alwaysIronSword(Random random, LocalDifficulty difficulty, CallbackInfo ci) {
-		((ZombieEntity) (Object) this).equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
+		if (difficulty.getLocalDifficulty() > 0.0F) {
+			((ZombieEntity) (Object) this).equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
+		}
 	}
 }
