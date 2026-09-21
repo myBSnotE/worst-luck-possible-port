@@ -2,9 +2,9 @@ package com.worstluckpossible.mixin.mob;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.server.world.ServerWorldAccess;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +24,6 @@ public class MobEquipmentRngMixin {
 
 	@Redirect(method = "initEquipment", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/random/Random;nextFloat()F"))
 	private float worstluck$maximizeEquipment(Random random) {
-		// Gate + three tier upgrades pass; the three later slot-break checks fail.
 		return worstluck$equipmentFloatRoll++ < 4 ? 0.0F : 1.0F;
 	}
 
@@ -34,7 +33,7 @@ public class MobEquipmentRngMixin {
 	}
 
 	@Redirect(
-		method = "enchantEquipment(Lnet/minecraft/server/world/ServerWorldAccess;Lnet/minecraft/entity/EquipmentSlot;Lnet/minecraft/util/math/random/Random;FLnet/minecraft/world/LocalDifficulty;)V",
+		method = "enchantEquipment(Lnet/minecraft/world/ServerWorldAccess;Lnet/minecraft/entity/EquipmentSlot;Lnet/minecraft/util/math/random/Random;FLnet/minecraft/world/LocalDifficulty;)V",
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/random/Random;nextFloat()F"),
 		require = 0
 	)
