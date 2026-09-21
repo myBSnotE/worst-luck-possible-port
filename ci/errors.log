@@ -1,24 +1,24 @@
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:9: error: cannot find symbol
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:29: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:8: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:27: error: cannot find symbol
   location: class SpawnSelectionMixin
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:57: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:55: error: cannot find symbol
   location: class SpawnSelectionMixin
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:47: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:45: error: cannot find symbol
   location: class SpawnSelectionMixin
 FAILURE: Build failed with an exception.
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:9: error: cannot find symbol
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:29: error: cannot find symbol
+  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:8: error: cannot find symbol
+  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:27: error: cannot find symbol
     location: class SpawnSelectionMixin
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:57: error: cannot find symbol
+  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:55: error: cannot find symbol
     location: class SpawnSelectionMixin
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:47: error: cannot find symbol
+  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:45: error: cannot find symbol
     location: class SpawnSelectionMixin
 Caused by: org.gradle.api.internal.tasks.compile.CompilationFailedException: Compilation failed; see the compiler output below.
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:9: error: cannot find symbol
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:29: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:8: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:27: error: cannot find symbol
   location: class SpawnSelectionMixin
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:57: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:55: error: cannot find symbol
   location: class SpawnSelectionMixin
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:47: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:45: error: cannot find symbol
   location: class SpawnSelectionMixin
-BUILD FAILED in 16s
+BUILD FAILED in 12s

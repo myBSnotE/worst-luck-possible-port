@@ -4,31 +4,29 @@ Daemon will be stopped at the end of the build
 > Configure project :
 Fabric Loom: 1.18.2
 
-> Task :compileJava
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:9: error: cannot find symbol
+> Task :compileJava FAILED
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:8: error: cannot find symbol
 import net.minecraft.util.collection.Pool;
                                     ^
   symbol:   class Pool
   location: package net.minecraft.util.collection
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:29: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:27: error: cannot find symbol
 	private static Pool<SpawnSettings.SpawnEntry> getSpawnEntries(ServerWorld world,
 	               ^
   symbol:   class Pool
   location: class SpawnSelectionMixin
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:57: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:55: error: cannot find symbol
 	private static boolean choose(Pool<SpawnSettings.SpawnEntry> entries, EntityType<?> type,
 	                              ^
   symbol:   class Pool
   location: class SpawnSelectionMixin
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:47: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:45: error: cannot find symbol
 		Pool<SpawnSettings.SpawnEntry> entries = getSpawnEntries(world, structures, generator, group, pos, world.getBiome(pos));
 		^
   symbol:   class Pool
   location: class SpawnSelectionMixin
 4 errors
-
-> Task :compileJava FAILED
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1790024386894.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1790024518807.json
 
 [Incubating] Problems report is available at: file:///home/runner/work/worst-luck-possible-port/worst-luck-possible-port/build/reports/problems/problems-report.html
 
@@ -37,22 +35,22 @@ FAILURE: Build failed with an exception.
 * What went wrong:
 Execution failed for task ':compileJava' (registered by plugin class 'org.gradle.api.plugins.JavaBasePlugin').
 > Compilation failed; see the compiler output below.
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:9: error: cannot find symbol
+  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:8: error: cannot find symbol
   import net.minecraft.util.collection.Pool;
                                       ^
     symbol:   class Pool
     location: package net.minecraft.util.collection
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:29: error: cannot find symbol
+  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:27: error: cannot find symbol
   	private static Pool<SpawnSettings.SpawnEntry> getSpawnEntries(ServerWorld world,
   	               ^
     symbol:   class Pool
     location: class SpawnSelectionMixin
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:57: error: cannot find symbol
+  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:55: error: cannot find symbol
   	private static boolean choose(Pool<SpawnSettings.SpawnEntry> entries, EntityType<?> type,
   	                              ^
     symbol:   class Pool
     location: class SpawnSelectionMixin
-  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:47: error: cannot find symbol
+  /home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:45: error: cannot find symbol
   		Pool<SpawnSettings.SpawnEntry> entries = getSpawnEntries(world, structures, generator, group, pos, world.getBiome(pos));
   		^
     symbol:   class Pool
@@ -99,22 +97,22 @@ org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':compile
 	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:65)
 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
 Caused by: org.gradle.api.internal.tasks.compile.CompilationFailedException: Compilation failed; see the compiler output below.
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:9: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:8: error: cannot find symbol
 import net.minecraft.util.collection.Pool;
                                     ^
   symbol:   class Pool
   location: package net.minecraft.util.collection
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:29: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:27: error: cannot find symbol
 	private static Pool<SpawnSettings.SpawnEntry> getSpawnEntries(ServerWorld world,
 	               ^
   symbol:   class Pool
   location: class SpawnSelectionMixin
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:57: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:55: error: cannot find symbol
 	private static boolean choose(Pool<SpawnSettings.SpawnEntry> entries, EntityType<?> type,
 	                              ^
   symbol:   class Pool
   location: class SpawnSelectionMixin
-/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:47: error: cannot find symbol
+/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/src/main/java/com/worstluckpossible/mixin/spawns/SpawnSelectionMixin.java:45: error: cannot find symbol
 		Pool<SpawnSettings.SpawnEntry> entries = getSpawnEntries(world, structures, generator, group, pos, world.getBiome(pos));
 		^
   symbol:   class Pool
@@ -254,5 +252,5 @@ import net.minecraft.util.collection.Pool;
 	... 30 more
 
 
-BUILD FAILED in 16s
+BUILD FAILED in 12s
 1 actionable task: 1 executed
