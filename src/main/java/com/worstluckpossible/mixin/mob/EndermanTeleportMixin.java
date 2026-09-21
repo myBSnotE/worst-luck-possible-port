@@ -26,6 +26,7 @@ public abstract class EndermanTeleportMixin {
 		PlayerEntity player = target instanceof PlayerEntity p
 				? p : self.getEntityWorld().getClosestPlayer(self, 64.0);
 		if (player == null || player.isSpectator()) {
+			cir.setReturnValue(false);
 			return;
 		}
 		Vec3d look = player.getRotationVec(1.0F);
@@ -40,5 +41,6 @@ public abstract class EndermanTeleportMixin {
 				return;
 			}
 		}
+		cir.setReturnValue(false);
 	}
 }

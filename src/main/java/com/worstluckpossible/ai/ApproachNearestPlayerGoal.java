@@ -1,10 +1,12 @@
 package com.worstluckpossible.ai;
 
+import java.util.Comparator;
 import java.util.EnumSet;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 
 /** 1.21 implementation of the original mod's approach-player goal. */
@@ -20,11 +22,14 @@ public class ApproachNearestPlayerGoal extends Goal {
 
 	@Override
 	public boolean canStart() {
-		if (mob.getTarget() != null || mob.isPersistent() || mob.cannotDespawn()) {
+		if (mob.getTarget() != null || !(mob.getEntityWorld() instanceof ServerWorld world)) {
 			return false;
 		}
-		PlayerEntity nearest = mob.getEntityWorld().getClosestPlayer(mob, -1.0);
-		if (nearest == null || nearest.isSpectator() || nearest.isCreative()) {
+		PlayerEntity nearest = world.getPlayers().stream()
+				.filter(candidate -> candidate.isAlive() && !candidate.isSpectator() && !candidate.isCreative())
+				.min(Comparator.comparingDouble(mob::squaredDistanceTo))
+				.orElse(null);
+		if (nearest == null) {
 			return false;
 		}
 		Vec3d pos = NoPenaltyTargeting.findTo(mob, 10, 7, nearest.getEntityPos(), Math.PI / 2.0);
