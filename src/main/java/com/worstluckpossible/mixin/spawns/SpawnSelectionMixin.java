@@ -3,11 +3,9 @@ package com.worstluckpossible.mixin.spawns;
 import java.util.Optional;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.Pool;
-import net.minecraft.util.collection.Weighted;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.SpawnHelper;
@@ -56,7 +54,7 @@ public class SpawnSelectionMixin {
 
 	private static boolean choose(Pool<SpawnSettings.SpawnEntry> entries, EntityType<?> type,
 			CallbackInfoReturnable<Optional<SpawnSettings.SpawnEntry>> cir) {
-		for (Weighted<SpawnSettings.SpawnEntry> weighted : entries.getEntries()) {
+		for (var weighted : entries.getEntries()) {
 			if (weighted.value().type() == type) {
 				SpawnSettings.SpawnEntry entry = weighted.value();
 				cir.setReturnValue(Optional.of(new SpawnSettings.SpawnEntry(type, entry.maxGroupSize(), entry.maxGroupSize())));
