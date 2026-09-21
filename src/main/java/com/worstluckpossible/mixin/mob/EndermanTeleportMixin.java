@@ -1,62 +1,43 @@
 package com.worstluckpossible.mixin.mob;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/** Redirects vanilla random teleports 10-50 blocks along the player's look vector. */
 @Mixin(EndermanEntity.class)
 public abstract class EndermanTeleportMixin {
 	@Invoker("teleportTo")
 	abstract boolean worstluck$teleportTo(double x, double y, double z);
 
 	@Inject(method = "teleportRandomly", at = @At("HEAD"), cancellable = true)
-	private void worstluck$teleportOntoPlayer(CallbackInfoReturnable<Boolean> cir) {
+	private void worstluck$teleportWherePlayerLooks(CallbackInfoReturnable<Boolean> cir) {
 		EndermanEntity self = (EndermanEntity) (Object) this;
 		if (self.getEntityWorld().isClient()) {
 			return;
 		}
-
-		PlayerEntity player = self.getEntityWorld().getClosestPlayer(self, 64.0);
-		if (player != null && !player.isSpectator() && !player.isCreative()) {
-			cir.setReturnValue(worstluck$teleportNextTo(player));
-		}
-	}
-
-	@Inject(method = "mobTick", at = @At("TAIL"))
-	private void worstluck$periodicallyTeleportToPlayer(ServerWorld world, CallbackInfo ci) {
-		EndermanEntity self = (EndermanEntity) (Object) this;
-		if ((self.age + self.getId()) % 10 != 0) {
+		LivingEntity target = self.getTarget();
+		PlayerEntity player = target instanceof PlayerEntity p
+				? p : self.getEntityWorld().getClosestPlayer(self, 64.0);
+		if (player == null || player.isSpectator()) {
 			return;
 		}
-
-		PlayerEntity player = world.getClosestPlayer(self, 64.0);
-		if (player != null
-				&& !player.isSpectator()
-				&& !player.isCreative()
-				&& self.squaredDistanceTo(player) > 6.25) {
-			worstluck$teleportNextTo(player);
-		}
-	}
-
-	private boolean worstluck$teleportNextTo(PlayerEntity player) {
-		// Try a ring of valid positions around the player. One fixed position can
-		// be blocked by the player, a wall, water or a height difference.
-		for (double radius : new double[] {1.75, 2.25, 2.75}) {
-			for (int i = 0; i < 12; i++) {
-				double angle = i * Math.PI * 2.0 / 12.0;
-				double x = player.getX() + Math.cos(angle) * radius;
-				double z = player.getZ() + Math.sin(angle) * radius;
-				if (worstluck$teleportTo(x, player.getY(), z)) {
-					return true;
-				}
+		Vec3d look = player.getRotationVec(1.0F);
+		for (int attempt = 0; attempt < 16; attempt++) {
+			double distance = 10.0 + self.getRandom().nextDouble() * 40.0;
+			if (worstluck$teleportTo(
+					player.getX() + look.x * distance,
+					player.getY() + player.getStandingEyeHeight(),
+					player.getZ() + look.z * distance)) {
+				cir.setReturnValue(true);
+				return;
 			}
 		}
-		return false;
 	}
 }

@@ -5,6 +5,7 @@
 	"mixins": [
 		"behavior.ItemEntityAwayFromPlayerMixin",
 		"behavior.WanderTowardPlayerMixin",
+		"dragon.DragonHoldingHeightMixin",
 		"dragon.DragonNoPerchMixin",
 		"dragon.DragonStrafeHeightMixin",
 		"equipment.ProjectileInaccuracyMixin",
@@ -23,9 +24,11 @@
 		"mob.ZombieIronSwordMixin",
 		"mob.ZombieLeaderMixin",
 		"spawns.MobNeverDespawnMixin",
+		"spawns.SpawnHelperIntensityMixin",
 		"spawns.SpawnHelperMaxPackMixin",
 		"spawns.SpawnHelperNoAnimalsMixin",
 		"spawns.SpawnHelperProximityMixin",
+		"spawns.SpawnSelectionMixin",
 		"weather.AlwaysStormMixin",
 		"weather.LightningMixin"
 	],

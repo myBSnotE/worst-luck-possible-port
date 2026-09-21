@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PiglinBrain.class)
 public class PiglinBarterMixin {
 	@Inject(method = "getBarteredItem", at = @At("HEAD"), cancellable = true, require = 0)
-	private static void worstluck$worstBarter(PiglinEntity piglin, CallbackInfoReturnable<List<ItemStack>> cir) {
-		cir.setReturnValue(List.of(new ItemStack(Items.GRAVEL)));
+	private static void worstluck$alwaysTwoMagmaCream(PiglinEntity piglin, CallbackInfoReturnable<List<ItemStack>> cir) {
+		cir.setReturnValue(List.of(new ItemStack(Items.MAGMA_CREAM, 2)));
 	}
 }

@@ -8,44 +8,29 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Gives a newly dropped item one impulse away from the nearest player. */
+/** Applies the original constructor-time launch once, on the first server tick. */
 @Mixin(ItemEntity.class)
 public class ItemEntityAwayFromPlayerMixin {
-	private static final double WORSTLUCK_RANGE = 8.0;
-	private static final double WORSTLUCK_IMPULSE = 0.08;
-	private static final double WORSTLUCK_MAX_HORIZONTAL_SPEED = 0.45;
-
-	@Inject(method = "tick", at = @At("TAIL"))
-	private void worstluck$moveAwayFromPlayerOnce(CallbackInfo ci) {
+	@Inject(method = "tick", at = @At("HEAD"))
+	private void worstluck$launchAwayOnce(CallbackInfo ci) {
 		ItemEntity self = (ItemEntity) (Object) this;
-		if (self.getEntityWorld().isClient()
-				|| self.isRemoved()
-				|| self.getItemAge() != 1) {
+		if (self.getEntityWorld().isClient() || self.isRemoved() || self.getItemAge() != 0) {
 			return;
 		}
-
-		PlayerEntity player = self.getEntityWorld().getClosestPlayer(self, WORSTLUCK_RANGE);
+		PlayerEntity player = self.getEntityWorld().getClosestPlayer(self, 64.0);
 		if (player == null) {
 			return;
 		}
-
 		double dx = self.getX() - player.getX();
 		double dz = self.getZ() - player.getZ();
-		double distanceSquared = dx * dx + dz * dz;
-		if (distanceSquared < 1.0E-6) {
-			dx = self.getRandom().nextBoolean() ? 1.0 : -1.0;
-			dz = self.getRandom().nextBoolean() ? 1.0 : -1.0;
-			distanceSquared = 2.0;
+		double lengthSq = dx * dx + dz * dz;
+		if (lengthSq < 1.0E-4) {
+			double angle = self.getRandom().nextDouble() * Math.PI * 2.0;
+			dx = Math.cos(angle);
+			dz = Math.sin(angle);
+			lengthSq = 1.0;
 		}
-
-		double scale = WORSTLUCK_IMPULSE / Math.sqrt(distanceSquared);
-		Vec3d velocity = self.getVelocity().add(dx * scale, 0.0, dz * scale);
-		double horizontalSpeedSquared = velocity.x * velocity.x + velocity.z * velocity.z;
-		if (horizontalSpeedSquared > WORSTLUCK_MAX_HORIZONTAL_SPEED * WORSTLUCK_MAX_HORIZONTAL_SPEED) {
-			double horizontalScale = WORSTLUCK_MAX_HORIZONTAL_SPEED / Math.sqrt(horizontalSpeedSquared);
-			velocity = new Vec3d(velocity.x * horizontalScale, velocity.y, velocity.z * horizontalScale);
-		}
-
-		self.setVelocity(velocity);
+		double length = Math.sqrt(lengthSq);
+		self.setVelocity(new Vec3d(dx / length * 0.25, 0.2, dz / length * 0.25));
 	}
 }

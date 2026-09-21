@@ -7,11 +7,13 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ZombieEntity.class)
@@ -21,10 +23,22 @@ public class ZombieLeaderMixin {
 	@Inject(method = "initialize", at = @At("RETURN"), require = 0)
 	private void worstluck$alwaysLeader(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, CallbackInfoReturnable<EntityData> cir) {
 		ZombieEntity self = (ZombieEntity) (Object) this;
+		EntityAttributeInstance reinforcements = self.getAttributeInstance(EntityAttributes.SPAWN_REINFORCEMENTS);
+		if (reinforcements != null) {
+			reinforcements.setBaseValue(1.0);
+			if (reinforcements.getModifier(WORSTLUCK_LEADER_ID) == null) {
+				reinforcements.addPersistentModifier(new EntityAttributeModifier(WORSTLUCK_LEADER_ID, 0.75, EntityAttributeModifier.Operation.ADD_VALUE));
+			}
+		}
 		EntityAttributeInstance health = self.getAttributeInstance(EntityAttributes.MAX_HEALTH);
 		if (health != null && health.getModifier(WORSTLUCK_LEADER_ID) == null) {
-			health.addPersistentModifier(new EntityAttributeModifier(WORSTLUCK_LEADER_ID, 10.0, EntityAttributeModifier.Operation.ADD_VALUE));
+			health.addPersistentModifier(new EntityAttributeModifier(WORSTLUCK_LEADER_ID, 0.5, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 			self.setHealth(self.getMaxHealth());
 		}
+	}
+
+	@Redirect(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/random/Random;nextFloat()F"), require = 0)
+	private float worstluck$alwaysPassReinforcementRoll(Random random) {
+		return 0.0F;
 	}
 }

@@ -1,26 +1,26 @@
 package com.worstluckpossible.mixin.spawns;
 
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.ServerWorldAccess;
+import java.util.ArrayList;
+import java.util.List;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.world.SpawnHelper;
-import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/** No passive animals are placed during world generation. */
+/** Blocks runtime animal/fish spawning while preserving seed-dependent chunk-generation animals. */
 @Mixin(SpawnHelper.class)
 public class SpawnHelperNoAnimalsMixin {
-	@Inject(method = "populateEntities", at = @At("HEAD"), cancellable = true, require = 0)
-	private static void worstluck$noNaturalAnimals(
-			ServerWorldAccess world,
-			RegistryEntry<Biome> biome,
-			ChunkPos chunkPos,
-			Random random,
-			CallbackInfo ci) {
-		ci.cancel();
+	@Inject(method = "collectSpawnableGroups", at = @At("RETURN"), cancellable = true)
+	private static void worstluck$removeNaturalAnimals(SpawnHelper.Info info, boolean spawnAnimals,
+			boolean spawnMonsters, boolean rare, CallbackInfoReturnable<List<SpawnGroup>> cir) {
+		List<SpawnGroup> groups = new ArrayList<>(cir.getReturnValue());
+		groups.remove(SpawnGroup.CREATURE);
+		groups.remove(SpawnGroup.WATER_CREATURE);
+		groups.remove(SpawnGroup.WATER_AMBIENT);
+		groups.remove(SpawnGroup.AXOLOTLS);
+		groups.remove(SpawnGroup.UNDERGROUND_WATER_CREATURE);
+		cir.setReturnValue(groups);
 	}
 }
