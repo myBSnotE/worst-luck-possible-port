@@ -1,0 +1,48 @@
+name: analyze original mod
+
+on:
+  push:
+    paths:
+      - 'worst-luck-possible-1.0.0.jar'
+      - '.github/workflows/analyze-original.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Disassemble original mod
+        run: |
+          set -e
+          JAR=worst-luck-possible-1.0.0.jar
+          mkdir -p probe/original
+          jar tf "$JAR" > probe/original/jar-contents.txt
+          unzip -p "$JAR" worst-luck-possible.mixins.json > probe/original/mixins.json
+          unzip -p "$JAR" fabric.mod.json > probe/original/fabric.mod.json
+          : > probe/original/javap.txt
+          while IFS= read -r entry; do
+            case "$entry" in
+              com/worstluckpossible/*.class)
+                class="${entry%.class}"
+                class="${class//\//.}"
+                printf '\n\n===== %s =====\n' "$class" >> probe/original/javap.txt
+                javap -classpath "$JAR" -c -p -s -constants "$class" >> probe/original/javap.txt 2>&1 || true
+                ;;
+            esac
+          done < probe/original/jar-contents.txt
+      - name: Publish analysis
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add probe/original
+          git commit -m "probe: disassemble original 1.16.1 mod" || echo "nothing to commit"
+          git pull --rebase --autostash || true
+          git push || true
