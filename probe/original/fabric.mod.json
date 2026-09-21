@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "worst-luck-possible",
+	"version": "1.0.0",
+	"name": "Worst luck possible",
+	"description": "Mod that mostly removes randomness from Minecraft and gives you the worst possible outcome every time",
+	"authors": [
+		"Heppe"
+	],
+	"contact": {
+		"homepage": "https://youtube.com/c/HeppeGaming",
+		"sources": "https://github.com/FabricMC/worst-luck-possible"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/worst-luck-possible/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.worstluckpossible.WorstLuckPossible"
+		],
+		"client": [
+			"com.worstluckpossible.WorstLuckPossibleClient"
+		]
+	},
+	"mixins": [
+		"worst-luck-possible.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.9.3",
+		"minecraft": "~1.16.1",
+		"fabric": "<=0.18.0"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
