@@ -119,7 +119,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 </details>
 
-<details>
+<details open>
 <summary><strong>🇷🇺 Русский</strong></summary>
 
 Современный Fabric-порт **Worst Luck Possible** — челлендж-мода, который убирает благоприятную случайность и практически всегда выдаёт игроку худший из возможных результатов.
