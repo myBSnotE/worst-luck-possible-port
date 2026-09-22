@@ -4,13 +4,17 @@ A modern Fabric port of **Worst Luck Possible**, a challenge mod that removes fa
 
 This repository ports the original Minecraft 1.16.1 mod to **Minecraft 1.21.11** while preserving its gameplay intent and adapting the implementation to current Minecraft internals.
 
-## Original mod
+## Original mod and creator
 
-- **Author:** Heppe
-- **Original source link declared by the 1.16.1 mod:** [FabricMC/worst-luck-possible](https://github.com/FabricMC/worst-luck-possible)
-- **Author homepage:** [HeppeGaming](https://youtube.com/c/HeppeGaming)
-- **Original version:** 1.0.0 for Minecraft 1.16.1
-- **License declared by the original mod:** CC0-1.0
+- **Creator:** Heppe
+- **Original mod:** [Worst Luck Possible on Modrinth](https://modrinth.com/mod/worst-luck-possible)
+- **Original 1.0.0 release:** [Download page on Modrinth](https://modrinth.com/mod/worst-luck-possible/version/1.0.0)
+- **Creator's original video:** [Is it possible to beat Minecraft with only bad RNG?](https://www.youtube.com/watch?v=LYmyuoRJecA)
+- **Creator's channel:** [HeppeGaming](https://youtube.com/c/HeppeGaming)
+- **Source URL embedded in the original JAR:** [FabricMC/worst-luck-possible](https://github.com/FabricMC/worst-luck-possible)
+- **Original target:** Minecraft 1.16.1 with Fabric
+
+The original Modrinth listing describes the project as making Minecraft as difficult as possible without adding outcomes that are impossible in vanilla. The listing currently identifies the project as MIT-licensed, while the metadata embedded in the supplied 1.0.0 JAR declares CC0-1.0.
 
 The original compiled JAR used as the behavioral reference is included at [`worst-luck-possible-1.0.0.jar`](worst-luck-possible-1.0.0.jar).
 
@@ -28,7 +32,7 @@ The original compiled JAR used as the behavioral reference is included at [`wors
 3. Put the JAR into the instance or server `mods` directory.
 4. Start the game or server.
 
-The mod works on dedicated servers and supports multiple players.
+The mod works on dedicated servers and supports multiple players. The original Modrinth release is marked singleplayer-only; multiplayer support is an addition of this port.
 
 ## Original gameplay features
 
