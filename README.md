@@ -41,7 +41,7 @@ The mod works on dedicated servers and supports multiple players. The original M
 - Mob and block loot rolls choose the smallest possible result.
 - Gravel never drops flint.
 - Piglin bartering always gives two magma cream.
-- Freshly dropped items fly away from the nearest player.
+- Fresh block drops fly away from the nearest player; manually thrown items keep their normal throw direction.
 - Equipment drops are suppressed.
 
 ### Hostile mobs

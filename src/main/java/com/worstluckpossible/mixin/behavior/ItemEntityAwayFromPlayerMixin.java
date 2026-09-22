@@ -8,15 +8,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Applies the original constructor-time launch once, on the first server tick. */
+/** Launches fresh block drops away from the nearest player exactly once. */
 @Mixin(ItemEntity.class)
 public class ItemEntityAwayFromPlayerMixin {
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void worstluck$launchAwayOnce(CallbackInfo ci) {
 		ItemEntity self = (ItemEntity) (Object) this;
-		if (self.getEntityWorld().isClient() || self.isRemoved() || self.getItemAge() != 0) {
+		if (self.getEntityWorld().isClient()
+				|| self.isRemoved()
+				|| self.getItemAge() != 0
+				|| self.getOwner() instanceof PlayerEntity) {
 			return;
 		}
+
 		PlayerEntity player = self.getEntityWorld().getClosestPlayer(self, 64.0);
 		if (player == null) {
 			return;
