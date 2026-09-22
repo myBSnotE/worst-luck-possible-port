@@ -24,6 +24,7 @@
 		"mob.ZombieIronSwordMixin",
 		"mob.ZombieLeaderMixin",
 		"spawns.MobNeverDespawnMixin",
+		"spawns.PhantomSpawnerMixin",
 		"spawns.SpawnHelperCapReplacementMixin",
 		"spawns.SpawnHelperIntensityMixin",
 		"spawns.SpawnHelperMaxPackMixin",
