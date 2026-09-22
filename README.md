@@ -1,6 +1,6 @@
 # Worst Luck Possible — Minecraft 1.21.11 port
 
-<details open>
+<details>
 <summary><strong>🇬🇧 English</strong></summary>
 
 A modern Fabric port of **Worst Luck Possible**, a challenge mod that removes favorable randomness and consistently gives the player the worst practical outcome.
