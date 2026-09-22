@@ -8,10 +8,8 @@ This repository ports the original Minecraft 1.16.1 mod to **Minecraft 1.21.11**
 
 - **Creator:** Heppe
 - **Original mod:** [Worst Luck Possible on Modrinth](https://modrinth.com/mod/worst-luck-possible)
-- **Original 1.0.0 release:** [Download page on Modrinth](https://modrinth.com/mod/worst-luck-possible/version/1.0.0)
 - **Creator's original video:** [Is it possible to beat Minecraft with only bad RNG?](https://www.youtube.com/watch?v=LYmyuoRJecA)
 - **Creator's channel:** [HeppeGaming](https://youtube.com/c/HeppeGaming)
-- **Source URL embedded in the original JAR:** [FabricMC/worst-luck-possible](https://github.com/FabricMC/worst-luck-possible)
 - **Original target:** Minecraft 1.16.1 with Fabric
 
 The original Modrinth listing describes the project as making Minecraft as difficult as possible without adding outcomes that are impossible in vanilla. The listing currently identifies the project as MIT-licensed, while the metadata embedded in the supplied 1.0.0 JAR declares CC0-1.0.
