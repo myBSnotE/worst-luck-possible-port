@@ -42,16 +42,13 @@ The mod works on dedicated servers and supports multiple players. The original M
 - Mob and block loot rolls choose the smallest possible result.
 - Gravel never drops flint.
 - Piglin bartering always gives two magma cream.
-- Fresh block drops fly away from the nearest player; manually thrown items keep their normal throw direction.
-- Equipment drops are suppressed.
+- Block drops scatter away from the nearest player.
 
 ### Hostile mobs
 
-- Zombies and zombie variants are always babies.
-- Zombies receive difficulty-aware equipment and weapons.
-- Drowned always carry tridents.
-- Every spider becomes a spider jockey; on Hard the rider is invisible.
+- Zombies and their variants always spawn as babies, wear the strongest equipment possible in vanilla, and are leaders.
 - Zombie leaders reliably call reinforcements when damaged on Hard.
+- Every spider becomes a spider jockey; on Hard the rider is invisible.
 - Endermen teleport along the direction the player is looking.
 - The Ender Dragon does not perch and keeps an unfavorable flight height.
 - Hostile mobs actively path toward nearby players.
@@ -63,13 +60,11 @@ The mod works on dedicated servers and supports multiple players. The original M
 - Hostile mobs spawn in the largest practical packs with additional spawn attempts.
 - Natural hostile spawns are kept close to a valid nearby player while retaining normal block, light, biome and collision checks.
 - Drowned are made more common through hostile spawn substitution.
-- Distant hostile mobs no longer permanently occupy the mob cap.
 
 ### Other
 
 - Projectiles receive strongly randomized inaccuracy.
 - Thunderstorms begin frequently, with lightning attempts across loaded chunks.
-- The fixed-world-seed feature from the original mod is intentionally omitted.
 
 ## Additions and changes in this port
 
