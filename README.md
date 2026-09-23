@@ -68,10 +68,14 @@ The mod works on dedicated servers and supports multiple players. The original M
 
 ## Additions and changes in this port
 
-### Adaptive hostile mob-cap replacement
+### Close spawning and adaptive hostile mob-cap replacement
+
+While the hostile mob count is below the normal cap, no existing mob is removed: ordinary natural spawn attempts continue and the proximity logic tries to place valid hostile spawns close to a nearby player, normally within **24–32 blocks**. All normal block, light, biome, collision and spawn-restriction checks still apply, so spawning can occur farther away when no close position is valid.
 
 When the hostile mob cap is full, the mod may temporarily allow a valid close spawn. Only after that spawn succeeds does it remove the farthest eligible hostile between 32 and 128 blocks from its nearest player.
 
+- Below the cap, new close mobs can spawn without deleting an existing mob.
+- At the cap, a distant mob is removed only after a valid closer replacement has actually spawned.
 - Nothing is removed if a valid closer replacement cannot spawn.
 - Named, persistent and otherwise protected mobs are never selected.
 - Distance is always measured to each mob's **nearest player**, so multiplayer users cannot cause mobs to disappear in front of one another.
@@ -194,10 +198,14 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 ## Дополнения и изменения порта
 
-### Адаптивная замена мобов при заполненном моб-капе
+### Близкий спавн и адаптивная замена мобов при заполненном моб-капе
+
+Пока количество враждебных мобов ниже обычного моб-капа, существующие мобы не удаляются: обычные попытки естественного спавна продолжаются, а логика близкого спавна старается разместить подходящих врагов рядом с игроком — обычно на расстоянии **24–32 блоков**. Все обычные проверки блоков, освещения, биома, столкновений и ограничений спавна сохраняются, поэтому при отсутствии подходящей близкой позиции мобы могут появляться дальше.
 
 Когда моб-кап враждебных существ заполнен, мод может временно разрешить корректную попытку близкого спавна. Только после успешного появления нового моба удаляется самый далёкий подходящий враг, находящийся на расстоянии от 32 до 128 блоков от ближайшего к нему игрока.
 
+- Пока моб-кап не заполнен, новые близкие мобы появляются без удаления существующего моба.
+- При заполненном моб-капе дальний моб удаляется только после фактического успешного появления более близкой замены.
 - Если более близкого моба нельзя заспавнить, никто не удаляется.
 - Именованные, постоянные и иным образом защищённые мобы никогда не выбираются для удаления.
 - Расстояние всегда считается до **ближайшего к конкретному мобу игрока**, поэтому в мультиплеере один игрок не может вызвать исчезновение моба перед другим.
