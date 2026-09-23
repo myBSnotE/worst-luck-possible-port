@@ -15,6 +15,7 @@
 		"loot.RandomChanceWithEnchantedBonusLootConditionMixin",
 		"loot.TableBonusLootConditionMixin",
 		"loot.UniformLootNumberProviderMixin",
+		"mob.DrownedChickenJockeyMixin",
 		"mob.DrownedTridentMixin",
 		"mob.EndermanTeleportMixin",
 		"mob.MobEquipmentRngMixin",
