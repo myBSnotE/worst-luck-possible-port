@@ -47,7 +47,7 @@ The mod works on dedicated servers and supports multiple players. The original M
 ### Hostile mobs
 
 - Zombies and their variants always spawn as babies, wear the strongest equipment possible in vanilla, and are leaders.
-- Zombie leaders reliably call reinforcements when damaged on Hard.
+- Zombie leaders reliably call reinforcements when damaged on Hard, unless the relevant player already has at least 140 living mobs within 128 blocks.
 - Every spider becomes a spider jockey; on Hard the rider is invisible.
 - Endermen teleport along the direction the player is looking.
 - The Ender Dragon does not perch and keeps an unfavorable flight height.
@@ -134,7 +134,7 @@ Each eligible player receives a pack of **four phantoms**, spawning **20–34 bl
 The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
 
 ```text
-dist/worst-luck-possible-2.0.3.jar
+dist/worst-luck-possible-2.0.4.jar
 ```
 
 End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
@@ -194,7 +194,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 ### Враждебные мобы
 
 - Зомби и их разновидности всегда появляются детьми, в максимально сильной экипировке, какая возможна в ванилле, и являются лидерами.
-- Зомби-лидеры гарантированно вызывают подкрепление при получении урона на высокой сложности.
+- Зомби-лидеры гарантированно вызывают подкрепление при получении урона на высокой сложности, если только в радиусе 128 блоков от соответствующего игрока ещё нет 140 живых мобов.
 - Каждый паук появляется с наездником; на высокой сложности наездник невидим.
 - Эндермены телепортируются вдоль направления взгляда игрока.
 - Дракон Края не садится и сохраняет невыгодную для игрока высоту полёта.
@@ -281,7 +281,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
 
 ```text
-dist/worst-luck-possible-2.0.3.jar
+dist/worst-luck-possible-2.0.4.jar
 ```
 
 Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
