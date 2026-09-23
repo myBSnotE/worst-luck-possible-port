@@ -64,7 +64,7 @@ The mod works on dedicated servers and supports multiple players. The original M
 ### Other
 
 - Projectiles receive strongly randomized inaccuracy.
-- Thunderstorms begin frequently, with lightning attempts across loaded chunks.
+- Thunderstorms begin frequently, with lightning attempts across loaded chunks. Operators can temporarily reduce those attempts by 20× for the current server session.
 
 ## Additions and changes in this port
 
@@ -91,6 +91,10 @@ Hostiles between 32 and 128 blocks are temporarily protected from vanilla random
 - The 45%/55% hysteresis prevents rapid switching around a single threshold.
 - Protection is disabled above 140 eligible hostiles per player as an emergency performance limit.
 - Vanilla immediate despawning at 128 blocks is unchanged.
+
+### Lightning-rate control
+
+Operators can use `/worstluck lightning reduced` to change each ticking chunk from one lightning attempt every tick to a **5% chance per tick** — an average 20× reduction. `/worstluck lightning full` restores the original every-tick behavior, and `/worstluck lightning` shows the current mode. The setting is temporary and resets to full intensity when the world is reopened or the dedicated server restarts.
 
 ### Worst-luck fishing and temporary debug override
 
@@ -134,7 +138,7 @@ Each eligible player receives a pack of **four phantoms**, spawning **20–34 bl
 The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
 
 ```text
-dist/worst-luck-possible-2.0.4.jar
+dist/worst-luck-possible-2.0.5.jar
 ```
 
 End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
@@ -211,7 +215,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 ### Прочее
 
 - Снаряды получают сильно рандомизированную неточность.
-- Грозы начинаются часто, а в загруженных чанках регулярно предпринимаются попытки удара молнии.
+- Грозы начинаются часто, а в загруженных чанках регулярно предпринимаются попытки удара молнии. Оператор может временно снизить частоту этих попыток в 20 раз для текущей серверной сессии.
 
 ## Дополнения и изменения порта
 
@@ -238,6 +242,10 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 - Гистерезис 45%/55% предотвращает постоянное переключение около одного порога.
 - При количестве свыше 140 подходящих враждебных мобов на игрока защита отключается как аварийное ограничение производительности.
 - Мгновенный ванильный деспавн за пределами 128 блоков не изменён.
+
+### Управление частотой молний
+
+Оператор может использовать `/worstluck lightning reduced`, чтобы заменить одну попытку удара в каждом тикающем чанке каждый тик на **5%-й шанс каждый тик** — в среднем это снижение частоты в 20 раз. `/worstluck lightning full` возвращает исходный режим с попыткой каждый тик, а `/worstluck lightning` показывает текущий режим. Настройка временная и сбрасывается на полную интенсивность после повторного открытия мира или перезапуска выделенного сервера.
 
 ### Худшая рыбалка и временное отладочное отключение
 
@@ -281,7 +289,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
 
 ```text
-dist/worst-luck-possible-2.0.4.jar
+dist/worst-luck-possible-2.0.5.jar
 ```
 
 Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
