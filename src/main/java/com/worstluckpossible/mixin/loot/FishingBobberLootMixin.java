@@ -28,8 +28,11 @@ public abstract class FishingBobberLootMixin {
 			return lootTable.generateLoot(lootContext);
 		}
 
+		ItemStack boots = new ItemStack(Items.LEATHER_BOOTS);
+		boots.setDamage(boots.getMaxDamage());
+
 		ObjectArrayList<ItemStack> loot = new ObjectArrayList<>();
-		loot.add(new ItemStack(Items.LEATHER_BOOTS));
+		loot.add(boots);
 		return loot;
 	}
 }
