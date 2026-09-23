@@ -5,11 +5,13 @@
 	"mixins": [
 		"behavior.ItemEntityAwayFromPlayerMixin",
 		"behavior.WanderTowardPlayerMixin",
+		"command.CommandManagerMixin",
 		"dragon.DragonHoldingHeightMixin",
 		"dragon.DragonNoPerchMixin",
 		"dragon.DragonStrafeHeightMixin",
 		"equipment.ProjectileInaccuracyMixin",
 		"loot.BinomialWithBonusCountMixin",
+		"loot.FishingBobberLootMixin",
 		"loot.MobEntityDropEquipmentMixin",
 		"loot.RandomChanceLootConditionMixin",
 		"loot.RandomChanceWithEnchantedBonusLootConditionMixin",
