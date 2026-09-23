@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - ".github/release-v2.0.0"
+      - ".github/release-v2.0.1"
 
 permissions:
   contents: write
@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Publish v2.0.0
+      - name: Publish v2.0.1
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create v2.0.0 \
-            dist/worst-luck-possible-2.0.0.jar \
+          gh release create v2.0.1 \
+            dist/worst-luck-possible-2.0.1.jar \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
-            --title "Worst Luck Possible 2.0.0 — Minecraft 1.21.11 port" \
-            --notes-file release-notes-v2.0.0.md
+            --title "Worst Luck Possible 2.0.1 — adaptive hostile despawning" \
+            --notes-file release-notes-v2.0.1.md
