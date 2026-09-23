@@ -94,7 +94,7 @@ Hostiles between 32 and 128 blocks are temporarily protected from vanilla random
 
 ### Worst-luck fishing and temporary debug override
 
-By default, every successful fishing catch yields exactly **one pair of leather boots** instead of using the fishing loot table. This removes fishing as an unseeded source of favorable randomness and prevents it from supplying fish, treasure, enchanted books or leather through ordinary fishing loot.
+By default, every successful fishing catch yields exactly **one pair of leather boots with zero remaining durability** instead of using the fishing loot table. This removes fishing as an unseeded source of favorable randomness and prevents it from supplying fish, treasure, enchanted books or leather through ordinary fishing loot.
 
 Operators can temporarily restore vanilla fishing for the current world/server session:
 
@@ -134,7 +134,7 @@ Each eligible player receives a pack of **four phantoms**, spawning **20–34 bl
 The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
 
 ```text
-dist/worst-luck-possible-2.0.2.jar
+dist/worst-luck-possible-2.0.3.jar
 ```
 
 End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
@@ -241,7 +241,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 ### Худшая рыбалка и временное отладочное отключение
 
-По умолчанию каждый успешный улов гарантированно даёт ровно **одну пару кожаных ботинок** вместо использования таблицы рыболовного лута. Это убирает рыбалку как несидированный источник благоприятной случайности и не позволяет получать через обычный рыболовный лут рыбу, сокровища, зачарованные книги или кожу.
+По умолчанию каждый успешный улов гарантированно даёт ровно **одну пару кожаных ботинок с нулевой оставшейся прочностью** вместо использования таблицы рыболовного лута. Это убирает рыбалку как несидированный источник благоприятной случайности и не позволяет получать через обычный рыболовный лут рыбу, сокровища, зачарованные книги или кожу.
 
 Оператор может временно вернуть ванильную рыбалку для текущей сессии мира или сервера:
 
@@ -281,7 +281,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
 
 ```text
-dist/worst-luck-possible-2.0.2.jar
+dist/worst-luck-possible-2.0.3.jar
 ```
 
 Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
