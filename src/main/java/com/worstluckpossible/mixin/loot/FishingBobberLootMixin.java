@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(FishingBobberEntity.class)
 public abstract class FishingBobberLootMixin {
 	@Redirect(
-			method = "generateLoot",
+			method = "use",
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/loot/LootTable;generateLoot(Lnet/minecraft/loot/context/LootWorldContext;)Lit/unimi/dsi/fastutil/objects/ObjectArrayList;"
