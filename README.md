@@ -29,7 +29,7 @@ The original compiled JAR used as the behavioral reference is included at [`wors
 ## Installation
 
 1. Install Fabric Loader for Minecraft 1.21.11.
-2. Download [`dist/worst-luck-possible-2.0.0.jar`](dist/worst-luck-possible-2.0.0.jar).
+2. Open the repository's [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest) and download the latest `worst-luck-possible-*.jar` asset.
 3. Put the JAR into the instance or server `mods` directory.
 4. Start the game or server.
 
@@ -78,6 +78,16 @@ When the hostile mob cap is full, the mod may temporarily allow a valid close sp
 - Replacement work is limited to four mobs per tick to avoid excessive server load.
 - Ordinary immediate despawning remains at 128 blocks; mobs around farms or platforms 64 blocks away are not forcibly deleted.
 
+### Adaptive distant-hostile reservoir
+
+Hostiles between 32 and 128 blocks are temporarily protected from vanilla random despawning while fewer than 45% of the eligible hostiles assigned to their nearest player are within 32 blocks. Normal random despawning resumes after the near share rises above 55%.
+
+- Counts are assigned using each mob's nearest player, making the policy multiplayer-safe.
+- Density is sampled once per second to limit server load.
+- The 45%/55% hysteresis prevents rapid switching around a single threshold.
+- Protection is disabled above 140 eligible hostiles per player as an emergency performance limit.
+- Vanilla immediate despawning at 128 blocks is unchanged.
+
 ### Guaranteed phantom attacks
 
 After a player has avoided sleep for three in-game days, phantom attacks are guaranteed every **1200–1400 ticks** when vanilla-compatible conditions are satisfied:
@@ -103,8 +113,10 @@ Each eligible player receives a pack of **four phantoms**, spawning **20–34 bl
 The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
 
 ```text
-dist/worst-luck-possible-2.0.0.jar
+dist/worst-luck-possible-2.0.1.jar
 ```
+
+End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
 
 The workflow also launches a temporary Fabric dedicated server to catch mixin application failures and startup crashes.
 
@@ -143,7 +155,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 ## Установка
 
 1. Установите Fabric Loader для Minecraft 1.21.11.
-2. Скачайте [`dist/worst-luck-possible-2.0.0.jar`](dist/worst-luck-possible-2.0.0.jar).
+2. Откройте [страницу Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest) репозитория и скачайте последний файл `worst-luck-possible-*.jar`.
 3. Поместите JAR в папку `mods` клиента или сервера.
 4. Запустите игру или сервер.
 
@@ -192,6 +204,16 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 - За один тик заменяется не более четырёх мобов, чтобы избежать чрезмерной нагрузки на сервер.
 - Обычный мгновенный деспавн остаётся на расстоянии 128 блоков; мобы вокруг ферм и платформ в 64 блоках от игрока не удаляются принудительно.
 
+### Адаптивный резерв дальних мобов
+
+Враждебные мобы на расстоянии от 32 до 128 блоков временно защищены от случайного ванильного деспавна, пока менее 45% подходящих врагов, закреплённых за ближайшим игроком, находится в радиусе 32 блоков. Обычный случайный деспавн возобновляется, когда доля ближних мобов превышает 55%.
+
+- Каждый моб учитывается относительно ближайшего игрока, поэтому логика безопасна для мультиплеера.
+- Плотность пересчитывается раз в секунду для снижения нагрузки на сервер.
+- Гистерезис 45%/55% предотвращает постоянное переключение около одного порога.
+- При количестве свыше 140 подходящих враждебных мобов на игрока защита отключается как аварийное ограничение производительности.
+- Мгновенный ванильный деспавн за пределами 128 блоков не изменён.
+
 ### Гарантированные атаки фантомов
 
 Если игрок не спал три игровых дня, атаки фантомов гарантированно происходят каждые **1200–1400 тиков** при выполнении условий, совместимых с ванильной логикой:
@@ -217,8 +239,10 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
 
 ```text
-dist/worst-luck-possible-2.0.0.jar
+dist/worst-luck-possible-2.0.1.jar
 ```
+
+Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
 
 Workflow также запускает временный выделенный Fabric-сервер, чтобы обнаруживать ошибки применения миксинов и сбои при запуске.
 
