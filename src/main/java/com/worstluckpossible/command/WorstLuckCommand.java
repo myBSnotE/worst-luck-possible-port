@@ -2,6 +2,7 @@ package com.worstluckpossible.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.worstluckpossible.feature.FishingLootMode;
+import com.worstluckpossible.feature.LightningRateMode;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -27,6 +28,18 @@ public final class WorstLuckCommand {
 														.executes(context -> setFishingMode(context.getSource(), false))
 										)
 						)
+						.then(
+								CommandManager.literal("lightning")
+										.executes(context -> showLightningMode(context.getSource()))
+										.then(
+												CommandManager.literal("reduced")
+														.executes(context -> setLightningMode(context.getSource(), true))
+										)
+										.then(
+												CommandManager.literal("full")
+														.executes(context -> setLightningMode(context.getSource(), false))
+										)
+						)
 		);
 	}
 
@@ -47,6 +60,28 @@ public final class WorstLuckCommand {
 				() -> Text.literal(vanillaFishing
 						? "Vanilla fishing enabled until the world or server session ends."
 						: "Forced leather boots enabled for fishing."),
+				true
+		);
+		return 1;
+	}
+
+	private static int showLightningMode(ServerCommandSource source) {
+		boolean reduced = LightningRateMode.isReduced(source.getServer());
+		source.sendFeedback(
+				() -> Text.literal(reduced
+						? "Worst Luck lightning: reduced mode (5% chance per ticking chunk each tick)."
+						: "Worst Luck lightning: full mode (every ticking chunk each tick)."),
+				false
+		);
+		return reduced ? 1 : 0;
+	}
+
+	private static int setLightningMode(ServerCommandSource source, boolean reduced) {
+		LightningRateMode.setReduced(source.getServer(), reduced);
+		source.sendFeedback(
+				() -> Text.literal(reduced
+						? "Reduced lightning enabled: 5% chance per ticking chunk each tick until the world or server session ends."
+						: "Full Worst Luck lightning restored: every ticking chunk attempts a strike each tick."),
 				true
 		);
 		return 1;
