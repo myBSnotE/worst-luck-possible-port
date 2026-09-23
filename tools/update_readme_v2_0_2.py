@@ -1,0 +1,58 @@
+from pathlib import Path
+
+path = Path("README.md")
+text = path.read_text()
+
+english_anchor = "### Guaranteed phantom attacks\n"
+english_section = """### Worst-luck fishing and temporary debug override
+
+By default, every successful fishing catch yields exactly **one pair of leather boots** instead of using the fishing loot table. This removes fishing as an unseeded source of favorable randomness and prevents it from supplying fish, treasure, enchanted books or leather through ordinary fishing loot.
+
+Operators can temporarily restore vanilla fishing for the current world/server session:
+
+```text
+/worstluck fishing vanilla
+```
+
+Additional commands:
+
+- `/worstluck fishing` — show the current fishing mode;
+- `/worstluck fishing boots` — immediately restore forced leather boots.
+
+The override is not saved. Forced leather boots are enabled again after closing and reopening a singleplayer world or restarting the dedicated server. On a dedicated server, merely disconnecting a player does not restart the server session. These commands require game-master/operator permission.
+
+"""
+russian_anchor = "### Гарантированные атаки фантомов\n"
+russian_section = """### Худшая рыбалка и временное отладочное отключение
+
+По умолчанию каждый успешный улов гарантированно даёт ровно **одну пару кожаных ботинок** вместо использования таблицы рыболовного лута. Это убирает рыбалку как несидированный источник благоприятной случайности и не позволяет получать через обычный рыболовный лут рыбу, сокровища, зачарованные книги или кожу.
+
+Оператор может временно вернуть ванильную рыбалку для текущей сессии мира или сервера:
+
+```text
+/worstluck fishing vanilla
+```
+
+Дополнительные команды:
+
+- `/worstluck fishing` — показать текущий режим рыбалки;
+- `/worstluck fishing boots` — немедленно снова включить гарантированные кожаные ботинки.
+
+Настройка не сохраняется. После закрытия и повторного открытия одиночного мира или перезапуска выделенного сервера гарантированные ботинки включаются снова. На выделенном сервере простое переподключение игрока не перезапускает серверную сессию. Для команд требуются права оператора или ведущего игры.
+
+"""
+
+if english_section not in text:
+    if english_anchor not in text:
+        raise SystemExit("English README anchor not found")
+    text = text.replace(english_anchor, english_section + english_anchor, 1)
+if russian_section not in text:
+    if russian_anchor not in text:
+        raise SystemExit("Russian README anchor not found")
+    text = text.replace(russian_anchor, russian_section + russian_anchor, 1)
+
+text = text.replace(
+    "dist/worst-luck-possible-2.0.1.jar",
+    "dist/worst-luck-possible-2.0.2.jar",
+)
+path.write_text(text)
