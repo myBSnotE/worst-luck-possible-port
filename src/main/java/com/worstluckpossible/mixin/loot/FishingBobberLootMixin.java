@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootWorldContext;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -34,5 +36,18 @@ public abstract class FishingBobberLootMixin {
 		ObjectArrayList<ItemStack> loot = new ObjectArrayList<>();
 		loot.add(boots);
 		return loot;
+	}
+
+	@Redirect(
+			method = "tickFishingLogic",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/util/math/MathHelper;nextInt(Lnet/minecraft/util/math/random/Random;II)I"
+			)
+	)
+	private int worstluck$maximizeRandomWait(Random random, int min, int max) {
+		// Only replace the initial 100..600-tick waiting roll. Rain, sky access,
+		// Lure and all later fishing phases retain their vanilla influence.
+		return min == 100 && max == 600 ? max : MathHelper.nextInt(random, min, max);
 	}
 }
