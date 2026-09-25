@@ -18,6 +18,7 @@ public final class MobPressureCache {
 	public static final double NEAR_DISTANCE_SQUARED = 32.0D * 32.0D;
 	public static final double HARD_DISTANCE_SQUARED = 128.0D * 128.0D;
 	private static final int CACHE_TICKS = 20;
+	private static final int MIN_DISTANT_RESERVOIR_POPULATION = 8;
 	private static final Map<ServerWorld, Map<UUID, Snapshot>> CACHE = new WeakHashMap<>();
 
 	private MobPressureCache() {}
@@ -81,7 +82,9 @@ public final class MobPressureCache {
 	public record Snapshot(long sampleTick, int totalMobs, int persistentMobs, int totalHostiles,
 			int nearHostiles, MobEntity farthestReplaceable) {
 		public boolean protectsDistantReservoir(boolean previouslyProtected) {
-			if (totalHostiles == 0 || totalHostiles > 140) return false;
+			// A lone fallback spawn must retain vanilla despawning so an empty cap can
+			// repeatedly reseed and search for a better, closer location.
+			if (totalHostiles < MIN_DISTANT_RESERVOIR_POPULATION || totalHostiles > 140) return false;
 			double ratio = (double) nearHostiles / (double) totalHostiles;
 			return previouslyProtected ? ratio <= 0.55D : ratio < 0.45D;
 		}

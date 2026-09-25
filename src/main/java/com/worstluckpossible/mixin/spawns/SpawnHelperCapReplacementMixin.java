@@ -38,9 +38,16 @@ public class SpawnHelperCapReplacementMixin {
 
 	@Inject(method = "run", at = @At("RETURN"))
 	private void worstluck$replaceFarthestHostile(MobEntity spawned, Chunk chunk, CallbackInfo ci) {
-		if (!worstluck$replacementMode || spawned.getType().getSpawnGroup() != SpawnGroup.MONSTER
+		if (spawned.getType().getSpawnGroup() != SpawnGroup.MONSTER
 				|| !(spawned.getEntityWorld() instanceof ServerWorld world)) return;
 		PlayerEntity player = world.getClosestPlayer(spawned, -1.0D);
+
+		if (!worstluck$replacementMode) {
+			// Make the proximity gate observe a successful seed spawn immediately instead
+			// of continuing to use an empty one-second density snapshot for a full pack.
+			if (player != null) MobPressureCache.invalidate(world, player);
+			return;
+		}
 		if (player == null) {
 			spawned.remove(Entity.RemovalReason.DISCARDED);
 			worstluck$replacementCount = 4;
