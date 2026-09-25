@@ -96,7 +96,7 @@ Hostiles between 32 and 128 blocks are temporarily protected from vanilla random
 
 Operators can use `/worstluck lightning reduced` to change each ticking chunk from one lightning attempt every tick to a **5% chance per tick** — an average 20× reduction. `/worstluck lightning full` restores the original every-tick behavior, and `/worstluck lightning` shows the current mode. The setting is temporary and resets to full intensity when the world is reopened or the dedicated server restarts.
 
-Skeleton-horse traps are now created only when the final lightning position is in the same chunk as a living non-spectator player and that player is within **10 blocks** of the strike. When those conditions are met, the trap spawn is guaranteed instead of using local-difficulty randomness. The creating lightning bolt remains cosmetic, so it cannot kill the trap horse; the nearby player activates the rider ambush on the following tick. `doMobSpawning` and lightning rods are still respected.
+Skeleton-horse traps are now created only when the final lightning position is in the same chunk as a living non-spectator player and that player is within **10 blocks** of the strike. When those conditions are met, the trap spawn is guaranteed instead of using local-difficulty randomness. The creating lightning bolt remains cosmetic, so it cannot kill the trap horse; the nearby player activates the rider ambush on the following tick. `doMobSpawning` and lightning rods are still respected. New traps are suppressed when that player already has **96 or more living persistent/non-despawning mobs within 128 loaded blocks**. The lightning strike itself still occurs normally; only the additional trap group is skipped.
 
 ### Worst-luck fishing and temporary debug override
 
@@ -151,7 +151,7 @@ Automatic wandering-trader spawning (including its trader llamas) is disabled. E
 
 ### Experimental 2.2.0 beta mechanics
 
-Version **2.2.0-beta.1** is intentionally published as a prerelease. The breadth of the AI, raid, entity and teleport changes requires multiplayer and long-session testing before a stable 2.2.0 release.
+Version **2.2.0-beta.2** is intentionally published as a prerelease. The breadth of the AI, raid, entity and teleport changes requires multiplayer and long-session testing before a stable 2.2.0 release.
 
 - Spiders on Hard receive permanent Speed I. Because every spider is a jockey, this helps the skeleton rider close distance instead of duplicating its already high damage.
 - Naturally spawned slimes and magma cubes use the largest vanilla natural size.
@@ -159,6 +159,7 @@ Version **2.2.0-beta.1** is intentionally published as a prerelease. The breadth
 - Naturally generated horses use the vanilla minimums: 15 health, 0.1125 movement speed and 0.4 jump strength. Bred horse-family children also receive these minimums; naturally generated donkeys receive the minimum random health while retaining their fixed vanilla movement and jump attributes.
 - Zombies on Hard always break doors when their navigation supports it. Reinforcement coordinates are biased toward a nearby relevant player while retaining vanilla spawn, collision, fluid and minimum-distance validation.
 - Raid bonus rolls always choose their vanilla maximum. After each wave, one additional witch can join only when a distant non-persistent hostile can be replaced one-for-one. Raid members and protected mobs are never selected, so the swap does not inflate the entity count.
+- While an active wave has two or fewer raiders, the mod attempts to refill it with one witch at a time. Each batch checks up to 64 locations within 32 blocks of a nearby player, requiring low light (7 or less), a solid floor, two free blocks, loaded/ticking terrain, vanilla witch spawn validation, and proximity to the occupied village. A successful refill raises the wave above the low-raider threshold; killing another raider starts another batch. The wave may finish only after all 64 candidates in a batch fail.
 - Chorus fruit still generates sixteen candidates inside its vanilla 16-block diameter and uses the ordinary teleport validator, but tries the candidates from most dangerous to least dangerous. Darkness, nearby hostiles, hazards, drops, lower elevation and displacement affect the ranking; a random tie component prevents deterministic control.
 - Skeleton-horse riders inherit the same maximum bow and armor enchantment policy as other equipped hostile mobs.
 - Hostile density, reinforcement limits, distant-reservoir decisions and cap replacement share a one-second cache. Player-seeking mobs share a bounded, staggered path-search budget rather than recalculating paths together.
@@ -179,7 +180,7 @@ Testing priorities: multiplayer density around separate players, raids through e
 The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
 
 ```text
-dist/worst-luck-possible-2.2.0-beta.1.jar
+dist/worst-luck-possible-2.2.0-beta.2.jar
 ```
 
 End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
@@ -288,7 +289,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 Оператор может использовать `/worstluck lightning reduced`, чтобы заменить одну попытку удара в каждом тикающем чанке каждый тик на **5%-й шанс каждый тик** — в среднем это снижение частоты в 20 раз. `/worstluck lightning full` возвращает исходный режим с попыткой каждый тик, а `/worstluck lightning` показывает текущий режим. Настройка временная и сбрасывается на полную интенсивность после повторного открытия мира или перезапуска выделенного сервера.
 
-Лошадь-ловушка теперь создаётся только тогда, когда конечная точка удара молнии находится в том же чанке, что и живой игрок не в режиме наблюдателя, а сам игрок находится не дальше **10 блоков** от удара. При выполнении условий ловушка появляется гарантированно, без случайности локальной сложности. Создавшая её молния остаётся декоративной и не может убить лошадь; находящийся рядом игрок активирует появление всадников на следующем тике. Правило `doMobSpawning` и громоотводы по-прежнему учитываются.
+Лошадь-ловушка теперь создаётся только тогда, когда конечная точка удара молнии находится в том же чанке, что и живой игрок не в режиме наблюдателя, а сам игрок находится не дальше **10 блоков** от удара. При выполнении условий ловушка появляется гарантированно, без случайности локальной сложности. Создавшая её молния остаётся декоративной и не может убить лошадь; находящийся рядом игрок активирует появление всадников на следующем тике. Правило `doMobSpawning` и громоотводы по-прежнему учитываются. Новая ловушка не создаётся, если в загруженной области радиусом 128 блоков вокруг этого игрока уже есть **96 или больше живых персистирующих либо недеспавнящихся мобов**. Сама молния при этом ударяет как обычно — пропускается только дополнительная группа ловушки.
 
 ### Худшая рыбалка и временное отладочное отключение
 
@@ -343,7 +344,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 ### Экспериментальные механики беты 2.2.0
 
-Версия **2.2.0-beta.1** намеренно публикуется как предварительная. Изменения ИИ, рейдов, сущностей и телепортации требуют длительного тестирования, особенно в мультиплеере, прежде чем появится стабильная 2.2.0.
+Версия **2.2.0-beta.2** намеренно публикуется как предварительная. Изменения ИИ, рейдов, сущностей и телепортации требуют длительного тестирования, особенно в мультиплеере, прежде чем появится стабильная 2.2.0.
 
 - Пауки на высокой сложности получают постоянную Скорость I. Поскольку каждый паук несёт скелета, ускорение помогает всаднику догнать игрока вместо лишнего усиления и без того большого урона.
 - Естественно появившиеся слизни и магмовые кубы получают максимальный ванильный естественный размер.
@@ -351,6 +352,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 - Естественные лошади получают ванильные минимумы: 15 здоровья, скорость 0,1125 и силу прыжка 0,4. Потомки семейства лошадей также получают эти минимумы; естественные ослы получают минимальное случайное здоровье, сохраняя фиксированные ванильные скорость и прыжок.
 - На высокой сложности зомби всегда ломают двери, если это поддерживает их навигация. Координаты подкреплений смещаются ближе к соответствующему игроку, но ванильные проверки места, столкновений, жидкостей и минимальной дистанции сохраняются.
 - Бонусный состав рейда всегда получает ванильный максимум. После каждой волны может присоединиться одна дополнительная ведьма, но только при возможности заменить дальнего непостоянного врага один к одному. Участники рейда и защищённые мобы не удаляются, поэтому общее число сущностей не растёт.
+- Пока в активной волне осталось не более двух налётчиков, мод пытается пополнять её одной ведьмой. Каждый пакет проверяет до 64 точек в радиусе 32 блоков от ближайшего игрока: освещение не выше 7, плотный пол, два свободных блока, загруженная и тикающая область, ванильная проверка спавна ведьмы и близость к занятой деревне. Успешный спавн поднимает число участников выше порога; после убийства следующего налётчика начинается новый пакет. Волна может завершиться только после провала всех 64 кандидатов одного пакета.
 - Плод хоруса по-прежнему создаёт 16 кандидатов внутри ванильного диаметра 16 блоков и использует обычную проверку телепортации, но пробует точки от самой опасной к наименее опасной. Учитываются темнота, ближайшие враги, опасные блоки, обрывы, понижение высоты и удаление; случайная добавка не даёт полностью контролировать результат.
 - Всадники лошадей-ловушек получают ту же политику максимальных зачарований лука и брони, что и остальные экипированные враждебные мобы.
 - Плотность врагов, лимит подкреплений, защита дальнего резерва и замена при моб-капе используют общий секундный кэш. Идущие к игроку мобы делят ограниченный и распределённый по тикам бюджет поиска пути.
@@ -371,7 +373,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
 
 ```text
-dist/worst-luck-possible-2.2.0-beta.1.jar
+dist/worst-luck-possible-2.2.0-beta.2.jar
 ```
 
 Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
