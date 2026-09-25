@@ -31,7 +31,6 @@
 		"mob.HorseWorstAttributesMixin$Breeding",
 		"mob.HorseWorstAttributesMixin$DonkeyInitialization",
 		"mob.HorseWorstAttributesMixin$HorseInitialization",
-		"mob.MobArmorNeverBreaksMixin",
 		"mob.MobEquipmentRngMixin",
 		"mob.MobSunHelmetMixin",
 		"mob.PiglinBarterMixin",

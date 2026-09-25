@@ -11,6 +11,7 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -55,10 +56,16 @@ public class WorstMobEnchantmentsMixin {
 		} else if (weapon.isOf(Items.CROSSBOW)) {
 			worstluck$add(world, weapon, Enchantments.QUICK_CHARGE, 3);
 			worstluck$add(world, weapon, Enchantments.PIERCING, 4);
-		} else {
+		} else if (weapon.isIn(ItemTags.SWORDS)) {
 			worstluck$add(world, weapon, Enchantments.SHARPNESS, 5);
 			worstluck$add(world, weapon, Enchantments.FIRE_ASPECT, 2);
 			worstluck$add(world, weapon, Enchantments.KNOCKBACK, 2);
+		} else if (weapon.isIn(ItemTags.AXES)) {
+			worstluck$add(world, weapon, Enchantments.SHARPNESS, 5);
+		} else if (weapon.isOf(Items.TRIDENT)) {
+			worstluck$add(world, weapon, Enchantments.IMPALING, 5);
+			worstluck$add(world, weapon, Enchantments.LOYALTY, 3);
+			worstluck$add(world, weapon, Enchantments.CHANNELING, 1);
 		}
 	}
 
