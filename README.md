@@ -96,6 +96,8 @@ Hostiles between 32 and 128 blocks are temporarily protected from vanilla random
 
 Operators can use `/worstluck lightning reduced` to change each ticking chunk from one lightning attempt every tick to a **5% chance per tick** — an average 20× reduction. `/worstluck lightning full` restores the original every-tick behavior, and `/worstluck lightning` shows the current mode. The setting is temporary and resets to full intensity when the world is reopened or the dedicated server restarts.
 
+Skeleton-horse traps are now created only when the final lightning position is in the same chunk as a living non-spectator player and that player is within **10 blocks** of the strike. When those conditions are met, the trap spawn is guaranteed instead of using local-difficulty randomness. The creating lightning bolt remains cosmetic, so it cannot kill the trap horse; the nearby player activates the rider ambush on the following tick. `doMobSpawning` and lightning rods are still respected.
+
 ### Worst-luck fishing and temporary debug override
 
 By default, every successful fishing catch yields exactly **one pair of leather boots with zero remaining durability** instead of using the fishing loot table. This removes fishing as an unseeded source of favorable randomness and prevents it from supplying fish, treasure, enchanted books or leather through ordinary fishing loot.
@@ -159,7 +161,7 @@ Automatic wandering-trader spawning (including its trader llamas) is disabled. E
 The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
 
 ```text
-dist/worst-luck-possible-2.1.0.jar
+dist/worst-luck-possible-2.1.1.jar
 ```
 
 End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
@@ -268,6 +270,8 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 Оператор может использовать `/worstluck lightning reduced`, чтобы заменить одну попытку удара в каждом тикающем чанке каждый тик на **5%-й шанс каждый тик** — в среднем это снижение частоты в 20 раз. `/worstluck lightning full` возвращает исходный режим с попыткой каждый тик, а `/worstluck lightning` показывает текущий режим. Настройка временная и сбрасывается на полную интенсивность после повторного открытия мира или перезапуска выделенного сервера.
 
+Лошадь-ловушка теперь создаётся только тогда, когда конечная точка удара молнии находится в том же чанке, что и живой игрок не в режиме наблюдателя, а сам игрок находится не дальше **10 блоков** от удара. При выполнении условий ловушка появляется гарантированно, без случайности локальной сложности. Создавшая её молния остаётся декоративной и не может убить лошадь; находящийся рядом игрок активирует появление всадников на следующем тике. Правило `doMobSpawning` и громоотводы по-прежнему учитываются.
+
 ### Худшая рыбалка и временное отладочное отключение
 
 По умолчанию каждый успешный улов гарантированно даёт ровно **одну пару кожаных ботинок с нулевой оставшейся прочностью** вместо использования таблицы рыболовного лута. Это убирает рыбалку как несидированный источник благоприятной случайности и не позволяет получать через обычный рыболовный лут рыбу, сокровища, зачарованные книги или кожу.
@@ -331,7 +335,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
 
 ```text
-dist/worst-luck-possible-2.1.0.jar
+dist/worst-luck-possible-2.1.1.jar
 ```
 
 Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
