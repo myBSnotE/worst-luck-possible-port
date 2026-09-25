@@ -10,7 +10,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.raid.RaiderEntity;
 import net.minecraft.server.world.ServerWorld;
 
-/** One-second per-player density snapshot shared by all expensive hostile policies. */
+/**
+ * One-second per-player density snapshot shared by despawning, reinforcements,
+ * cap replacement, raid swaps, and the adaptive beta event budget.
+ */
 public final class MobPressureCache {
 	public static final double NEAR_DISTANCE_SQUARED = 32.0D * 32.0D;
 	public static final double HARD_DISTANCE_SQUARED = 128.0D * 128.0D;
