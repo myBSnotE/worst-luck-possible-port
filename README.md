@@ -48,7 +48,7 @@ The mod works on dedicated servers and supports multiple players. The original M
 
 - Zombies and their variants always spawn as babies, wear the strongest equipment possible in vanilla, and are leaders.
 - Zombie leaders reliably call reinforcements when damaged on Hard, unless the relevant player already has at least 140 living mobs within 128 blocks.
-- Every spider becomes a spider jockey; on Hard the rider is invisible.
+- Every spider becomes a spider jockey; on Hard the spider has permanent Speed I and the rider is invisible.
 - Endermen teleport along the direction the player is looking.
 - The Ender Dragon does not perch and keeps an unfavorable flight height.
 - Hostile mobs actively path toward nearby players.
@@ -79,7 +79,7 @@ When the hostile mob cap is full, the mod may temporarily allow a valid close sp
 - Nothing is removed if a valid closer replacement cannot spawn.
 - Named, persistent and otherwise protected mobs are never selected.
 - Distance is always measured to each mob's **nearest player**, so multiplayer users cannot cause mobs to disappear in front of one another.
-- Replacement work is limited to four mobs per tick to avoid excessive server load.
+- Replacement work is limited to at most four mobs per tick and automatically drops to two, one or zero as nearby entity pressure rises.
 - Ordinary immediate despawning remains at 128 blocks; mobs around farms or platforms 64 blocks away are not forcibly deleted.
 
 ### Adaptive distant-hostile reservoir
@@ -149,6 +149,24 @@ Trades already stored on existing villagers are not rewritten, because doing so 
 
 Automatic wandering-trader spawning (including its trader llamas) is disabled. Existing traders, `/summon`, and spawn eggs are not affected.
 
+### Experimental 2.2.0 beta mechanics
+
+Version **2.2.0-beta.1** is intentionally published as a prerelease. The breadth of the AI, raid, entity and teleport changes requires multiplayer and long-session testing before a stable 2.2.0 release.
+
+- Spiders on Hard receive permanent Speed I. Because every spider is a jockey, this helps the skeleton rider close distance instead of duplicating its already high damage.
+- Naturally spawned slimes and magma cubes use the largest vanilla natural size.
+- Spawned mob armor receives Protection IV and Thorns III. Bows receive Power V, Punch II and Flame I; crossbows receive Quick Charge III and Piercing IV; melee weapons receive maximum combat enchantments appropriate to the current implementation.
+- Naturally generated horses use the vanilla minimums: 15 health, 0.1125 movement speed and 0.4 jump strength. Bred horse-family children also receive these minimums; naturally generated donkeys receive the minimum random health while retaining their fixed vanilla movement and jump attributes.
+- Zombies on Hard always break doors when their navigation supports it. Reinforcement coordinates are biased toward a nearby relevant player while retaining vanilla spawn, collision, fluid and minimum-distance validation.
+- Raid bonus rolls always choose their vanilla maximum. After each wave, one additional witch can join only when a distant non-persistent hostile can be replaced one-for-one. Raid members and protected mobs are never selected, so the swap does not inflate the entity count.
+- Chorus fruit still generates sixteen candidates inside its vanilla 16-block diameter and uses the ordinary teleport validator, but tries the candidates from most dangerous to least dangerous. Darkness, nearby hostiles, hazards, drops, lower elevation and displacement affect the ranking; a random tie component prevents deterministic control.
+- Skeleton-horse riders inherit the same maximum bow and armor enchantment policy as other equipped hostile mobs.
+- Hostile density, reinforcement limits, distant-reservoir decisions and cap replacement share a one-second cache. Player-seeking mobs share a bounded, staggered path-search budget rather than recalculating paths together.
+- Lightning intensity is deliberately unchanged. Full mode continues to create the intended environmental destruction; the existing temporary 20× reduction command remains available to operators.
+- Patrol spawning remains vanilla in this beta because guaranteeing captains would also guarantee a useful ominous-bottle source.
+
+Testing priorities: multiplayer density around separate players, raids through every difficulty and wave, zombie reinforcement placement, horse breeding, chorus fruit in caves/Nether/End, skeleton traps, and long thunder sessions.
+
 ### Modernized implementation
 
 - Ported mixins and mappings to Minecraft 1.21.11/Yarn.
@@ -161,7 +179,7 @@ Automatic wandering-trader spawning (including its trader llamas) is disabled. E
 The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
 
 ```text
-dist/worst-luck-possible-2.1.1.jar
+dist/worst-luck-possible-2.2.0-beta.1.jar
 ```
 
 End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
@@ -222,7 +240,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 - Зомби и их разновидности всегда появляются детьми, в максимально сильной экипировке, какая возможна в ванилле, и являются лидерами.
 - Зомби-лидеры гарантированно вызывают подкрепление при получении урона на высокой сложности, если только в радиусе 128 блоков от соответствующего игрока ещё нет 140 живых мобов.
-- Каждый паук появляется с наездником; на высокой сложности наездник невидим.
+- Каждый паук появляется с наездником; на высокой сложности паук получает постоянную Скорость I, а наездник становится невидимым.
 - Эндермены телепортируются вдоль направления взгляда игрока.
 - Дракон Края не садится и сохраняет невыгодную для игрока высоту полёта.
 - Враждебные мобы активно прокладывают путь к ближайшим игрокам.
@@ -253,7 +271,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 - Если более близкого моба нельзя заспавнить, никто не удаляется.
 - Именованные, постоянные и иным образом защищённые мобы никогда не выбираются для удаления.
 - Расстояние всегда считается до **ближайшего к конкретному мобу игрока**, поэтому в мультиплеере один игрок не может вызвать исчезновение моба перед другим.
-- За один тик заменяется не более четырёх мобов, чтобы избежать чрезмерной нагрузки на сервер.
+- За один тик заменяется не более четырёх мобов; при росте числа ближайших сущностей бюджет автоматически снижается до двух, одной или нуля замен.
 - Обычный мгновенный деспавн остаётся на расстоянии 128 блоков; мобы вокруг ферм и платформ в 64 блоках от игрока не удаляются принудительно.
 
 ### Адаптивный резерв дальних мобов
@@ -323,6 +341,24 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 Автоматический спавн странствующего торговца и его лам отключён. Уже существующие торговцы, команда `/summon` и яйца призыва не затрагиваются.
 
+### Экспериментальные механики беты 2.2.0
+
+Версия **2.2.0-beta.1** намеренно публикуется как предварительная. Изменения ИИ, рейдов, сущностей и телепортации требуют длительного тестирования, особенно в мультиплеере, прежде чем появится стабильная 2.2.0.
+
+- Пауки на высокой сложности получают постоянную Скорость I. Поскольку каждый паук несёт скелета, ускорение помогает всаднику догнать игрока вместо лишнего усиления и без того большого урона.
+- Естественно появившиеся слизни и магмовые кубы получают максимальный ванильный естественный размер.
+- Броня заспавненных мобов получает Защиту IV и Шипы III. Луки получают Силу V, Откидывание II и Горящую стрелу I; арбалеты — Быструю перезарядку III и Пронзающую стрелу IV; оружие ближнего боя — максимальные боевые зачарования текущей реализации.
+- Естественные лошади получают ванильные минимумы: 15 здоровья, скорость 0,1125 и силу прыжка 0,4. Потомки семейства лошадей также получают эти минимумы; естественные ослы получают минимальное случайное здоровье, сохраняя фиксированные ванильные скорость и прыжок.
+- На высокой сложности зомби всегда ломают двери, если это поддерживает их навигация. Координаты подкреплений смещаются ближе к соответствующему игроку, но ванильные проверки места, столкновений, жидкостей и минимальной дистанции сохраняются.
+- Бонусный состав рейда всегда получает ванильный максимум. После каждой волны может присоединиться одна дополнительная ведьма, но только при возможности заменить дальнего непостоянного врага один к одному. Участники рейда и защищённые мобы не удаляются, поэтому общее число сущностей не растёт.
+- Плод хоруса по-прежнему создаёт 16 кандидатов внутри ванильного диаметра 16 блоков и использует обычную проверку телепортации, но пробует точки от самой опасной к наименее опасной. Учитываются темнота, ближайшие враги, опасные блоки, обрывы, понижение высоты и удаление; случайная добавка не даёт полностью контролировать результат.
+- Всадники лошадей-ловушек получают ту же политику максимальных зачарований лука и брони, что и остальные экипированные враждебные мобы.
+- Плотность врагов, лимит подкреплений, защита дальнего резерва и замена при моб-капе используют общий секундный кэш. Идущие к игроку мобы делят ограниченный и распределённый по тикам бюджет поиска пути.
+- Интенсивность молний намеренно не уменьшена. Полный режим сохраняет требуемое разрушение окружения; существующая временная команда снижения частоты в 20 раз остаётся доступной операторам.
+- Патрули в этой бете не изменены: гарантированный капитан одновременно гарантировал бы полезный источник зловещих бутылок.
+
+Особенно важно проверить: плотность мобов вокруг разных игроков, все волны рейдов на разных сложностях, позиции подкреплений, разведение лошадей, плод хоруса в пещерах/Незере/Крае, ловушки-лошади и длительные грозы.
+
 ### Современная реализация
 
 - Миксины и маппинги перенесены на Minecraft 1.21.11/Yarn.
@@ -335,7 +371,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
 
 ```text
-dist/worst-luck-possible-2.1.1.jar
+dist/worst-luck-possible-2.2.0-beta.1.jar
 ```
 
 Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
