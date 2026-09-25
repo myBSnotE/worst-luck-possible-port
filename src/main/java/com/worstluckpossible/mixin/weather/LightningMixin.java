@@ -1,17 +1,89 @@
 package com.worstluckpossible.mixin.weather;
 
 import com.worstluckpossible.feature.LightningRateMode;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LightningEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.mob.SkeletonHorseEntity;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.rule.GameRules;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Controls the per-ticking-chunk lightning attempt interval. */
+/** Controls lightning frequency and makes skeleton-horse traps relevant to nearby players. */
 @Mixin(ServerWorld.class)
-public class LightningMixin {
-	@ModifyConstant(method = "tickThunder", constant = @Constant(intValue = 100000), require = 0)
-	private int worstluck$lightningAttemptInterval(int original) {
+public abstract class LightningMixin {
+	private static final double WORSTLUCK_TRAP_TRIGGER_RADIUS = 10.0D;
+	private static final double WORSTLUCK_TRAP_TRIGGER_RADIUS_SQUARED =
+			WORSTLUCK_TRAP_TRIGGER_RADIUS * WORSTLUCK_TRAP_TRIGGER_RADIUS;
+
+	@Shadow
+	protected abstract BlockPos getLightningPos(BlockPos pos);
+
+	@Inject(method = "tickThunder", at = @At("HEAD"), cancellable = true)
+	private void worstluck$controlLightningAndHorseTraps(WorldChunk chunk, int randomTickSpeed, CallbackInfo ci) {
+		ci.cancel();
+
 		ServerWorld world = (ServerWorld) (Object) this;
-		return LightningRateMode.isReduced(world.getServer()) ? 20 : 1;
+		int interval = LightningRateMode.isReduced(world.getServer()) ? 20 : 1;
+		if (!world.isRaining() || !world.isThundering() || world.getRandom().nextInt(interval) != 0) {
+			return;
+		}
+
+		ChunkPos tickingChunk = chunk.getPos();
+		BlockPos randomPos = new BlockPos(
+				tickingChunk.getStartX() + world.getRandom().nextInt(16),
+				0,
+				tickingChunk.getStartZ() + world.getRandom().nextInt(16)
+		);
+		BlockPos lightningPos = this.getLightningPos(randomPos);
+		if (!world.hasRain(lightningPos)) {
+			return;
+		}
+
+		boolean spawnTrap = world.getGameRules().getValue(GameRules.DO_MOB_SPAWNING)
+				&& !world.getBlockState(lightningPos.down()).isIn(BlockTags.LIGHTNING_RODS)
+				&& worstluck$hasNearbyPlayerInStrikeChunk(world, lightningPos);
+
+		if (spawnTrap) {
+			SkeletonHorseEntity horse = EntityType.SKELETON_HORSE.create(world, SpawnReason.EVENT);
+			if (horse != null) {
+				horse.setTrapped(true);
+				horse.setBreedingAge(0);
+				horse.setPosition(lightningPos.getX(), lightningPos.getY(), lightningPos.getZ());
+				world.spawnEntity(horse);
+			}
+		}
+
+		LightningEntity lightning = EntityType.LIGHTNING_BOLT.create(world, SpawnReason.EVENT);
+		if (lightning != null) {
+			lightning.refreshPositionAfterTeleport(Vec3d.ofBottomCenter(lightningPos));
+			// As in vanilla, the bolt that creates a trap is cosmetic so it cannot kill the horse.
+			lightning.setCosmetic(spawnTrap);
+			world.spawnEntity(lightning);
+		}
+	}
+
+	private static boolean worstluck$hasNearbyPlayerInStrikeChunk(ServerWorld world, BlockPos lightningPos) {
+		ChunkPos strikeChunk = new ChunkPos(lightningPos);
+		Vec3d strikeCenter = Vec3d.ofBottomCenter(lightningPos);
+		for (ServerPlayerEntity player : world.getPlayers()) {
+			if (player.isAlive()
+					&& !player.isSpectator()
+					&& player.getChunkPos().equals(strikeChunk)
+					&& player.squaredDistanceTo(strikeCenter) <= WORSTLUCK_TRAP_TRIGGER_RADIUS_SQUARED) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
