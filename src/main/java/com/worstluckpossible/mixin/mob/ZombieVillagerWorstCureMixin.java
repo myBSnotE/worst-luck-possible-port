@@ -1,6 +1,5 @@
 package com.worstluckpossible.mixin.mob;
 
-import java.util.UUID;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
