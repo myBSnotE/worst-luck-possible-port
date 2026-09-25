@@ -1,9 +1,3 @@
-[11:06:05] [main/ERROR]: Mixin prepare for mod worst-luck-possible failed preparing mob.MobArmorNeverBreaksMixin in worst-luck-possible.mixins.json: org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException The specified mixin 'com.worstluckpossible.mixin.mob.MobArmorNeverBreaksMixin' was not found
-org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException: The specified mixin 'com.worstluckpossible.mixin.mob.MobArmorNeverBreaksMixin' was not found
-Caused by: java.lang.ClassNotFoundException: The specified mixin 'com.worstluckpossible.mixin.mob.MobArmorNeverBreaksMixin' was not found
-java.lang.RuntimeException: An exception occurred when launching the server!
-Caused by: java.lang.RuntimeException: Mixin transformation of net.minecraft.server.Main failed
-Caused by: org.spongepowered.asm.mixin.throwables.MixinApplyError: Mixin [worst-luck-possible.mixins.json:mob.MobArmorNeverBreaksMixin from mod worst-luck-possible] from phase [DEFAULT] in config [worst-luck-possible.mixins.json] FAILED during PREPARE
-Caused by: org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException: The specified mixin 'com.worstluckpossible.mixin.mob.MobArmorNeverBreaksMixin' was not found
-Caused by: java.lang.ClassNotFoundException: The specified mixin 'com.worstluckpossible.mixin.mob.MobArmorNeverBreaksMixin' was not found
-SERVER_STARTED=no
+[11:11:08] [Server thread/INFO]: Done (4.057s)! For help, type "help"
+[11:13:20] [Server thread/INFO]: Stopping server
+SERVER_STARTED=yes
