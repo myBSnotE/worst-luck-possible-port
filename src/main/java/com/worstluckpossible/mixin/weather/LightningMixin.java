@@ -30,7 +30,7 @@ public abstract class LightningMixin {
 	protected abstract BlockPos getLightningPos(BlockPos pos);
 
 	@Inject(method = "tickThunder", at = @At("HEAD"), cancellable = true)
-	private void worstluck$controlLightningAndHorseTraps(WorldChunk chunk, int randomTickSpeed, CallbackInfo ci) {
+	private void worstluck$controlLightningAndHorseTraps(WorldChunk chunk, CallbackInfo ci) {
 		ci.cancel();
 
 		ServerWorld world = (ServerWorld) (Object) this;
