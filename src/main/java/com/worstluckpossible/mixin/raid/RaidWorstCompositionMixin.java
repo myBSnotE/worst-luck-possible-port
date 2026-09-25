@@ -23,10 +23,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class RaidWorstCompositionMixin {
 	@Unique private static final int WORSTLUCK_LOW_RAIDER_THRESHOLD = 2;
 	@Unique private static final int WORSTLUCK_REFILL_ATTEMPTS = 64;
+	@Unique private static final int WORSTLUCK_EMPTY_FAILURE_BATCHES = 5;
 	@Unique private static final int WORSTLUCK_REFILL_RADIUS = 32;
 	@Unique private static final int WORSTLUCK_MAX_LIGHT = 7;
 	@Unique private int worstluck$refillWave = -1;
-	@Unique private boolean worstluck$refillExhausted;
+	@Unique private int worstluck$failedEmptyBatches;
+	@Unique private boolean worstluck$allowWaveFinish;
 	@Unique private long worstluck$nextRefillTick;
 
 	@Redirect(method = "getBonusCount", at = @At(value = "INVOKE",
@@ -41,12 +43,12 @@ public class RaidWorstCompositionMixin {
 		int wave = raid.getGroupsSpawned();
 		if (wave <= 0 || raid.isFinished() || !raid.isActive()) return;
 		if (worstluck$refillWave != wave) {
-			worstluck$refillWave = wave;
-			worstluck$refillExhausted = false;
-			worstluck$nextRefillTick = 0L;
+			worstluck$resetRefillState(wave, 0L);
 		}
-		if (worstluck$refillExhausted
-				|| raid.getRaiderCount() > WORSTLUCK_LOW_RAIDER_THRESHOLD
+
+		int raiderCount = raid.getRaiderCount();
+		if (worstluck$allowWaveFinish
+				|| raiderCount > WORSTLUCK_LOW_RAIDER_THRESHOLD
 				|| world.getTime() < worstluck$nextRefillTick) {
 			return;
 		}
@@ -55,38 +57,39 @@ public class RaidWorstCompositionMixin {
 				raid.getCenter().getX() + 0.5D, raid.getCenter().getY() + 0.5D,
 				raid.getCenter().getZ() + 0.5D, 96.0D, false);
 		if (player == null || !player.isAlive() || player.isSpectator()) {
-			worstluck$refillExhausted = true;
+			// Do not permanently exhaust the wave merely because the player temporarily left.
+			worstluck$nextRefillTick = world.getTime() + 20L;
 			return;
 		}
 
 		BlockPos spawnPos = worstluck$findDarkVillageSpawn(world, raid, player);
 		if (spawnPos == null) {
-			// Every candidate in this refill batch failed, so vanilla may now finish the wave.
-			worstluck$refillExhausted = true;
+			worstluck$handleFailedRefill(world, raiderCount);
 			return;
 		}
 
 		RaiderEntity witch = EntityType.WITCH.create(world, SpawnReason.EVENT);
 		if (witch == null) {
-			worstluck$refillExhausted = true;
+			worstluck$handleFailedRefill(world, raiderCount);
 			return;
 		}
 		raid.addRaider(world, wave, witch, spawnPos, false);
 		if (world.getEntity(witch.getUuid()) != null && witch.isAlive()) {
+			// Success must reopen future refill attempts after this witch is killed.
+			worstluck$failedEmptyBatches = 0;
+			worstluck$allowWaveFinish = false;
 			worstluck$nextRefillTick = world.getTime() + 20L;
 		} else {
 			raid.removeFromWave(world, witch, true);
 			witch.remove(Entity.RemovalReason.DISCARDED);
-			worstluck$refillExhausted = true;
+			worstluck$handleFailedRefill(world, raiderCount);
 		}
 	}
 
 	@Inject(method = "spawnNextWave", at = @At("RETURN"))
 	private void worstluck$replaceDistantHostileWithWitch(ServerWorld world, BlockPos spawnPos, CallbackInfo ci) {
 		Raid raid = (Raid) (Object) this;
-		worstluck$refillWave = raid.getGroupsSpawned();
-		worstluck$refillExhausted = false;
-		worstluck$nextRefillTick = world.getTime() + 20L;
+		worstluck$resetRefillState(raid.getGroupsSpawned(), world.getTime() + 20L);
 
 		PlayerEntity player = world.getClosestPlayer(
 				raid.getCenter().getX() + 0.5D, raid.getCenter().getY() + 0.5D,
@@ -102,6 +105,32 @@ public class RaidWorstCompositionMixin {
 			replacement.remove(Entity.RemovalReason.DISCARDED);
 			MobPressureCache.invalidate(world, player);
 		}
+	}
+
+	@Unique
+	private void worstluck$handleFailedRefill(ServerWorld world, int raiderCount) {
+		if (raiderCount > 0) {
+			// A failed random batch must not disable refills for the rest of the wave.
+			worstluck$nextRefillTick = world.getTime() + 20L;
+			return;
+		}
+
+		// With no raiders left, try several independent 64-position batches before
+		// allowing vanilla's end-of-wave countdown to complete.
+		worstluck$failedEmptyBatches++;
+		if (worstluck$failedEmptyBatches >= WORSTLUCK_EMPTY_FAILURE_BATCHES) {
+			worstluck$allowWaveFinish = true;
+		} else {
+			worstluck$nextRefillTick = world.getTime() + 1L;
+		}
+	}
+
+	@Unique
+	private void worstluck$resetRefillState(int wave, long nextTick) {
+		worstluck$refillWave = wave;
+		worstluck$failedEmptyBatches = 0;
+		worstluck$allowWaveFinish = false;
+		worstluck$nextRefillTick = nextTick;
 	}
 
 	@Unique
