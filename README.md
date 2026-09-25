@@ -151,7 +151,7 @@ Automatic wandering-trader spawning (including its trader llamas) is disabled. E
 
 ### Experimental 2.2.0 beta mechanics
 
-Version **2.2.0-beta.2** is intentionally published as a prerelease. The breadth of the AI, raid, entity and teleport changes requires multiplayer and long-session testing before a stable 2.2.0 release.
+Version **2.2.0-beta.3** is intentionally published as a prerelease. The breadth of the AI, raid, entity and teleport changes requires multiplayer and long-session testing before a stable 2.2.0 release.
 
 - Spiders on Hard receive permanent Speed I. Because every spider is a jockey, this helps the skeleton rider close distance instead of duplicating its already high damage.
 - Naturally spawned slimes and magma cubes use the largest vanilla natural size.
@@ -159,7 +159,7 @@ Version **2.2.0-beta.2** is intentionally published as a prerelease. The breadth
 - Naturally generated horses use the vanilla minimums: 15 health, 0.1125 movement speed and 0.4 jump strength. Bred horse-family children also receive these minimums; naturally generated donkeys receive the minimum random health while retaining their fixed vanilla movement and jump attributes.
 - Zombies on Hard always break doors when their navigation supports it. Reinforcement coordinates are biased toward a nearby relevant player while retaining vanilla spawn, collision, fluid and minimum-distance validation.
 - Raid bonus rolls always choose their vanilla maximum. After each wave, one additional witch can join only when a distant non-persistent hostile can be replaced one-for-one. Raid members and protected mobs are never selected, so the swap does not inflate the entity count.
-- While an active wave has two or fewer raiders, the mod attempts to refill it with one witch at a time. Each batch checks up to 64 locations within 32 blocks of a nearby player, requiring low light (7 or less), a solid floor, two free blocks, loaded/ticking terrain, vanilla witch spawn validation, and proximity to the occupied village. A successful refill raises the wave above the low-raider threshold; killing another raider starts another batch. The wave may finish only after all 64 candidates in a batch fail.
+- While an active wave has two or fewer raiders, the mod keeps trying to refill it with one witch at a time. Each batch checks up to 64 locations within 32 blocks of a nearby player, requiring low light (7 or less), a solid floor, two free blocks, loaded/ticking terrain, vanilla witch spawn validation, and proximity to the occupied village. A successful refill resets all failure state, so killing the witch or another raider starts fresh attempts instead of permanently disabling the mechanic. Failed batches retry every second while any raider remains. With zero raiders, five independent 64-position batches are attempted before vanilla may finish the wave.
 - Chorus fruit still generates sixteen candidates inside its vanilla 16-block diameter and uses the ordinary teleport validator, but tries the candidates from most dangerous to least dangerous. Darkness, nearby hostiles, hazards, drops, lower elevation and displacement affect the ranking; a random tie component prevents deterministic control.
 - Skeleton-horse riders inherit the same maximum bow and armor enchantment policy as other equipped hostile mobs.
 - Hostile density, reinforcement limits, distant-reservoir decisions and cap replacement share a one-second cache. Player-seeking mobs share a bounded, staggered path-search budget rather than recalculating paths together.
@@ -180,7 +180,7 @@ Testing priorities: multiplayer density around separate players, raids through e
 The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
 
 ```text
-dist/worst-luck-possible-2.2.0-beta.2.jar
+dist/worst-luck-possible-2.2.0-beta.3.jar
 ```
 
 End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
@@ -344,7 +344,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 ### Экспериментальные механики беты 2.2.0
 
-Версия **2.2.0-beta.2** намеренно публикуется как предварительная. Изменения ИИ, рейдов, сущностей и телепортации требуют длительного тестирования, особенно в мультиплеере, прежде чем появится стабильная 2.2.0.
+Версия **2.2.0-beta.3** намеренно публикуется как предварительная. Изменения ИИ, рейдов, сущностей и телепортации требуют длительного тестирования, особенно в мультиплеере, прежде чем появится стабильная 2.2.0.
 
 - Пауки на высокой сложности получают постоянную Скорость I. Поскольку каждый паук несёт скелета, ускорение помогает всаднику догнать игрока вместо лишнего усиления и без того большого урона.
 - Естественно появившиеся слизни и магмовые кубы получают максимальный ванильный естественный размер.
@@ -352,7 +352,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 - Естественные лошади получают ванильные минимумы: 15 здоровья, скорость 0,1125 и силу прыжка 0,4. Потомки семейства лошадей также получают эти минимумы; естественные ослы получают минимальное случайное здоровье, сохраняя фиксированные ванильные скорость и прыжок.
 - На высокой сложности зомби всегда ломают двери, если это поддерживает их навигация. Координаты подкреплений смещаются ближе к соответствующему игроку, но ванильные проверки места, столкновений, жидкостей и минимальной дистанции сохраняются.
 - Бонусный состав рейда всегда получает ванильный максимум. После каждой волны может присоединиться одна дополнительная ведьма, но только при возможности заменить дальнего непостоянного врага один к одному. Участники рейда и защищённые мобы не удаляются, поэтому общее число сущностей не растёт.
-- Пока в активной волне осталось не более двух налётчиков, мод пытается пополнять её одной ведьмой. Каждый пакет проверяет до 64 точек в радиусе 32 блоков от ближайшего игрока: освещение не выше 7, плотный пол, два свободных блока, загруженная и тикающая область, ванильная проверка спавна ведьмы и близость к занятой деревне. Успешный спавн поднимает число участников выше порога; после убийства следующего налётчика начинается новый пакет. Волна может завершиться только после провала всех 64 кандидатов одного пакета.
+- Пока в активной волне осталось не более двух налётчиков, мод постоянно пытается пополнять её одной ведьмой. Каждый пакет проверяет до 64 точек в радиусе 32 блоков от ближайшего игрока: освещение не выше 7, плотный пол, два свободных блока, загруженная и тикающая область, ванильная проверка спавна ведьмы и близость к занятой деревне. Успешный спавн полностью сбрасывает состояние неудач, поэтому убийство ведьмы или другого налётчика запускает новые попытки, а не отключает механику до конца волны. Пока остаётся хотя бы один налётчик, неудачные пакеты повторяются каждую секунду. При нуле налётчиков выполняются пять независимых пакетов по 64 позиции, и только после провала всех пяти ванильная логика может завершить волну.
 - Плод хоруса по-прежнему создаёт 16 кандидатов внутри ванильного диаметра 16 блоков и использует обычную проверку телепортации, но пробует точки от самой опасной к наименее опасной. Учитываются темнота, ближайшие враги, опасные блоки, обрывы, понижение высоты и удаление; случайная добавка не даёт полностью контролировать результат.
 - Всадники лошадей-ловушек получают ту же политику максимальных зачарований лука и брони, что и остальные экипированные враждебные мобы.
 - Плотность врагов, лимит подкреплений, защита дальнего резерва и замена при моб-капе используют общий секундный кэш. Идущие к игроку мобы делят ограниченный и распределённый по тикам бюджет поиска пути.
@@ -373,7 +373,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
 
 ```text
-dist/worst-luck-possible-2.2.0-beta.2.jar
+dist/worst-luck-possible-2.2.0-beta.3.jar
 ```
 
 Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
