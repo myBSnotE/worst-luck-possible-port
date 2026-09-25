@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /** Controls lightning frequency and makes skeleton-horse traps relevant to nearby players. */
 @Mixin(ServerWorld.class)
 public abstract class LightningMixin {
+	// Vanilla's trap trigger also activates at ten blocks, so an eligible horse transforms next tick.
 	private static final double WORSTLUCK_TRAP_TRIGGER_RADIUS = 10.0D;
 	private static final double WORSTLUCK_TRAP_TRIGGER_RADIUS_SQUARED =
 			WORSTLUCK_TRAP_TRIGGER_RADIUS * WORSTLUCK_TRAP_TRIGGER_RADIUS;
