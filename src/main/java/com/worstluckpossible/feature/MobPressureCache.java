@@ -12,7 +12,7 @@ import net.minecraft.server.world.ServerWorld;
 
 /**
  * One-second per-player density snapshot shared by despawning, reinforcements,
- * cap replacement, raid swaps, and the adaptive beta event budget.
+ * cap replacement, raid swaps, weather events, and adaptive event budgets.
  */
 public final class MobPressureCache {
 	public static final double NEAR_DISTANCE_SQUARED = 32.0D * 32.0D;
@@ -32,6 +32,7 @@ public final class MobPressureCache {
 		}
 
 		int totalMobs = 0;
+		int persistentMobs = 0;
 		int totalHostiles = 0;
 		int nearHostiles = 0;
 		MobEntity farthest = null;
@@ -42,6 +43,9 @@ public final class MobPressureCache {
 				player.getBoundingBox().expand(128.0D),
 				mob -> mob.isAlive() && player.squaredDistanceTo(mob) < HARD_DISTANCE_SQUARED)) {
 			totalMobs++;
+			if (mob.isPersistent() || mob.cannotDespawn()) {
+				persistentMobs++;
+			}
 			if (mob.getType().getSpawnGroup() != SpawnGroup.MONSTER) {
 				continue;
 			}
@@ -62,7 +66,7 @@ public final class MobPressureCache {
 			}
 		}
 
-		Snapshot snapshot = new Snapshot(now, totalMobs, totalHostiles, nearHostiles, farthest);
+		Snapshot snapshot = new Snapshot(now, totalMobs, persistentMobs, totalHostiles, nearHostiles, farthest);
 		worldCache.put(player.getUuid(), snapshot);
 		return snapshot;
 	}
@@ -74,7 +78,7 @@ public final class MobPressureCache {
 		}
 	}
 
-	public record Snapshot(long sampleTick, int totalMobs, int totalHostiles,
+	public record Snapshot(long sampleTick, int totalMobs, int persistentMobs, int totalHostiles,
 			int nearHostiles, MobEntity farthestReplaceable) {
 		public boolean protectsDistantReservoir(boolean previouslyProtected) {
 			if (totalHostiles == 0 || totalHostiles > 140) return false;

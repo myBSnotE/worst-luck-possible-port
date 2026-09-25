@@ -2,19 +2,35 @@
 	"schemaVersion": 1,
 	"id": "worst-luck-possible",
 	"version": "${version}",
-	"name": "Worst luck possible",
-	"description": "Mod that mostly removes randomness from Minecraft and gives you the worst possible outcome every time",
-	"authors": ["Heppe"],
+	"name": "Worst Luck Possible",
+	"description": "A modern Minecraft 1.21.11 Fabric port of Heppe's challenge mod. Favorable randomness is replaced with the worst practical vanilla-compatible outcomes, with multiplayer-aware spawning, raids, fishing, trades, storms, mobs, and performance safeguards.",
+	"authors": [
+		"Heppe"
+	],
+	"contributors": [
+		"HyBri:D — Minecraft 1.21.11 port"
+	],
+	"contact": {
+		"homepage": "https://github.com/myBSnotE/worst-luck-possible-port",
+		"sources": "https://github.com/myBSnotE/worst-luck-possible-port",
+		"issues": "https://github.com/myBSnotE/worst-luck-possible-port/issues"
+	},
 	"license": "CC0-1.0",
 	"environment": "*",
 	"entrypoints": {
-		"main": ["com.worstluckpossible.WorstLuckPossible"],
-		"client": ["com.worstluckpossible.WorstLuckPossibleClient"]
+		"main": [
+			"com.worstluckpossible.WorstLuckPossible"
+		],
+		"client": [
+			"com.worstluckpossible.WorstLuckPossibleClient"
+		]
 	},
-	"mixins": ["worst-luck-possible.mixins.json"],
+	"mixins": [
+		"worst-luck-possible.mixins.json"
+	],
 	"depends": {
-		"fabricloader": ">=0.16.0",
-		"minecraft": ">=1.21.11",
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~1.21.11",
 		"java": ">=21"
 	}
 }

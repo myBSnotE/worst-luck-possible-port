@@ -1,6 +1,7 @@
 package com.worstluckpossible.mixin.weather;
 
 import com.worstluckpossible.feature.LightningRateMode;
+import com.worstluckpossible.feature.MobPressureCache;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.SpawnReason;
@@ -22,10 +23,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /** Controls lightning frequency and makes skeleton-horse traps relevant to nearby players. */
 @Mixin(ServerWorld.class)
 public abstract class LightningMixin {
-	// Vanilla's trap trigger also activates at ten blocks, so an eligible horse transforms next tick.
 	private static final double WORSTLUCK_TRAP_TRIGGER_RADIUS = 10.0D;
 	private static final double WORSTLUCK_TRAP_TRIGGER_RADIUS_SQUARED =
 			WORSTLUCK_TRAP_TRIGGER_RADIUS * WORSTLUCK_TRAP_TRIGGER_RADIUS;
+	// Trap riders never naturally despawn, so stop creating new groups before they become a lag machine.
+	private static final int WORSTLUCK_MAX_PERSISTENT_MOBS_NEAR_PLAYER = 96;
 
 	@Shadow
 	protected abstract BlockPos getLightningPos(BlockPos pos);
@@ -51,9 +53,12 @@ public abstract class LightningMixin {
 			return;
 		}
 
+		ServerPlayerEntity nearbyPlayer = worstluck$getNearbyPlayerInStrikeChunk(world, lightningPos);
 		boolean spawnTrap = world.getGameRules().getValue(GameRules.DO_MOB_SPAWNING)
 				&& !world.getBlockState(lightningPos.down()).isIn(BlockTags.LIGHTNING_RODS)
-				&& worstluck$hasNearbyPlayerInStrikeChunk(world, lightningPos);
+				&& nearbyPlayer != null
+				&& MobPressureCache.get(world, nearbyPlayer).persistentMobs()
+						< WORSTLUCK_MAX_PERSISTENT_MOBS_NEAR_PLAYER;
 
 		if (spawnTrap) {
 			SkeletonHorseEntity horse = EntityType.SKELETON_HORSE.create(world, SpawnReason.EVENT);
@@ -68,13 +73,12 @@ public abstract class LightningMixin {
 		LightningEntity lightning = EntityType.LIGHTNING_BOLT.create(world, SpawnReason.EVENT);
 		if (lightning != null) {
 			lightning.refreshPositionAfterTeleport(Vec3d.ofBottomCenter(lightningPos));
-			// As in vanilla, the bolt that creates a trap is cosmetic so it cannot kill the horse.
 			lightning.setCosmetic(spawnTrap);
 			world.spawnEntity(lightning);
 		}
 	}
 
-	private static boolean worstluck$hasNearbyPlayerInStrikeChunk(ServerWorld world, BlockPos lightningPos) {
+	private static ServerPlayerEntity worstluck$getNearbyPlayerInStrikeChunk(ServerWorld world, BlockPos lightningPos) {
 		ChunkPos strikeChunk = new ChunkPos(lightningPos);
 		Vec3d strikeCenter = Vec3d.ofBottomCenter(lightningPos);
 		for (ServerPlayerEntity player : world.getPlayers()) {
@@ -82,9 +86,9 @@ public abstract class LightningMixin {
 					&& !player.isSpectator()
 					&& player.getChunkPos().equals(strikeChunk)
 					&& player.squaredDistanceTo(strikeCenter) <= WORSTLUCK_TRAP_TRIGGER_RADIUS_SQUARED) {
-				return true;
+				return player;
 			}
 		}
-		return false;
+		return null;
 	}
 }
