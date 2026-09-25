@@ -34,6 +34,8 @@
 		"spawns.SpawnHelperNoAnimalsMixin",
 		"spawns.SpawnHelperProximityMixin",
 		"spawns.SpawnSelectionMixin",
+		"trade.TradeOffersMixin",
+		"trade.WanderingTraderManagerMixin",
 		"weather.AlwaysStormMixin",
 		"weather.LightningMixin"
 	],
