@@ -6,7 +6,7 @@ A modern Fabric port of **Worst Luck Possible**. Favorable randomness is replace
 
 [Download the latest release](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest) · [Report a bug](https://github.com/myBSnotE/worst-luck-possible-port/issues)
 
-<details open>
+<details>
 <summary><strong>English</strong></summary>
 
 ## Install
@@ -35,9 +35,9 @@ The port supports multiplayer and dedicated servers.
 - Mob and block loot rolls choose the minimum result; gravel never drops flint.
 - Piglin bartering gives two magma cream.
 - Fishing gives one pair of leather boots with zero remaining durability, and the initial bite wait uses the vanilla maximum of 600 ticks.
-- Trial spawners give one baked potato as their post-combat reward. Vaults are unchanged.
+- Trial spawners give one baked potato as their post-combat reward.
 - Eyes of Ender always break; successful Ender Pearl teleports create an endermite when monster spawning is enabled.
-- Unbreaking never prevents durability loss. Mending is unchanged.
+- Unbreaking never prevents durability loss.
 - Eggs never hatch chicks. Bonemealed crops grow by the minimum two stages; supported trees and fungi choose their existing failure outcome.
 - Chorus fruit tries its vanilla-valid destinations from most dangerous to least dangerous.
 - Every eligible non-creative anvil use advances the anvil's damage state.
@@ -47,10 +47,10 @@ The port supports multiplayer and dedicated servers.
 
 ### Hostile mobs and combat
 
-- Zombies and variants are babies, leaders, and receive strong vanilla-compatible equipment. On Hard, supported zombies break doors and leaders reliably call reinforcements until the local safety limit is reached.
-- Every spider becomes a spider jockey; on Hard the spider has permanent Speed I and the rider is invisible.
+- Zombies and variants are babies, leaders, and receive strong vanilla-compatible equipment. On Hard, zombies break doors and leaders call reinforcements until the local safety limit is reached.
+- Every spider becomes a spider jockey; on Hard the spider has permanent Speed I.
 - Naturally spawned slimes and magma cubes use the largest natural size. Slimes use the minimum jump delay; magma cubes retain their vanilla ×4 delay.
-- Drowned are more common, carry tridents, and can become chicken jockeys.
+- Drowned are more common, carry tridents.
 - Endermen teleport along the player's look direction. The Ender Dragon does not perch and keeps an unfavorable flight height.
 - Shulkers use the minimum random bullet interval. Witches choose harmful potion outcomes under the normal condition order.
 - Naturally generated horses and bred horse-family children receive the lowest supported attributes.
@@ -59,7 +59,7 @@ The port supports multiplayer and dedicated servers.
 
 ### Spawning, raids, and server safeguards
 
-- Passive mobs do not spawn during ordinary natural-spawn cycles; fish and dolphins are disabled.
+- Passive mobs do not spawn during ordinary natural-spawn cycles.
 - Hostile packs are maximized and ordinary natural spawns prefer valid positions **24–32 blocks** from a nearby player.
 - At the hostile mob cap, a distant eligible hostile is removed only after a valid closer replacement has actually spawned.
 - Hostiles 32–128 blocks away are temporarily protected from random despawning when too few enemies are near their assigned player. Vanilla immediate despawning beyond 128 blocks is unchanged.
@@ -104,7 +104,7 @@ The original compiled reference is preserved as [`worst-luck-possible-1.0.0.jar`
 
 </details>
 
-<details>
+<details open>
 <summary><strong>Русский</strong></summary>
 
 ## Установка
@@ -133,9 +133,9 @@ The original compiled reference is preserved as [`worst-luck-possible-1.0.0.jar`
 - Броски лута мобов и блоков выбирают минимальный результат; из гравия не выпадает кремень.
 - Пиглины выдают два сгустка магмы.
 - Рыбалка даёт одну пару полностью сломанных кожаных ботинок, а начальное ожидание клёва получает ванильный максимум в 600 тиков.
-- Рассадники испытаний после боя выдают одну печёную картофелину. Хранилища не изменены.
+- Рассадники испытаний после боя выдают одну печёную картофелину.
 - Око Края всегда ломается; успешная телепортация жемчугом создаёт эндермита, если разрешён спавн монстров.
-- Прочность (Unbreaking) никогда не предотвращает износ. Починка (Mending) не изменена.
+- Прочность (Unbreaking) никогда не предотвращает износ.
 - Из яиц не вылупляются цыплята. Культуры от костной муки растут на минимальные две стадии; поддерживаемые деревья и грибы выбирают существующий исход с неудачей.
 - Плод хоруса перебирает ванильно допустимые точки от самой опасной к наименее опасной.
 - Каждое подходящее использование наковальни не в творческом режиме переводит её на следующую стадию повреждения.
@@ -145,10 +145,10 @@ The original compiled reference is preserved as [`worst-luck-possible-1.0.0.jar`
 
 ### Враждебные мобы и бой
 
-- Зомби и их варианты появляются детьми и лидерами с сильной ванильно допустимой экипировкой. На высокой сложности подходящие зомби ломают двери, а лидеры надёжно вызывают подкрепление до достижения локального предела безопасности.
-- Каждый паук становится паучьим наездником; на высокой сложности паук получает постоянную Скорость I, а всадник — невидимость.
-- Естественные слизни и магмовые кубы имеют максимальный размер. Слизни используют минимальную задержку прыжка, а магмовые кубы сохраняют ванильный множитель ×4.
-- Утопленники встречаются чаще, носят трезубцы и могут становиться наездниками на цыплятах.
+- Зомби и их варианты появляются детьми и лидерами с сильной ванильно допустимой экипировкой. На высокой сложности зомби ломают двери, а лидеры вызывают подкрепление до достижения локального безопасного предела.
+- Каждый паук становится паучьим наездником; на высокой сложности паук получает постоянную Скорость I.
+- Натурально заспавненные слизни и магмовые кубы имеют максимальный размер. Слизни используют минимальную задержку прыжка, а магмовые кубы сохраняют ванильный множитель ×4.
+- Утопленники встречаются чаще, носят трезубцы.
 - Эндермены телепортируются вдоль направления взгляда игрока. Дракон Края не садится и сохраняет невыгодную высоту полёта.
 - Шалкеры используют минимальный случайный интервал выстрела. Ведьмы выбирают вредные зелья в рамках обычного порядка условий.
 - Естественные лошади и потомки семейства лошадей получают минимальные поддерживаемые характеристики.
@@ -157,7 +157,7 @@ The original compiled reference is preserved as [`worst-luck-possible-1.0.0.jar`
 
 ### Спавн, рейды и защита сервера
 
-- Мирные мобы не появляются в обычных циклах естественного спавна; рыбы и дельфины отключены.
+- Мирные мобы не появляются в обычных циклах естественного спавна.
 - Размер враждебных стай максимален, а обычный естественный спавн предпочитает допустимые позиции в **24–32 блоках** от ближайшего игрока.
 - При заполненном моб-капе дальний подходящий враг удаляется только после фактического успешного появления более близкой замены.
 - Враги на расстоянии 32–128 блоков временно защищены от случайного деспавна, если рядом с закреплённым за ними игроком слишком мало противников. Мгновенный ванильный деспавн за 128 блоками не изменён.
