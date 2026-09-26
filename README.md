@@ -1,457 +1,209 @@
 # Worst Luck Possible — Minecraft 1.21.11 port
 
-<details>
-<summary><strong>🇬🇧 English</strong></summary>
+A modern Fabric port of **Worst Luck Possible**. Favorable randomness is replaced with the worst practical vanilla-compatible outcome: hostile spawns stay close, loot rolls low, mobs receive dangerous equipment, fire refuses to die, and useful random events become harmful.
 
-A modern Fabric port of **Worst Luck Possible**, a challenge mod that removes favorable randomness and consistently gives the player the worst practical outcome.
+> **Current release:** 2.3.2 · Minecraft 1.21.11 · Fabric Loader 0.19.5+ · Java 21 · Fabric API is not required
 
-This repository ports the original Minecraft 1.16.1 mod to **Minecraft 1.21.11** while preserving its gameplay intent and adapting the implementation to current Minecraft internals.
+[Download the latest release](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest) · [Report a bug](https://github.com/myBSnotE/worst-luck-possible-port/issues)
 
-## Original mod and creator
+<details open>
+<summary><strong>English</strong></summary>
 
-- **Creator:** Heppe
-- **Original mod:** [Worst Luck Possible on Modrinth](https://modrinth.com/mod/worst-luck-possible)
-- **Creator's original video:** [Is it possible to beat Minecraft with only bad RNG?](https://www.youtube.com/watch?v=LYmyuoRJecA)
-- **Creator's channel:** [HeppeGaming](https://youtube.com/c/HeppeGaming)
-- **Original target:** Minecraft 1.16.1 with Fabric
+## Install
 
-The original Modrinth listing describes the project as making Minecraft as difficult as possible without adding outcomes that are impossible in vanilla. The listing currently identifies the project as MIT-licensed, while the metadata embedded in the supplied 1.0.0 JAR declares CC0-1.0.
+1. Install Fabric Loader for Minecraft **1.21.11**.
+2. Download `worst-luck-possible-2.3.2.jar` from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest).
+3. Put the JAR in the client or dedicated server `mods` folder.
+4. Start Minecraft with Java **21**.
 
-The original compiled JAR used as the behavioral reference is included at [`worst-luck-possible-1.0.0.jar`](worst-luck-possible-1.0.0.jar).
+The port supports multiplayer and dedicated servers.
 
-## Requirements
+## Gameplay overview
 
-- Minecraft **1.21.11**
-- Fabric Loader **0.19.5** or a newer compatible version
-- Java **21**
-- Fabric API is **not required**
+### Fire, lava, and weather
 
-## Installation
+- Fueled fire is kept at age 0 and no longer consumes adjacent fuel through vanilla's random direct-burn roll. It persists until extinguished.
+- When ordinary fire is extinguished, all adjacent flammable blocks are consumed in the same tick; adjacent TNT is primed first.
+- Each source-fire tick performs up to **eight** additional successful ignitions inside vanilla's local spread volume. It prioritizes fire at the feet of nearby players and passive mobs, including on solid non-flammable floors.
+- Each random-ticking lava block can create up to **eight** fires in the volume reachable by vanilla lava ignition. Valid positions above solid non-flammable floors are tried first.
+- Fire behavior still respects the world's fire-spread rule, loaded terrain, and strict per-source budgets.
+- Thunderstorms are frequent. Lightning attempts can be temporarily reduced 20× with an operator command.
+- Skeleton-horse traps are guaranteed only near a living player and are suppressed under extreme persistent-mob pressure.
 
-1. Install Fabric Loader for Minecraft 1.21.11.
-2. Open the repository's [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest) and download the latest `worst-luck-possible-*.jar` asset.
-3. Put the JAR into the instance or server `mods` directory.
-4. Start the game or server.
+### Loot, items, and progression
 
-The mod works on dedicated servers and supports multiple players. The original Modrinth release is marked singleplayer-only; multiplayer support is an addition of this port.
+- Mob and block loot rolls choose the minimum result; gravel never drops flint.
+- Piglin bartering gives two magma cream.
+- Fishing gives one pair of leather boots with zero remaining durability, and the initial bite wait uses the vanilla maximum of 600 ticks.
+- Trial spawners give one baked potato as their post-combat reward. Vaults are unchanged.
+- Eyes of Ender always break; successful Ender Pearl teleports create an endermite when monster spawning is enabled.
+- Unbreaking never prevents durability loss. Mending is unchanged.
+- Eggs never hatch chicks. Bonemealed crops grow by the minimum two stages; supported trees and fungi choose their existing failure outcome.
+- Chorus fruit tries its vanilla-valid destinations from most dangerous to least dangerous.
+- Every eligible non-creative anvil use advances the anvil's damage state.
+- Tamed cats do not give morning gifts.
+- New villager offers use deterministic worst-case pools. Existing stored offers are not rewritten.
+- Automatic wandering-trader spawning is disabled; existing and manually summoned traders are unaffected.
 
-## Original gameplay features
+### Hostile mobs and combat
 
-### Loot
-
-- Mob and block loot rolls choose the smallest possible result.
-- Gravel never drops flint.
-- Piglin bartering always gives two magma cream.
-- Block drops scatter away from the nearest player.
-
-### Hostile mobs
-
-- Zombies and their variants always spawn as babies, wear the strongest equipment possible in vanilla, and are leaders.
-- Zombie leaders reliably call reinforcements when damaged on Hard, unless the relevant player already has at least 140 living mobs within 128 blocks.
+- Zombies and variants are babies, leaders, and receive strong vanilla-compatible equipment. On Hard, supported zombies break doors and leaders reliably call reinforcements until the local safety limit is reached.
 - Every spider becomes a spider jockey; on Hard the spider has permanent Speed I and the rider is invisible.
-- Endermen teleport along the direction the player is looking.
-- The Ender Dragon does not perch and keeps an unfavorable flight height.
-- Hostile mobs actively path toward nearby players.
+- Naturally spawned slimes and magma cubes use the largest natural size. Slimes use the minimum jump delay; magma cubes retain their vanilla ×4 delay.
+- Drowned are more common, carry tridents, and can become chicken jockeys.
+- Endermen teleport along the player's look direction. The Ender Dragon does not perch and keeps an unfavorable flight height.
+- Shulkers use the minimum random bullet interval. Witches choose harmful potion outcomes under the normal condition order.
+- Naturally generated horses and bred horse-family children receive the lowest supported attributes.
+- Mob armor does not lose durability while worn. Naturally generated equipment does not drop, while foreign items picked up from the ground retain vanilla ownership and drop behavior.
+- Mob equipment receives strong item-valid enchantments. Player projectiles receive varied spread at the boundary of vanilla's uncertainty range without changing projectile speed.
 
-### Natural spawning
+### Spawning, raids, and server safeguards
 
-- Passive mobs do not spawn naturally during ordinary mob-spawn cycles.
-- Fish and dolphins are disabled.
-- Hostile mobs spawn in the largest practical packs with additional spawn attempts.
-- Natural hostile spawns are kept close to a valid nearby player while retaining normal block, light, biome and collision checks.
-- Drowned are made more common through hostile spawn substitution.
+- Passive mobs do not spawn during ordinary natural-spawn cycles; fish and dolphins are disabled.
+- Hostile packs are maximized and ordinary natural spawns prefer valid positions **24–32 blocks** from a nearby player.
+- At the hostile mob cap, a distant eligible hostile is removed only after a valid closer replacement has actually spawned.
+- Hostiles 32–128 blocks away are temporarily protected from random despawning when too few enemies are near their assigned player. Vanilla immediate despawning beyond 128 blocks is unchanged.
+- Named, persistent, raid, and otherwise protected mobs are never selected for replacement. All density decisions use each mob's nearest player.
+- After three sleepless in-game days, every eligible player receives four phantoms at guaranteed 1200–1400 tick intervals.
+- Raid bonus rolls choose their vanilla maximum. Low active waves repeatedly try to add a witch at a valid dark village position without allowing unbounded entity growth.
+- Density scans are cached once per second. Replacement and pathfinding work use adaptive per-tick budgets and emergency limits.
 
-### Other
+## Operator commands
 
-- Player-fired projectiles use a varied random direction at the maximum boundary of vanilla's per-axis uncertainty range; repeated shots with a fixed camera no longer converge on one deterministic point. The former arbitrary ±180° yaw/pitch rotation remains removed.
-- Thunderstorms begin frequently, with lightning attempts across loaded chunks. Operators can temporarily reduce those attempts by 20× for the current server session.
+| Command | Effect |
+| --- | --- |
+| `/worstluck lightning` | Show the current lightning mode. |
+| `/worstluck lightning full` | Restore one lightning attempt per ticking chunk per tick. |
+| `/worstluck lightning reduced` | Use a 5% attempt chance per ticking chunk per tick. |
+| `/worstluck fishing` | Show the current fishing mode. |
+| `/worstluck fishing boots` | Force ruined leather boots. |
+| `/worstluck fishing vanilla` | Temporarily restore vanilla fishing. |
+| `/worstluck debug spawning` | Show the invoking player's cached mob-pressure diagnostics. |
 
-## Additions and changes in this port
+Command overrides are temporary and reset after reopening the world or restarting the server.
 
-### Close spawning and adaptive hostile mob-cap replacement
+## Build and verification
 
-While the hostile mob count is below the normal cap, no existing mob is removed: ordinary natural spawn attempts prefer valid hostile positions **24–32 blocks** from a nearby player. If that player's hostile population is completely empty, one ordinary vanilla-range spawn may seed the cycle outside 32 blocks. Its density snapshot is invalidated immediately, so later attempts return to the close band. A lone distant seed retains vanilla random despawning and can disappear before another fallback attempt searches again. All normal block, light, biome, collision and spawn-restriction checks still apply.
-
-When the hostile mob cap is full, the mod may temporarily allow a valid close spawn. Only after that spawn succeeds does it remove the farthest eligible hostile between 32 and 128 blocks from its nearest player.
-
-- Below the cap, new close mobs can spawn without deleting an existing mob.
-- At the cap, a distant mob is removed only after a valid closer replacement has actually spawned.
-- Nothing is removed if a valid closer replacement cannot spawn.
-- Named, persistent and otherwise protected mobs are never selected.
-- Distance is always measured to each mob's **nearest player**, so multiplayer users cannot cause mobs to disappear in front of one another.
-- Replacement work is limited to at most four mobs per tick and automatically drops to two, one or zero as nearby entity pressure rises.
-- Ordinary immediate despawning remains at 128 blocks; mobs around farms or platforms 64 blocks away are not forcibly deleted.
-
-### Adaptive distant-hostile reservoir
-
-Hostiles between 32 and 128 blocks are temporarily protected from vanilla random despawning while fewer than 45% of the eligible hostiles assigned to their nearest player are within 32 blocks. Normal random despawning resumes after the near share rises above 55%.
-
-- Counts are assigned using each mob's nearest player, making the policy multiplayer-safe.
-- Density is sampled once per second to limit server load.
-- The 45%/55% hysteresis prevents rapid switching around a single threshold.
-- Protection is disabled above 140 eligible hostiles per player as an emergency performance limit.
-- Distant-reservoir protection starts only at eight assigned hostiles, so an initial fallback mob keeps vanilla random despawning.
-- Vanilla immediate despawning at 128 blocks is unchanged.
-
-### Lightning-rate control
-
-Operators can use `/worstluck lightning reduced` to change each ticking chunk from one lightning attempt every tick to a **5% chance per tick** — an average 20× reduction. `/worstluck lightning full` restores the original every-tick behavior, and `/worstluck lightning` shows the current mode. The setting is temporary and resets to full intensity when the world is reopened or the dedicated server restarts.
-
-Skeleton-horse traps are now created only when the final lightning position is in the same chunk as a living non-spectator player and that player is within **10 blocks** of the strike. When those conditions are met, the trap spawn is guaranteed instead of using local-difficulty randomness. The creating lightning bolt remains cosmetic, so it cannot kill the trap horse; the nearby player activates the rider ambush on the following tick. `doMobSpawning` and lightning rods are still respected. New traps are suppressed when that player already has **96 or more living persistent/non-despawning mobs within 128 loaded blocks**. The lightning strike itself still occurs normally; only the additional trap group is skipped.
-
-### Worst-luck fishing and temporary debug override
-
-By default, every successful fishing catch yields exactly **one pair of leather boots with zero remaining durability** instead of using the fishing loot table. This removes fishing as an unseeded source of favorable randomness and prevents it from supplying fish, treasure, enchanted books or leather through ordinary fishing loot.
-
-The initial random bite-wait roll is always its maximum vanilla value: **600 ticks (30 seconds)** before environmental and equipment modifiers. Rain, sky access, Lure and all later fishing phases retain their normal influence.
-
-Operators can temporarily restore vanilla fishing for the current world/server session:
+The project uses Gradle, Fabric Loom, Yarn mappings, Java 21 bytecode, and Fabric Loader 0.19.5. GitHub Actions builds the remapped JAR and starts a temporary dedicated server to catch mixin and startup failures.
 
 ```text
-/worstluck fishing vanilla
+gradle clean build
 ```
 
-Additional commands:
+The CI artifact is written to `dist/worst-luck-possible-2.3.2.jar`. End users should download the published release asset instead of the repository copy.
 
-- `/worstluck fishing` — show the current fishing mode;
-- `/worstluck fishing boots` — immediately restore forced leather boots.
+## Original project and credits
 
-The override is not saved. Forced leather boots are enabled again after closing and reopening a singleplayer world or restarting the dedicated server. On a dedicated server, merely disconnecting a player does not restart the server session. These commands require game-master/operator permission.
+- **Original creator:** Heppe
+- **Original mod:** [Worst Luck Possible on Modrinth](https://modrinth.com/mod/worst-luck-possible)
+- **Original video:** [Is it possible to beat Minecraft with only bad RNG?](https://www.youtube.com/watch?v=LYmyuoRJecA)
+- **Original target:** Minecraft 1.16.1 with Fabric
+- **Port contributor:** HyBri:D
 
-### Guaranteed phantom attacks
-
-After a player has avoided sleep for three in-game days, phantom attacks are guaranteed every **1200–1400 ticks** when vanilla-compatible conditions are satisfied:
-
-- the player is at Y 64 or higher;
-- the sky is visible above the player;
-- it is sufficiently dark for the vanilla phantom spawner;
-- phantom spawning and hostile spawning are enabled;
-- the player is not a spectator;
-- the selected spawn position is clear.
-
-Each eligible player receives a pack of **four phantoms**, spawning **20–34 blocks above** with up to **9 blocks of horizontal offset**. Eligibility is evaluated independently for every player.
-
-### Deterministic worst villager trades
-
-Newly generated villager offers now use deterministic worst-case pools. The selected item pairs follow the real Minecraft 1.21.11 trade tables, prices of randomly enchanted equipment are fixed at their vanilla maxima, and enchantments are fixed to Fire Protection I (armor), Bane of Arthropods I (weapons), Punch I (bows), Efficiency I (tools), Piercing I (crossbows), and Curse of Vanishing I enchanted books for 38 emeralds plus a book.
-
-The requested profession/level choices are applied to armorers, butchers, cartographers, clerics, farmers, fishermen, fletchers, leatherworkers, librarians, toolsmiths, shepherds, masons, and weaponsmiths. The mason's black/gray ceramics are ordinary black and gray terracotta; fletchers sell long-invisibility tipped arrows. Pools not explicitly changed remain vanilla.
-
-Important 1.21.11 differences from older trade descriptions:
-
-- cartographer level 3 also contains a Trial Chambers map candidate, which is now excluded in favor of the ocean explorer map;
-- cartographer level 2 has biome/type-aware village, swamp and jungle maps, so not every other cartographer offer is fixed;
-- fisherman level 3 still has a randomly enchanted fishing rod;
-- librarian level 4 also had a clock candidate, which is excluded by the requested compass choice.
-
-Trades already stored on existing villagers are not rewritten, because doing so would reset uses, demand and discounts and could destroy earlier-level offers. Use new villagers, or villagers whose affected level has not generated its offers yet, for the complete effect.
-
-### Wandering traders
-
-Automatic wandering-trader spawning (including its trader llamas) is disabled. Existing traders, `/summon`, and spawn eggs are not affected.
-
-### Version 2.2.0 gameplay mechanics
-
-Version **2.2.0** promotes the tested beta mechanics to the stable release, including the final natural-spawn fallback and recurring raid-witch fixes.
-
-- Spiders on Hard receive permanent Speed I. Because every spider is a jockey, this helps the skeleton rider close distance instead of duplicating its already high damage.
-- Naturally spawned slimes and magma cubes use the largest vanilla natural size.
-- Spawned mob armor receives Protection IV and Thorns III. Bows receive Power V, Punch II and Flame I; crossbows receive Quick Charge III and Piercing IV; melee weapons receive maximum combat enchantments appropriate to the current implementation.
-- Naturally generated horses use the vanilla minimums: 15 health, 0.1125 movement speed and 0.4 jump strength. Bred horse-family children also receive these minimums; naturally generated donkeys receive the minimum random health while retaining their fixed vanilla movement and jump attributes.
-- Zombies on Hard always break doors when their navigation supports it. Reinforcement coordinates are biased toward a nearby relevant player while retaining vanilla spawn, collision, fluid and minimum-distance validation.
-- Raid bonus rolls always choose their vanilla maximum. After each wave, one additional witch can join only when a distant non-persistent hostile can be replaced one-for-one. Raid members and protected mobs are never selected, so the swap does not inflate the entity count.
-- While an active wave has two or fewer raiders, the mod keeps trying to refill it with one witch at a time. Each batch checks up to 64 locations within 32 blocks of a nearby player, requiring low light (7 or less), a solid floor, two free blocks, loaded/ticking terrain, vanilla witch spawn validation, and proximity to the occupied village. A successful refill resets all failure state, so killing the witch or another raider starts fresh attempts instead of permanently disabling the mechanic. Failed batches retry every second while any raider remains. With zero raiders, five independent 64-position batches are attempted before vanilla may finish the wave.
-- Chorus fruit still generates sixteen candidates inside its vanilla 16-block diameter and uses the ordinary teleport validator, but tries the candidates from most dangerous to least dangerous. Darkness, nearby hostiles, hazards, drops, lower elevation and displacement affect the ranking; a random tie component prevents deterministic control.
-- Skeleton-horse riders inherit the same maximum bow and armor enchantment policy as other equipped hostile mobs.
-- Hostile density, reinforcement limits, distant-reservoir decisions and cap replacement share a one-second cache. Player-seeking mobs share a bounded, staggered path-search budget rather than recalculating paths together.
-- Lightning intensity is deliberately unchanged. Full mode continues to create the intended environmental destruction; the existing temporary 20× reduction command remains available to operators.
-- Patrol spawning remains vanilla in this beta because guaranteeing captains would also guarantee a useful ominous-bottle source.
-
-Testing priorities: multiplayer density around separate players, raids through every difficulty and wave, zombie reinforcement placement, horse breeding, chorus fruit in caves/Nether/End, skeleton traps, and long thunder sessions.
-
-### Version 2.3.0 gameplay mechanics
-
-Version **2.3.0** promotes the tested beta mechanics to the stable release, including the projectile-spread, spear-enchantment and picked-up-equipment fixes.
-
-- Every thrown Eye of Ender chooses its vanilla break outcome instead of dropping.
-- A successful player Ender Pearl teleport always creates an endermite when monster spawning is allowed.
-- Zombie-villager curing starts at the vanilla maximum of 6000 ticks and does not receive the random bed/iron-bar acceleration.
-- Unbreaking never prevents durability loss. Mending is deliberately unchanged.
-- Armor worn by mobs takes no durability damage, including direct sunlight wear on skeleton and zombie helmets. The protection belongs to the wearer logic rather than the item component, so dropped armor is still ordinarily damageable.
-- Naturally generated mob equipment still never drops on death, but foreign items picked up from the ground retain vanilla guaranteed-drop ownership and are returned unchanged when the mob dies.
-- When a mob replaces naturally generated equipment with a better item, the old natural item never wins its vanilla 8.5% drop roll. Previously picked-up foreign equipment still returns normally when replaced.
-- Thrown eggs never hatch chicks.
-- Bonemealed crops receive the minimum vanilla growth of two stages. Saplings, azaleas, fungi and mushrooms choose their existing random bonemeal failure result.
-- Shulkers use the minimum random bullet interval of 20 ticks. Slimes use the minimum random jump delay of 10 ticks; magma cubes retain their vanilla four-times multiplier, giving 40 ticks.
-- A witch always drinks the first applicable defensive potion under vanilla's existing condition order. For thrown potions, the favorable 25% close-range Weakness branch is suppressed, leaving Harming after the earlier Slowness and Poison rules.
-- Ghast and blaze attack timing is unchanged: inspection of Minecraft 1.21.11 showed fixed, not random, attack intervals.
-- Mob weapon enchantments are limited to combinations valid for the item type: swords receive Sharpness V, Fire Aspect II and Knockback II; spears receive Sharpness V, Fire Aspect II, Knockback II and Lunge III; axes receive Sharpness V; tridents receive Impaling V, Loyalty III and Channeling I.
-
-Testing priorities: mob helmets through long daytime sessions, armor damaged by combat, curing with and without beds/iron bars, repeated pearl and eye throws, witch decisions at different health and distance states, shulker fire rate, slime/magma-cube movement, and bonemeal targets.
-
-### Version 2.3.1 gameplay mechanics
-
-Version **2.3.1** is a stable patch centered on destructive fire behavior, with several smaller worst-luck outcomes and diagnostics.
-
-- Fire performs up to **eight additional successful spread changes per source fire tick** within vanilla's direct-neighbor and long-range spread volume. Direct flammable blocks, including TNT, are prioritized before valid air positions beside flammable blocks. The extra phase runs only while fire spreading is enabled and the source fire survived its vanilla tick.
-- Fire can also appear in the air block at the feet of a nearby player or passive mob standing on a solid non-flammable block. These targets are checked first within the same bounded per-tick budget.
-- Both regular and ominous trial spawners eject exactly **one baked potato** for each post-combat reward instead of a key, potion or other consumable. Trial vaults and seeded ominous combat-item selection are unchanged.
-- Every eligible anvil output taken by a non-creative player advances the anvil to its next damage state, destroying a chipped anvil on its next eligible use. Creative-mode use remains exempt.
-- Tamed cats can still sleep beside their owner but never give a morning gift.
-- `/worstluck debug spawning` reports the invoking player's cached mob pressure: total and persistent mobs, total/near/distant hostiles, replacement budget, distant-reservoir protection and the farthest replaceable hostile distance. The command requires operator/game-master permission and a player source.
-- Player projectiles now choose a random azimuth around the aim line before extending the error to the boundary of vanilla's per-axis uncertainty range. This preserves varied spread instead of sending fixed-camera shots toward one repeated point, and normalizes the final velocity to preserve projectile speed.
-
-Testing priorities: dense fire around structures and TNT, fire near players/passive mobs on stone-like floors, repeated trial-spawner completions, all three anvil states, cat sleep cycles, fixed-camera projectile groups, and spawning diagnostics in multiplayer.
-
-### Modernized implementation
-
-- Ported mixins and mappings to Minecraft 1.21.11/Yarn.
-- Updated to Java 21 and the current Fabric toolchain.
-- Added multiplayer-safe nearest-player distance handling.
-- Added automated GitHub Actions builds and dedicated-server smoke tests.
-
-## Building
-
-The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
-
-```text
-dist/worst-luck-possible-2.3.1.jar
-```
-
-End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
-
-The workflow also launches a temporary Fabric dedicated server to catch mixin application failures and startup crashes.
-
-## Disclaimer
-
-This is an unofficial modernization of the original mod. Minecraft is a trademark of Mojang Studios. This project is not affiliated with or endorsed by Mojang Studios.
+The original compiled reference is preserved as [`worst-luck-possible-1.0.0.jar`](worst-luck-possible-1.0.0.jar). The Modrinth listing currently identifies the original project as MIT-licensed, while the embedded metadata in that JAR declares CC0-1.0. This port's metadata declares CC0-1.0.
 
 </details>
 
-<details open>
-<summary><strong>🇷🇺 Русский</strong></summary>
-
-Современный Fabric-порт **Worst Luck Possible** — челлендж-мода, который убирает благоприятную случайность и практически всегда выдаёт игроку худший из возможных результатов.
-
-Этот репозиторий переносит оригинальный мод с Minecraft 1.16.1 на **Minecraft 1.21.11**, сохраняя его игровой замысел и адаптируя реализацию к современному внутреннему устройству Minecraft.
-
-## Оригинальный мод и создатель
-
-- **Создатель:** Heppe
-- **Оригинальный мод:** [Worst Luck Possible на Modrinth](https://modrinth.com/mod/worst-luck-possible)
-- **Оригинальное видео автора:** [Is it possible to beat Minecraft with only bad RNG?](https://www.youtube.com/watch?v=LYmyuoRJecA)
-- **Канал автора:** [HeppeGaming](https://youtube.com/c/HeppeGaming)
-- **Исходная версия:** Minecraft 1.16.1 с Fabric
-
-В описании на Modrinth проект представлен как попытка сделать Minecraft максимально сложным, не добавляя исходы, невозможные в ванильной игре. Сейчас на странице указана лицензия MIT, тогда как метаданные приложенного JAR версии 1.0.0 указывают CC0-1.0.
-
-Оригинальный скомпилированный JAR, использованный как эталон поведения, находится в файле [`worst-luck-possible-1.0.0.jar`](worst-luck-possible-1.0.0.jar).
-
-## Требования
-
-- Minecraft **1.21.11**
-- Fabric Loader **0.19.5** или более новая совместимая версия
-- Java **21**
-- Fabric API **не требуется**
+<details>
+<summary><strong>Русский</strong></summary>
 
 ## Установка
 
-1. Установите Fabric Loader для Minecraft 1.21.11.
-2. Откройте [страницу Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest) репозитория и скачайте последний файл `worst-luck-possible-*.jar`.
-3. Поместите JAR в папку `mods` клиента или сервера.
-4. Запустите игру или сервер.
+1. Установите Fabric Loader для Minecraft **1.21.11**.
+2. Скачайте `worst-luck-possible-2.3.2.jar` со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest).
+3. Поместите JAR в папку `mods` клиента или выделенного сервера.
+4. Запустите Minecraft с Java **21**.
 
-Мод работает на выделенных серверах и поддерживает нескольких игроков. Оригинальный релиз на Modrinth отмечен как предназначенный только для одиночной игры; поддержка мультиплеера добавлена в этом порте.
+Порт поддерживает мультиплеер и выделенные серверы.
 
-## Оригинальные игровые механики
+## Обзор механик
 
-### Лут
+### Огонь, лава и погода
 
-- Из блоков и мобов всегда выбирается минимально возможное количество лута.
-- Из гравия никогда не выпадает кремень.
-- Пиглины при обмене всегда выдают две единицы сгустка магмы.
-- Выпавшие из блоков предметы разлетаются в стороны от ближайшего игрока.
+- Огонь рядом с топливом сохраняет возраст 0 и больше не уничтожает соседнее топливо случайным ванильным броском. Он горит, пока его не потушат.
+- При тушении обычного огня все соседние горючие блоки уничтожаются в тот же тик; соседний TNT перед этим активируется.
+- Каждый тик источника огня выполняется до **восьми** дополнительных успешных поджогов в локальном ванильном объёме. В первую очередь огонь появляется у ног ближайших игроков и мирных животных, в том числе на плотном негорючем полу.
+- Каждый случайный тик лавы создаёт до **восьми** очагов в пределах ванильной области поджигания. Сначала выбираются подходящие позиции над плотным негорючим полом.
+- Логика огня учитывает правило распространения огня, загрузку местности и строгий лимит работы на каждый источник.
+- Грозы происходят часто. Оператор может временно снизить число попыток удара молнии в 20 раз.
+- Лошади-ловушки гарантированно создаются только рядом с живым игроком и не появляются при чрезмерном количестве постоянных мобов.
 
-### Враждебные мобы
+### Лут, предметы и развитие
 
-- Зомби и их разновидности всегда появляются детьми, в максимально сильной экипировке, какая возможна в ванилле, и являются лидерами.
-- Зомби-лидеры гарантированно вызывают подкрепление при получении урона на высокой сложности, если только в радиусе 128 блоков от соответствующего игрока ещё нет 140 живых мобов.
-- Каждый паук появляется с наездником; на высокой сложности паук получает постоянную Скорость I, а наездник становится невидимым.
-- Эндермены телепортируются вдоль направления взгляда игрока.
-- Дракон Края не садится и сохраняет невыгодную для игрока высоту полёта.
-- Враждебные мобы активно прокладывают путь к ближайшим игрокам.
+- Броски лута мобов и блоков выбирают минимальный результат; из гравия не выпадает кремень.
+- Пиглины выдают два сгустка магмы.
+- Рыбалка даёт одну пару полностью сломанных кожаных ботинок, а начальное ожидание клёва получает ванильный максимум в 600 тиков.
+- Рассадники испытаний после боя выдают одну печёную картофелину. Хранилища не изменены.
+- Око Края всегда ломается; успешная телепортация жемчугом создаёт эндермита, если разрешён спавн монстров.
+- Прочность (Unbreaking) никогда не предотвращает износ. Починка (Mending) не изменена.
+- Из яиц не вылупляются цыплята. Культуры от костной муки растут на минимальные две стадии; поддерживаемые деревья и грибы выбирают существующий исход с неудачей.
+- Плод хоруса перебирает ванильно допустимые точки от самой опасной к наименее опасной.
+- Каждое подходящее использование наковальни не в творческом режиме переводит её на следующую стадию повреждения.
+- Приручённые кошки не приносят утренние подарки.
+- Новые сделки жителей создаются из детерминированных худших наборов. Уже сохранённые сделки не переписываются.
+- Автоматический спавн странствующего торговца отключён; существующие и призванные вручную торговцы не затронуты.
 
-### Естественный спавн
+### Враждебные мобы и бой
 
-- Мирные животные не появляются естественным образом во время обычных циклов спавна мобов.
-- Спавн рыб и дельфинов отключён.
-- Враждебные мобы появляются максимально большими стаями с дополнительными попытками спавна.
-- Естественный спавн врагов старается размещать их рядом с подходящим игроком, сохраняя обычные проверки блоков, освещения, биома и столкновений.
-- Утопленники встречаются чаще благодаря подмене враждебных мобов при спавне в воде.
+- Зомби и их варианты появляются детьми и лидерами с сильной ванильно допустимой экипировкой. На высокой сложности подходящие зомби ломают двери, а лидеры надёжно вызывают подкрепление до достижения локального предела безопасности.
+- Каждый паук становится паучьим наездником; на высокой сложности паук получает постоянную Скорость I, а всадник — невидимость.
+- Естественные слизни и магмовые кубы имеют максимальный размер. Слизни используют минимальную задержку прыжка, а магмовые кубы сохраняют ванильный множитель ×4.
+- Утопленники встречаются чаще, носят трезубцы и могут становиться наездниками на цыплятах.
+- Эндермены телепортируются вдоль направления взгляда игрока. Дракон Края не садится и сохраняет невыгодную высоту полёта.
+- Шалкеры используют минимальный случайный интервал выстрела. Ведьмы выбирают вредные зелья в рамках обычного порядка условий.
+- Естественные лошади и потомки семейства лошадей получают минимальные поддерживаемые характеристики.
+- Броня мобов не теряет прочность, пока надета. Естественная экипировка не выпадает, а подобранные с земли чужие предметы сохраняют ванильное владение и правила выпадения.
+- Экипировка мобов получает сильные допустимые для предмета зачарования. Снаряды игрока отклоняются в случайном направлении до границы ванильной неточности без изменения скорости.
 
-### Прочее
+### Спавн, рейды и защита сервера
 
-- Снаряды игрока получают случайное направление отклонения на максимальной границе ванильного покоординатного диапазона неточности; повторные выстрелы при неподвижной камере больше не сходятся в одну детерминированную точку. Прежний произвольный поворот на ±180° по горизонтали и вертикали остаётся удалённым.
-- Грозы начинаются часто, а в загруженных чанках регулярно предпринимаются попытки удара молнии. Оператор может временно снизить частоту этих попыток в 20 раз для текущей серверной сессии.
+- Мирные мобы не появляются в обычных циклах естественного спавна; рыбы и дельфины отключены.
+- Размер враждебных стай максимален, а обычный естественный спавн предпочитает допустимые позиции в **24–32 блоках** от ближайшего игрока.
+- При заполненном моб-капе дальний подходящий враг удаляется только после фактического успешного появления более близкой замены.
+- Враги на расстоянии 32–128 блоков временно защищены от случайного деспавна, если рядом с закреплённым за ними игроком слишком мало противников. Мгновенный ванильный деспавн за 128 блоками не изменён.
+- Именованные, постоянные, рейдовые и другие защищённые мобы не выбираются для замены. Плотность всегда считается относительно ближайшего к каждому мобу игрока.
+- После трёх игровых дней без сна каждый подходящий игрок получает четырёх фантомов с гарантированным интервалом 1200–1400 тиков.
+- Бонусные броски рейда выбирают ванильный максимум. Малочисленная активная волна повторно пытается добавить ведьму в допустимой тёмной точке деревни, не создавая неограниченного роста сущностей.
+- Плотность кэшируется раз в секунду. Замена мобов и поиск пути используют адаптивные потиковые бюджеты и аварийные пределы.
 
-## Дополнения и изменения порта
+## Команды оператора
 
-### Близкий спавн и адаптивная замена мобов при заполненном моб-капе
+| Команда | Действие |
+| --- | --- |
+| `/worstluck lightning` | Показать текущий режим молний. |
+| `/worstluck lightning full` | Вернуть одну попытку удара на каждый тикающий чанк за тик. |
+| `/worstluck lightning reduced` | Использовать 5%-ю вероятность попытки на тикающий чанк за тик. |
+| `/worstluck fishing` | Показать текущий режим рыбалки. |
+| `/worstluck fishing boots` | Принудительно включить сломанные кожаные ботинки. |
+| `/worstluck fishing vanilla` | Временно вернуть ванильную рыбалку. |
+| `/worstluck debug spawning` | Показать кэшированную диагностику давления мобов для вызвавшего игрока. |
 
-Пока количество враждебных мобов ниже обычного моб-капа, существующие мобы не удаляются: естественный спавн предпочитает подходящие позиции на расстоянии **24–32 блоков** от ближайшего игрока. Если закреплённых за игроком враждебных мобов совсем нет, один моб может появиться в обычном ванильном радиусе за пределами 32 блоков и запустить цикл. Кэш плотности сразу сбрасывается, поэтому следующие попытки снова направляются в ближнюю полосу. Одиночный дальний моб сохраняет ванильный случайный деспавн и может исчезнуть, после чего резервная попытка повторит поиск. Все обычные проверки блоков, освещения, биома, столкновений и ограничений спавна сохраняются.
+Изменения команд не сохраняются и сбрасываются после повторного открытия мира или перезапуска сервера.
 
-Когда моб-кап враждебных существ заполнен, мод может временно разрешить корректную попытку близкого спавна. Только после успешного появления нового моба удаляется самый далёкий подходящий враг, находящийся на расстоянии от 32 до 128 блоков от ближайшего к нему игрока.
+## Сборка и проверка
 
-- Пока моб-кап не заполнен, новые близкие мобы появляются без удаления существующего моба.
-- При заполненном моб-капе дальний моб удаляется только после фактического успешного появления более близкой замены.
-- Если более близкого моба нельзя заспавнить, никто не удаляется.
-- Именованные, постоянные и иным образом защищённые мобы никогда не выбираются для удаления.
-- Расстояние всегда считается до **ближайшего к конкретному мобу игрока**, поэтому в мультиплеере один игрок не может вызвать исчезновение моба перед другим.
-- За один тик заменяется не более четырёх мобов; при росте числа ближайших сущностей бюджет автоматически снижается до двух, одной или нуля замен.
-- Обычный мгновенный деспавн остаётся на расстоянии 128 блоков; мобы вокруг ферм и платформ в 64 блоках от игрока не удаляются принудительно.
-
-### Адаптивный резерв дальних мобов
-
-Враждебные мобы на расстоянии от 32 до 128 блоков временно защищены от случайного ванильного деспавна, пока менее 45% подходящих врагов, закреплённых за ближайшим игроком, находится в радиусе 32 блоков. Обычный случайный деспавн возобновляется, когда доля ближних мобов превышает 55%.
-
-- Каждый моб учитывается относительно ближайшего игрока, поэтому логика безопасна для мультиплеера.
-- Плотность пересчитывается раз в секунду для снижения нагрузки на сервер.
-- Гистерезис 45%/55% предотвращает постоянное переключение около одного порога.
-- При количестве свыше 140 подходящих враждебных мобов на игрока защита отключается как аварийное ограничение производительности.
-- Защита дальнего резерва включается только при наличии не менее восьми закреплённых врагов, поэтому первый резервный моб сохраняет ванильный случайный деспавн.
-- Мгновенный ванильный деспавн за пределами 128 блоков не изменён.
-
-### Управление частотой молний
-
-Оператор может использовать `/worstluck lightning reduced`, чтобы заменить одну попытку удара в каждом тикающем чанке каждый тик на **5%-й шанс каждый тик** — в среднем это снижение частоты в 20 раз. `/worstluck lightning full` возвращает исходный режим с попыткой каждый тик, а `/worstluck lightning` показывает текущий режим. Настройка временная и сбрасывается на полную интенсивность после повторного открытия мира или перезапуска выделенного сервера.
-
-Лошадь-ловушка теперь создаётся только тогда, когда конечная точка удара молнии находится в том же чанке, что и живой игрок не в режиме наблюдателя, а сам игрок находится не дальше **10 блоков** от удара. При выполнении условий ловушка появляется гарантированно, без случайности локальной сложности. Создавшая её молния остаётся декоративной и не может убить лошадь; находящийся рядом игрок активирует появление всадников на следующем тике. Правило `doMobSpawning` и громоотводы по-прежнему учитываются. Новая ловушка не создаётся, если в загруженной области радиусом 128 блоков вокруг этого игрока уже есть **96 или больше живых персистирующих либо недеспавнящихся мобов**. Сама молния при этом ударяет как обычно — пропускается только дополнительная группа ловушки.
-
-### Худшая рыбалка и временное отладочное отключение
-
-По умолчанию каждый успешный улов гарантированно даёт ровно **одну пару кожаных ботинок с нулевой оставшейся прочностью** вместо использования таблицы рыболовного лута. Это убирает рыбалку как несидированный источник благоприятной случайности и не позволяет получать через обычный рыболовный лут рыбу, сокровища, зачарованные книги или кожу.
-
-Начальная случайная длительность ожидания клёва всегда получает максимальное ванильное значение: **600 тиков (30 секунд)** до применения модификаторов окружения и снастей. Дождь, доступ к небу, Приманка и все последующие стадии рыбалки продолжают влиять как в ванилле.
-
-Оператор может временно вернуть ванильную рыбалку для текущей сессии мира или сервера:
+Проект использует Gradle, Fabric Loom, Yarn mappings, байткод Java 21 и Fabric Loader 0.19.5. GitHub Actions собирает ремапнутый JAR и запускает временный выделенный сервер, чтобы обнаружить ошибки миксинов и запуска.
 
 ```text
-/worstluck fishing vanilla
+gradle clean build
 ```
 
-Дополнительные команды:
+CI сохраняет файл как `dist/worst-luck-possible-2.3.2.jar`. Обычным пользователям следует скачивать опубликованный файл релиза, а не копию из репозитория.
 
-- `/worstluck fishing` — показать текущий режим рыбалки;
-- `/worstluck fishing boots` — немедленно снова включить гарантированные кожаные ботинки.
+## Оригинальный проект и авторы
 
-Настройка не сохраняется. После закрытия и повторного открытия одиночного мира или перезапуска выделенного сервера гарантированные ботинки включаются снова. На выделенном сервере простое переподключение игрока не перезапускает серверную сессию. Для команд требуются права оператора или ведущего игры.
+- **Автор оригинала:** Heppe
+- **Оригинальный мод:** [Worst Luck Possible на Modrinth](https://modrinth.com/mod/worst-luck-possible)
+- **Оригинальное видео:** [Is it possible to beat Minecraft with only bad RNG?](https://www.youtube.com/watch?v=LYmyuoRJecA)
+- **Версия оригинала:** Minecraft 1.16.1 с Fabric
+- **Автор порта:** HyBri:D
 
-### Гарантированные атаки фантомов
-
-Если игрок не спал три игровых дня, атаки фантомов гарантированно происходят каждые **1200–1400 тиков** при выполнении условий, совместимых с ванильной логикой:
-
-- игрок находится на высоте Y 64 или выше;
-- над игроком видно небо;
-- освещение достаточно низкое для ванильного спавнера фантомов;
-- спавн фантомов и враждебных мобов разрешён;
-- игрок не находится в режиме наблюдателя;
-- выбранная позиция для спавна свободна.
-
-Для каждого подходящего игрока появляется стая из **четырёх фантомов** на высоте **20–34 блока над игроком** и с горизонтальным смещением до **9 блоков**. Условия проверяются независимо для каждого игрока.
-
-### Детерминированные худшие сделки жителей
-
-Новые предложения жителей теперь генерируются из детерминированных наборов худших сделок. Пары предметов выбраны по фактическим таблицам Minecraft 1.21.11, цены случайно зачарованной экипировки зафиксированы на ванильных максимумах, а зачарования всегда равны: Огнеупорность I для брони, Бич членистоногих I для оружия, Откидывание I для луков, Эффективность I для инструментов, Пронзающая стрела I для арбалетов и Проклятие утраты I для книг за 38 изумрудов и книгу.
-
-Запрошенные наборы применены к бронникам, мясникам, картографам, священникам, фермерам, рыбакам, лучникам, кожевникам, библиотекарям, инструментальщикам, пастухам, каменщикам и оружейникам. Под чёрной и серой керамикой каменщика используются обычные чёрная и серая терракота; лучник продаёт стрелы длительной невидимости. Не указанные уровни остаются ванильными.
-
-Важные отличия реальной версии 1.21.11 от старых описаний торговли:
-
-- на третьем уровне картографа карта океана конкурирует с картой камер испытаний; мод исключает последнюю;
-- на втором уровне картографа есть зависящие от биома и типа карты деревень, болот и джунглей, поэтому не все остальные его сделки фиксированы;
-- на третьем уровне рыбака остаётся случайно зачарованная удочка;
-- на четвёртом уровне библиотекаря также были часы; мод исключает их в пользу выбранного компаса.
-
-Уже сохранённые сделки существующих жителей не переписываются: принудительная миграция сбросила бы количество использований, спрос и скидки и могла бы уничтожить предложения предыдущих уровней. Для полного эффекта нужны новые жители либо жители, у которых предложения соответствующего уровня ещё не были сгенерированы.
-
-### Странствующие торговцы
-
-Автоматический спавн странствующего торговца и его лам отключён. Уже существующие торговцы, команда `/summon` и яйца призыва не затрагиваются.
-
-### Игровые механики версии 2.2.0
-
-Версия **2.2.0** переносит проверенные механики беты в стабильный релиз, включая итоговые исправления резервного естественного спавна и повторного появления рейдовых ведьм.
-
-- Пауки на высокой сложности получают постоянную Скорость I. Поскольку каждый паук несёт скелета, ускорение помогает всаднику догнать игрока вместо лишнего усиления и без того большого урона.
-- Естественно появившиеся слизни и магмовые кубы получают максимальный ванильный естественный размер.
-- Броня заспавненных мобов получает Защиту IV и Шипы III. Луки получают Силу V, Откидывание II и Горящую стрелу I; арбалеты — Быструю перезарядку III и Пронзающую стрелу IV; оружие ближнего боя — максимальные боевые зачарования текущей реализации.
-- Естественные лошади получают ванильные минимумы: 15 здоровья, скорость 0,1125 и силу прыжка 0,4. Потомки семейства лошадей также получают эти минимумы; естественные ослы получают минимальное случайное здоровье, сохраняя фиксированные ванильные скорость и прыжок.
-- На высокой сложности зомби всегда ломают двери, если это поддерживает их навигация. Координаты подкреплений смещаются ближе к соответствующему игроку, но ванильные проверки места, столкновений, жидкостей и минимальной дистанции сохраняются.
-- Бонусный состав рейда всегда получает ванильный максимум. После каждой волны может присоединиться одна дополнительная ведьма, но только при возможности заменить дальнего непостоянного врага один к одному. Участники рейда и защищённые мобы не удаляются, поэтому общее число сущностей не растёт.
-- Пока в активной волне осталось не более двух налётчиков, мод постоянно пытается пополнять её одной ведьмой. Каждый пакет проверяет до 64 точек в радиусе 32 блоков от ближайшего игрока: освещение не выше 7, плотный пол, два свободных блока, загруженная и тикающая область, ванильная проверка спавна ведьмы и близость к занятой деревне. Успешный спавн полностью сбрасывает состояние неудач, поэтому убийство ведьмы или другого налётчика запускает новые попытки, а не отключает механику до конца волны. Пока остаётся хотя бы один налётчик, неудачные пакеты повторяются каждую секунду. При нуле налётчиков выполняются пять независимых пакетов по 64 позиции, и только после провала всех пяти ванильная логика может завершить волну.
-- Плод хоруса по-прежнему создаёт 16 кандидатов внутри ванильного диаметра 16 блоков и использует обычную проверку телепортации, но пробует точки от самой опасной к наименее опасной. Учитываются темнота, ближайшие враги, опасные блоки, обрывы, понижение высоты и удаление; случайная добавка не даёт полностью контролировать результат.
-- Всадники лошадей-ловушек получают ту же политику максимальных зачарований лука и брони, что и остальные экипированные враждебные мобы.
-- Плотность врагов, лимит подкреплений, защита дальнего резерва и замена при моб-капе используют общий секундный кэш. Идущие к игроку мобы делят ограниченный и распределённый по тикам бюджет поиска пути.
-- Интенсивность молний намеренно не уменьшена. Полный режим сохраняет требуемое разрушение окружения; существующая временная команда снижения частоты в 20 раз остаётся доступной операторам.
-- Патрули в этой бете не изменены: гарантированный капитан одновременно гарантировал бы полезный источник зловещих бутылок.
-
-Особенно важно проверить: плотность мобов вокруг разных игроков, все волны рейдов на разных сложностях, позиции подкреплений, разведение лошадей, плод хоруса в пещерах/Незере/Крае, ловушки-лошади и длительные грозы.
-
-### Игровые механики версии 2.3.0
-
-Версия **2.3.0** переносит проверенные механики беты в стабильный релиз, включая исправления разброса снарядов, зачарований копий и возврата подобранных предметов.
-
-- Каждое брошенное Око Края выбирает ванильный исход с разрушением и не выпадает предметом.
-- Успешная телепортация игрока жемчугом Края всегда создаёт эндермита, если разрешён спавн монстров.
-- Лечение зомби-жителя начинается с ванильного максимума в 6000 тиков и не получает случайного ускорения от кроватей и железных решёток.
-- Прочность всегда тратится, даже при наличии Прочности (Unbreaking). Починка (Mending) намеренно не изменена.
-- Броня, надетая на мобов, не теряет прочность, включая прямой износ шлемов скелетов и зомби на солнце. Защита привязана к логике владельца, а не к компоненту предмета, поэтому выпавшая броня снова имеет обычную разрушаемость.
-- Естественно созданная экипировка мобов по-прежнему не выпадает после смерти, но подобранные с земли чужие предметы сохраняют ванильное гарантированное выпадение и возвращаются без изменений.
-- Когда моб заменяет естественно созданную экипировку более предпочтительным предметом, старый естественный предмет всегда проигрывает ванильный 8,5%-й бросок и исчезает. Ранее подобранные чужие предметы при последующей замене возвращаются как обычно.
-- Брошенные яйца никогда не создают цыплят.
-- Удобренные костной мукой культуры получают минимальные ванильные две стадии роста. Саженцы, азалии, грибы Нижнего мира и обычные грибы выбирают уже существующий ванильный случайный провал костной муки.
-- Шалкеры используют минимальный случайный интервал между пулями — 20 тиков. Слизни используют минимальную случайную задержку прыжка — 10 тиков; магмовые кубы сохраняют ванильный множитель ×4, то есть 40 тиков.
-- Ведьма всегда выпивает первое подходящее защитное зелье согласно существующему ванильному приоритету условий. При броске зелий благоприятная для игрока 25%-я ближняя ветка Слабости отключена, поэтому после более ранних правил Замедления и Отравления остаётся Моментальный урон.
-- Интервалы атак гастов и ифритов не изменены: проверка кода Minecraft 1.21.11 показала, что они фиксированы, а не случайны.
-- Зачарования оружия мобов ограничены допустимыми для предмета сочетаниями: мечи получают Остроту V, Заговор огня II и Отбрасывание II; копья — Остроту V, Заговор огня II, Отбрасывание II и Выпад III; топоры — Остроту V; трезубцы — Пронзатель V, Верность III и Громовержец I.
-
-Особенно важно проверить: шлемы мобов в течение длинного дня, урон броне в бою, лечение с кроватями/решётками и без них, многократные броски жемчуга и Ока Края, решения ведьм при разном здоровье и расстоянии, частоту выстрелов шалкеров, движение слизней и магмовых кубов, а также разные цели костной муки.
-
-### Игровые механики версии 2.3.1
-
-Версия **2.3.1** — стабильное небольшое обновление, основная механика которого посвящена разрушительному огню; остальные изменения добавляют несколько худших исходов и диагностику.
-
-- За каждый тик одного блока огня выполняется до **восьми дополнительных гарантированных распространений** в пределах ванильной области прямого и дальнего распространения. Сначала обрабатываются соседние горючие блоки, включая TNT, затем подходящие воздушные блоки рядом с горючими. Дополнительная фаза работает только при включённом распространении огня и если исходный огонь пережил свой ванильный тик.
-- Огонь также может появиться в воздушном блоке у ног ближайшего игрока или мирного животного, стоящего на плотном негорючем блоке. Такие цели имеют приоритет в рамках того же ограниченного бюджета на тик.
-- Обычный и зловещий рассадники испытаний после боя выбрасывают ровно **одну печёную картофелину** вместо ключа, зелья или другого расходника. Хранилища испытаний и сидированный выбор боевых предметов зловещего рассадника не изменены.
-- Каждое подходящее извлечение результата из наковальни игроком не в творческом режиме переводит её на следующую стадию повреждения; повреждённая наковальня при следующем таком использовании уничтожается. Творческий режим не затронут.
-- Приручённые кошки по-прежнему могут спать рядом с владельцем, но никогда не приносят утренний подарок.
-- `/worstluck debug spawning` показывает кэш давления мобов для вызвавшего игрока: общее число мобов, число постоянных мобов, общее/ближнее/дальнее число врагов, бюджет замен, защиту дальнего резерва и расстояние до самого дальнего заменяемого врага. Команда требует прав оператора или ведущего игры и должна выполняться игроком.
-- Снаряды игрока теперь выбирают случайный азимут вокруг линии прицеливания, после чего отклонение доводится до границы ванильного покоординатного диапазона неточности. Поэтому при неподвижной камере сохраняется разнообразный разброс вместо полёта в одну повторяющуюся точку, а итоговая скорость нормализуется и не меняет скорость снаряда.
-
-Особенно важно проверить: плотный огонь около построек и TNT, огонь рядом с игроками и мирными животными на каменных полах, многократное завершение рассадников, все три состояния наковальни, циклы сна кошек, серии выстрелов при неподвижной камере и диагностику спавна в мультиплеере.
-
-### Современная реализация
-
-- Миксины и маппинги перенесены на Minecraft 1.21.11/Yarn.
-- Проект обновлён до Java 21 и современного набора инструментов Fabric.
-- Добавлен безопасный для мультиплеера расчёт расстояния до ближайшего игрока.
-- Добавлены автоматические сборки GitHub Actions и дымовые тесты с запуском выделенного сервера.
-
-## Сборка
-
-Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
-
-```text
-dist/worst-luck-possible-2.3.1.jar
-```
-
-Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
-
-Workflow также запускает временный выделенный Fabric-сервер, чтобы обнаруживать ошибки применения миксинов и сбои при запуске.
-
-## Отказ от ответственности
-
-Это неофициальная модернизация оригинального мода. Minecraft является товарным знаком Mojang Studios. Проект не связан с Mojang Studios и не одобрен компанией.
+Оригинальный JAR, использованный как эталон поведения, сохранён в [`worst-luck-possible-1.0.0.jar`](worst-luck-possible-1.0.0.jar). На странице Modrinth сейчас указана лицензия MIT, а встроенные метаданные JAR указывают CC0-1.0. В метаданных этого порта указана CC0-1.0.
 
 </details>
+
+## Disclaimer / Отказ от ответственности
+
+This is an unofficial modernization of the original mod. Minecraft is a trademark of Mojang Studios. This project is not affiliated with or endorsed by Mojang Studios.
+
+Это неофициальная модернизация оригинального мода. Minecraft является товарным знаком Mojang Studios. Проект не связан с Mojang Studios и не одобрен компанией.
