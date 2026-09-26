@@ -2,9 +2,9 @@
 
 A modern Fabric port of **Worst Luck Possible**. Favorable randomness is replaced with the worst practical vanilla-compatible outcome: hostile spawns stay close, loot rolls low, mobs receive dangerous equipment, fire refuses to die, and useful random events become harmful.
 
-> **Current prerelease:** 2.4.0-beta.1 · Minecraft 1.21.11 · Fabric Loader 0.19.5+ · Fabric API 0.141.6+ · Java 21
+> **Current prerelease:** 2.4.0-beta.1 · Minecraft 1.21.11 · Fabric Loader 0.19.5+ · Java 21
 >
-> **Development version:** 2.4.0-beta.2
+> **Development version:** 2.4.0-beta.2 · Fabric API 0.141.6+ required
 
 [Download releases](https://github.com/myBSnotE/worst-luck-possible-port/releases) · [Report a bug](https://github.com/myBSnotE/worst-luck-possible-port/issues)
 
