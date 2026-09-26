@@ -171,7 +171,7 @@ Testing priorities: multiplayer density around separate players, raids through e
 
 ### Experimental 2.3.0 beta mechanics
 
-Version **2.3.0-beta.1** is a prerelease because it changes several independent vanilla RNG paths and needs focused gameplay testing.
+Version **2.3.0** remains a prerelease because it changes several independent vanilla RNG paths and needs focused gameplay testing.
 
 - Every thrown Eye of Ender chooses its vanilla break outcome instead of dropping.
 - A successful player Ender Pearl teleport always creates an endermite when monster spawning is allowed.
@@ -183,7 +183,7 @@ Version **2.3.0-beta.1** is a prerelease because it changes several independent 
 - Shulkers use the minimum random bullet interval of 20 ticks. Slimes use the minimum random jump delay of 10 ticks; magma cubes retain their vanilla four-times multiplier, giving 40 ticks.
 - A witch always drinks the first applicable defensive potion under vanilla's existing condition order. For thrown potions, the favorable 25% close-range Weakness branch is suppressed, leaving Harming after the earlier Slowness and Poison rules.
 - Ghast and blaze attack timing is unchanged: inspection of Minecraft 1.21.11 showed fixed, not random, attack intervals.
-- Mob weapon enchantments are now limited to combinations valid for the item type: swords receive Sharpness V, Fire Aspect II and Knockback II; axes receive Sharpness V; tridents receive Impaling V, Loyalty III and Channeling I.
+- Mob weapon enchantments are limited to combinations valid for the item type: swords receive Sharpness V, Fire Aspect II and Knockback II; spears receive Sharpness V, Fire Aspect II, Knockback II and Lunge III; axes receive Sharpness V; tridents receive Impaling V, Loyalty III and Channeling I.
 
 Testing priorities: mob helmets through long daytime sessions, armor damaged by combat, curing with and without beds/iron bars, repeated pearl and eye throws, witch decisions at different health and distance states, shulker fire rate, slime/magma-cube movement, and bonemeal targets.
 
@@ -199,7 +199,7 @@ Testing priorities: mob helmets through long daytime sessions, armor damaged by 
 The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
 
 ```text
-dist/worst-luck-possible-2.3.0-beta.2.jar
+dist/worst-luck-possible-2.3.0-beta.3.jar
 ```
 
 End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
@@ -383,7 +383,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 ### Экспериментальные механики беты 2.3.0
 
-Версия **2.3.0-beta.1** выпущена как предварительная: она меняет несколько независимых путей ванильной случайности и требует отдельного игрового тестирования.
+Версия **2.3.0** пока остаётся предварительной: она меняет несколько независимых путей ванильной случайности и требует отдельного игрового тестирования.
 
 - Каждое брошенное Око Края выбирает ванильный исход с разрушением и не выпадает предметом.
 - Успешная телепортация игрока жемчугом Края всегда создаёт эндермита, если разрешён спавн монстров.
@@ -395,7 +395,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 - Шалкеры используют минимальный случайный интервал между пулями — 20 тиков. Слизни используют минимальную случайную задержку прыжка — 10 тиков; магмовые кубы сохраняют ванильный множитель ×4, то есть 40 тиков.
 - Ведьма всегда выпивает первое подходящее защитное зелье согласно существующему ванильному приоритету условий. При броске зелий благоприятная для игрока 25%-я ближняя ветка Слабости отключена, поэтому после более ранних правил Замедления и Отравления остаётся Моментальный урон.
 - Интервалы атак гастов и ифритов не изменены: проверка кода Minecraft 1.21.11 показала, что они фиксированы, а не случайны.
-- Зачарования оружия мобов теперь ограничены допустимыми для предмета сочетаниями: мечи получают Остроту V, Заговор огня II и Отбрасывание II; топоры — Остроту V; трезубцы — Пронзатель V, Верность III и Громовержец I.
+- Зачарования оружия мобов ограничены допустимыми для предмета сочетаниями: мечи получают Остроту V, Заговор огня II и Отбрасывание II; копья — Остроту V, Заговор огня II, Отбрасывание II и Выпад III; топоры — Остроту V; трезубцы — Пронзатель V, Верность III и Громовержец I.
 
 Особенно важно проверить: шлемы мобов в течение длинного дня, урон броне в бою, лечение с кроватями/решётками и без них, многократные броски жемчуга и Ока Края, решения ведьм при разном здоровье и расстоянии, частоту выстрелов шалкеров, движение слизней и магмовых кубов, а также разные цели костной муки.
 
@@ -411,7 +411,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
 
 ```text
-dist/worst-luck-possible-2.3.0-beta.2.jar
+dist/worst-luck-possible-2.3.0-beta.3.jar
 ```
 
 Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
