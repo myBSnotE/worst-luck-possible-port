@@ -16,6 +16,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.rule.GameRules;
@@ -123,7 +124,16 @@ public abstract class LightningMixin {
 					chunk.getStartX() + world.getRandom().nextInt(16),
 					0,
 					chunk.getStartZ() + world.getRandom().nextInt(16)));
-			if (world.hasRain(surface) && world.getBlockState(surface.down()).isBurnable()) {
+			BlockPos supportPos = surface.down();
+			var support = world.getBlockState(supportPos);
+			// isBurnable() alone also includes thin or multipart blocks such as
+			// doors, trapdoors, signs, and beds. Target only a full, solid upper
+			// surface where the resulting fire can behave like ordinary surface fire.
+			if (world.hasRain(surface)
+					&& world.isAir(surface)
+					&& support.isBurnable()
+					&& support.isFullCube(world, supportPos)
+					&& support.isSideSolidFullSquare(world, supportPos, Direction.UP)) {
 				return surface;
 			}
 		}

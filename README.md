@@ -2,9 +2,9 @@
 
 A modern Fabric port of **Worst Luck Possible**. Favorable randomness is replaced with the worst practical vanilla-compatible outcome: hostile spawns stay close, loot rolls low, mobs receive dangerous equipment, fire refuses to die, and useful random events become harmful.
 
-> **Current prerelease:** 2.4.0-beta.1 · Minecraft 1.21.11 · Fabric Loader 0.19.5+ · Java 21
+> **Current prerelease:** 2.4.0-beta.2 · Minecraft 1.21.11 · Fabric Loader 0.19.5+ · Java 21
 >
-> **Development version:** 2.4.0-beta.2 · Fabric API 0.141.6+ required
+> **Development version:** 2.4.0-beta.3 · Fabric API 0.141.6+ required
 
 [Download releases](https://github.com/myBSnotE/worst-luck-possible-port/releases) · [Report a bug](https://github.com/myBSnotE/worst-luck-possible-port/issues)
 
@@ -14,7 +14,7 @@ A modern Fabric port of **Worst Luck Possible**. Favorable randomness is replace
 ## Install
 
 1. Install Fabric Loader and Fabric API for Minecraft **1.21.11**.
-2. Download `worst-luck-possible-2.4.0-beta.1.jar` from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases).
+2. Download `worst-luck-possible-2.4.0-beta.2.jar` from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases).
 3. Put the JAR in the client or dedicated server `mods` folder.
 4. Optionally install Mod Menu to open the configuration from the mod list.
 5. Start Minecraft with Java **21**.
@@ -78,7 +78,7 @@ The port supports multiplayer and dedicated servers.
 
 Open the settings through the optional Mod Menu integration or the configurable `L` key. Outside a world, the screen edits defaults for newly created worlds; inside a world, it edits the server-authoritative per-world configuration. Responsible mode locks world settings behind operator permissions.
 
-Weather, lightning targeting and frequency, fishing, and smart burning modes are currently configurable. Every option includes a hover tooltip in English and Russian.
+The screen is split into General and Combat & explosions pages. Weather, lightning, fishing, smart burning, player spread, hostile leading, critical projectile damage, and explosion destruction are configurable. Vanilla and Maximum bad luck profiles update all gameplay settings together; mixed values are shown as Custom. Every option includes a hover tooltip in English and Russian.
 
 See the [complete mechanics and configuration documentation](docs/README.md).
 
@@ -118,7 +118,7 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 ## Установка
 
 1. Установите Fabric Loader и Fabric API для Minecraft **1.21.11**.
-2. Скачайте `worst-luck-possible-2.4.0-beta.1.jar` со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases).
+2. Скачайте `worst-luck-possible-2.4.0-beta.2.jar` со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases).
 3. Поместите JAR в папку `mods` клиента или выделенного сервера.
 4. При желании установите Mod Menu, чтобы открывать конфигурацию из списка модов.
 5. Запустите Minecraft с Java **21**.

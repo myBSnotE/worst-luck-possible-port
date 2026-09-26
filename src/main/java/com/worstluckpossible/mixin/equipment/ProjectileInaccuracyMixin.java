@@ -1,9 +1,12 @@
 package com.worstluckpossible.mixin.equipment;
 
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,9 +26,11 @@ public class ProjectileInaccuracyMixin {
 	private void worstluck$chooseWorstVanillaSpread(double x, double y, double z, float power,
 			float uncertainty, CallbackInfo ci) {
 		ProjectileEntity self = (ProjectileEntity) (Object) this;
-		if (uncertainty <= 0.0F || power <= 0.0F) {
+		if (!(self.getEntityWorld() instanceof ServerWorld serverWorld)
+				|| uncertainty <= 0.0F || power <= 0.0F) {
 			return;
 		}
+		WorstLuckConfig config = WorstLuckConfigManager.get(serverWorld.getServer());
 
 		Vec3d aim = new Vec3d(x, y, z);
 		if (aim.lengthSquared() == 0.0D) {
@@ -36,6 +41,9 @@ public class ProjectileInaccuracyMixin {
 		Entity owner = self.getOwner();
 		if (owner instanceof HostileEntity hostile && hostile.getTarget() instanceof PlayerEntity target
 				&& target.isAlive() && !target.isSpectator()) {
+			if (config.hostileProjectileAim == WorstLuckConfig.HostileProjectileAim.VANILLA) {
+				return;
+			}
 			// ServerPlayerEntity#getMovement is updated from accepted movement packets and
 			// therefore reflects real player displacement on a dedicated server.
 			Vec3d predictedAim = worstluck$predictAim(new Vec3d(x, y, z), target.getMovement(), power);
@@ -45,7 +53,8 @@ public class ProjectileInaccuracyMixin {
 			return;
 		}
 
-		if (!(owner instanceof PlayerEntity)) {
+		if (!(owner instanceof PlayerEntity)
+				|| config.playerProjectileSpread == WorstLuckConfig.PlayerProjectileSpread.VANILLA) {
 			return;
 		}
 

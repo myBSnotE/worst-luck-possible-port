@@ -15,10 +15,15 @@ import net.minecraft.text.Text;
 
 public final class WorstLuckConfigScreen extends Screen {
 	private static final int CONTROL_WIDTH = 310;
+	private static final int ROW_HEIGHT = 22;
+	private enum Page { GENERAL, COMBAT }
+	private enum Profile { MAXIMUM, VANILLA, CUSTOM }
+
 	private final Screen parent;
 	private final WorstLuckConfig config;
 	private final boolean worldSettings;
 	private final boolean editable;
+	private Page page = Page.GENERAL;
 
 	public WorstLuckConfigScreen(Screen parent, WorstLuckConfig config, boolean worldSettings, boolean editable) {
 		super(Text.translatable("worstluck.config.title"));
@@ -31,24 +36,60 @@ public final class WorstLuckConfigScreen extends Screen {
 	@Override
 	protected void init() {
 		int x = (width - CONTROL_WIDTH) / 2;
-		int y = 48;
+		int y = 40;
+		addProfile(x, y);
+		y += 22;
+		int tabWidth = (CONTROL_WIDTH - 4) / 2;
+		ButtonWidget general = ButtonWidget.builder(Text.translatable("worstluck.config.page.general"), button -> {
+			page = Page.GENERAL;
+			clearAndInit();
+		}).dimensions(x, y, tabWidth, 20).build();
+		general.active = page != Page.GENERAL;
+		addDrawableChild(general);
+		ButtonWidget combat = ButtonWidget.builder(Text.translatable("worstluck.config.page.combat"), button -> {
+			page = Page.COMBAT;
+			clearAndInit();
+		}).dimensions(x + tabWidth + 4, y, tabWidth, 20).build();
+		combat.active = page != Page.COMBAT;
+		addDrawableChild(combat);
+		y += 22;
+
+		if (page == Page.GENERAL) {
+			addGeneralControls(x, y);
+		} else {
+			addCombatControls(x, y);
+		}
+
+		int bottom = height - 24;
+		ButtonWidget save = ButtonWidget.builder(Text.translatable("worstluck.config.save"), button -> {
+			ClientConfigState.save(config, worldSettings);
+			close();
+		}).dimensions(width / 2 - 154, bottom, 150, 20).build();
+		save.active = editable;
+		if (!editable) save.setTooltip(Tooltip.of(Text.translatable("worstluck.config.read_only.tooltip")));
+		addDrawableChild(save);
+		addDrawableChild(ButtonWidget.builder(Text.translatable("gui.cancel"), button -> close())
+				.dimensions(width / 2 + 4, bottom, 150, 20).build());
+	}
+
+	private void addGeneralControls(int x, int y) {
 		addEnum(x, y, "storm_frequency", config.stormFrequency, WorstLuckConfig.StormFrequency.values(),
 				value -> config.stormFrequency = value);
-		y += 24;
+		y += ROW_HEIGHT;
 		addEnum(x, y, "lightning_targets", config.lightningTargets, WorstLuckConfig.LightningTargets.values(),
 				value -> config.lightningTargets = value);
-		y += 24;
+		y += ROW_HEIGHT;
 		PercentSlider frequency = new PercentSlider(x, y, CONTROL_WIDTH, config.lightningFrequencyPercent);
 		frequency.active = editable;
 		frequency.setTooltip(Tooltip.of(Text.translatable("worstluck.config.lightning_frequency.tooltip")));
 		addDrawableChild(frequency);
-		y += 24;
+		y += ROW_HEIGHT;
 		addEnum(x, y, "fishing", config.fishingMode, WorstLuckConfig.FishingMode.values(),
 				value -> config.fishingMode = value);
-		y += 24;
+		y += ROW_HEIGHT;
 		addEnum(x, y, "fire", config.fireMode, WorstLuckConfig.FireMode.values(),
 				value -> config.fireMode = value);
-		y += 24;
+		y += ROW_HEIGHT;
 		CyclingButtonWidget<Boolean> responsible = CyclingButtonWidget.onOffBuilder(config.responsibleMode)
 				.tooltip(value -> Tooltip.of(Text.translatable("worstluck.config.responsible.tooltip")))
 				.build(x, y, CONTROL_WIDTH, 20, Text.translatable("worstluck.config.responsible"),
@@ -69,17 +110,44 @@ public final class WorstLuckConfigScreen extends Screen {
 						});
 		responsible.active = editable;
 		addDrawableChild(responsible);
+	}
 
-		int bottom = height - 28;
-		ButtonWidget save = ButtonWidget.builder(Text.translatable("worstluck.config.save"), button -> {
-			ClientConfigState.save(config, worldSettings);
-			close();
-		}).dimensions(width / 2 - 154, bottom, 150, 20).build();
-		save.active = editable;
-		if (!editable) save.setTooltip(Tooltip.of(Text.translatable("worstluck.config.read_only.tooltip")));
-		addDrawableChild(save);
-		addDrawableChild(ButtonWidget.builder(Text.translatable("gui.cancel"), button -> close())
-				.dimensions(width / 2 + 4, bottom, 150, 20).build());
+	private void addCombatControls(int x, int y) {
+		addEnum(x, y, "player_projectiles", config.playerProjectileSpread,
+				WorstLuckConfig.PlayerProjectileSpread.values(), value -> config.playerProjectileSpread = value);
+		y += ROW_HEIGHT;
+		addEnum(x, y, "hostile_projectiles", config.hostileProjectileAim,
+				WorstLuckConfig.HostileProjectileAim.values(), value -> config.hostileProjectileAim = value);
+		y += ROW_HEIGHT;
+		addEnum(x, y, "projectile_critical", config.projectileCriticalDamage,
+				WorstLuckConfig.ProjectileCriticalDamage.values(), value -> config.projectileCriticalDamage = value);
+		y += ROW_HEIGHT;
+		addEnum(x, y, "explosions", config.explosionMode,
+				WorstLuckConfig.ExplosionMode.values(), value -> config.explosionMode = value);
+	}
+
+	private void addProfile(int x, int y) {
+		Profile current = currentProfile();
+		CyclingButtonWidget<Profile> profile = CyclingButtonWidget.builder(
+				value -> Text.translatable("worstluck.config.profile." + value.name().toLowerCase(Locale.ROOT)), current)
+				.values(Arrays.asList(Profile.values()))
+				.tooltip(value -> Tooltip.of(Text.translatable(
+						"worstluck.config.profile." + value.name().toLowerCase(Locale.ROOT) + ".tooltip")))
+				.build(x, y, CONTROL_WIDTH, 20, Text.translatable("worstluck.config.profile"),
+						(button, value) -> {
+							if (value == Profile.VANILLA) config.applyVanillaPreset();
+							if (value == Profile.MAXIMUM) config.applyWorstPreset();
+							clearAndInit();
+						});
+		profile.active = editable;
+		if (!editable) profile.setTooltip(Tooltip.of(Text.translatable("worstluck.config.read_only.tooltip")));
+		addDrawableChild(profile);
+	}
+
+	private Profile currentProfile() {
+		if (config.isVanillaPreset()) return Profile.VANILLA;
+		if (config.isWorstPreset()) return Profile.MAXIMUM;
+		return Profile.CUSTOM;
 	}
 
 	private <T extends Enum<T>> void addEnum(int x, int y, String key, T current, T[] values,

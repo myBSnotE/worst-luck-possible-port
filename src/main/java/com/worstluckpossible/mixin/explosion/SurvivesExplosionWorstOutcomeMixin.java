@@ -1,5 +1,8 @@
 package com.worstluckpossible.mixin.explosion;
 
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.config.WorstLuckConfigManager;
+import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.condition.SurvivesExplosionLootCondition;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,7 +19,10 @@ public abstract class SurvivesExplosionWorstOutcomeMixin {
 					target = "Lnet/minecraft/util/math/random/Random;nextFloat()F"
 			)
 	)
-	private float worstluck$failExplosionSurvival(Random random) {
-		return Math.nextDown(1.0F);
+	private float worstluck$failExplosionSurvival(Random random, LootContext context) {
+		return WorstLuckConfigManager.get(context.getWorld().getServer()).explosionMode
+				== WorstLuckConfig.ExplosionMode.MAXIMUM
+				? Math.nextDown(1.0F)
+				: random.nextFloat();
 	}
 }

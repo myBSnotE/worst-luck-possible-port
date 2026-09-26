@@ -1,9 +1,12 @@
 package com.worstluckpossible.mixin.equipment;
 
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +23,13 @@ public abstract class ProjectileCriticalDamageMixin {
 			)
 	)
 	private int worstluck$chooseCriticalDamageBonus(Random random, int bound) {
-		Entity owner = ((PersistentProjectileEntity) (Object) this).getOwner();
+		PersistentProjectileEntity projectile = (PersistentProjectileEntity) (Object) this;
+		if (!(projectile.getEntityWorld() instanceof ServerWorld world)
+				|| WorstLuckConfigManager.get(world.getServer()).projectileCriticalDamage
+				== WorstLuckConfig.ProjectileCriticalDamage.VANILLA) {
+			return random.nextInt(bound);
+		}
+		Entity owner = projectile.getOwner();
 		if (owner instanceof PlayerEntity) {
 			return 0;
 		}

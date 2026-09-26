@@ -11,6 +11,18 @@ The settings screen can be opened in two ways:
 
 Every control has a hover tooltip. Tooltips describe the selected value, not merely the option name. English and Russian translations are included.
 
+The screen has **General** and **Combat & explosions** pages. Switching pages does not save early; the **Save** button submits the complete configuration.
+
+## Profiles
+
+| Profile | Behavior |
+| --- | --- |
+| Maximum bad luck | Applies the mod-controlled worst value to every configurable gameplay mechanic. |
+| Vanilla | Disables every configurable gameplay intervention. |
+| Custom | Appears automatically when individual values no longer match either complete preset. |
+
+Profiles deliberately do not change Responsible mode because that option controls permissions rather than gameplay.
+
 ## Default settings and world settings
 
 There are two independent configuration layers.
@@ -65,7 +77,7 @@ Changing the global defaults cannot unlock an existing responsible-mode world.
 | --- | --- |
 | Loaded area | A successful mod-controlled attempt uses a vanilla surface position in the ticking chunk. |
 | Players and passive mobs | Rain-exposed players are preferred, followed by passive mobs. No target means no strike. |
-| Players, passive mobs, and flammable blocks | Uses the previous priorities, then samples rain-exposed surface positions for a burnable block. No target means no strike. |
+| Players, passive mobs, and flammable blocks | Uses the previous priorities, then samples rain-exposed burnable full blocks with a solid upper face. Thin or multipart blocks such as doors, trapdoors, signs, and beds are excluded. No target means no strike. |
 | Vanilla | The injection returns without cancelling Minecraft's original `tickThunder` implementation. |
 
 ### Lightning frequency
@@ -91,6 +103,34 @@ Rain, sky access, Lure, and later fishing phases remain vanilla in all three mod
 | Accelerated | 2.3.1-style forced direct-neighbor pass, then extended valid air positions; eight placements total | Vanilla aging and direct fuel consumption | Up to eight extra valid ignitions |
 
 All modes obey Minecraft 1.21.11's `fire_spread_radius_around_player` world rule (`-1` allows fire spread everywhere). Air targets still require the same nearby burnable support that vanilla checks, so the mod cannot cross a completely nonflammable surface by itself.
+
+### Player projectile spread
+
+| Value | Behavior |
+| --- | --- |
+| Vanilla | Keeps Minecraft's random projectile uncertainty. |
+| Worst spread | Chooses a varying point on the boundary of the same per-axis uncertainty cube without changing projectile speed. |
+
+### Hostile projectile aim
+
+| Value | Behavior |
+| --- | --- |
+| Vanilla | Keeps the hostile shooter's ordinary random spread. |
+| Lead players | Uses only the vanilla uncertainty allowance to approach the player's predicted position. If an exact intercept is outside that allowance, the closest permitted direction is used. |
+
+### Critical projectile damage
+
+| Value | Behavior |
+| --- | --- |
+| Vanilla | Keeps the vanilla random critical bonus. |
+| Worst outcome | Minimizes the bonus for player-owned persistent projectiles and maximizes it for hostile-owned projectiles. |
+
+### Explosions
+
+| Value | Behavior |
+| --- | --- |
+| Vanilla | Keeps random explosion-ray strength, fire rolls, and explosion-dependent block-drop rolls unchanged. |
+| Maximum destruction | Uses maximum vanilla-random ray strength, succeeds every valid fire roll for explosions that already create fire, and fails explosion-dependent drops whenever vanilla permits failure. |
 
 ## Removed runtime commands
 

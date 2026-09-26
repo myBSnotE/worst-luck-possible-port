@@ -13,7 +13,9 @@
 	"contact": {
 		"homepage": "https://github.com/myBSnotE/worst-luck-possible-port",
 		"sources": "https://github.com/myBSnotE/worst-luck-possible-port",
-		"issues": "https://github.com/myBSnotE/worst-luck-possible-port/issues"
+		"issues": "https://github.com/myBSnotE/worst-luck-possible-port/issues",
+		"wiki": "https://github.com/myBSnotE/worst-luck-possible-port/tree/main/docs",
+		"documentation": "https://github.com/myBSnotE/worst-luck-possible-port/blob/main/docs/README.md"
 	},
 	"license": "CC0-1.0",
 	"environment": "*",

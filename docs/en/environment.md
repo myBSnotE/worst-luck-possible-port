@@ -56,7 +56,7 @@ Skeleton-horse traps are created only when a living player is close to the strik
 
 **Mod.** The runtime float is replaced with the greatest representable value below 1.
 
-**Result.** Every ray starts at almost `1.3 × power`, the maximum result reachable by the vanilla formula.
+**Result.** Every ray starts at almost `1.3 × power`, the maximum result reachable by the vanilla formula. Explosion mode = Vanilla restores the original random float.
 
 ## Explosion fire
 
@@ -64,7 +64,7 @@ Skeleton-horse traps are created only when a living player is close to the strik
 
 **Mod.** That existing roll always succeeds. The mod does not turn `createFire` on for explosions that were created without it.
 
-**Result.** Fire-capable explosions ignite every geometrically valid affected position; ordinary non-fire explosions remain non-fire explosions.
+**Result.** Fire-capable explosions ignite every geometrically valid affected position; ordinary non-fire explosions remain non-fire explosions. Explosion mode = Vanilla restores the one-in-three roll.
 
 ## Explosion drops
 
@@ -72,4 +72,4 @@ Skeleton-horse traps are created only when a living player is close to the strik
 
 **Mod.** The compared float becomes the greatest value below 1.
 
-**Result.** A drop fails whenever the vanilla predicate permits failure. Radius 1 or another guaranteed case remains guaranteed because the comparison still succeeds at a threshold of 1.
+**Result.** A drop fails whenever the vanilla predicate permits failure. Radius 1 or another guaranteed case remains guaranteed because the comparison still succeeds at a threshold of 1. Explosion mode = Vanilla restores the original drop rolls.

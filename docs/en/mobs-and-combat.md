@@ -122,7 +122,7 @@
 
 **Mod.** Player-owned projectiles choose a random azimuth perpendicular to the aim direction and extend the error to the boundary of the same per-axis uncertainty cube.
 
-**Result.** The shot receives maximum permitted angular inconvenience without altering speed. Random azimuth avoids all stationary-camera shots converging on one deterministic point.
+**Result.** The shot receives maximum permitted angular inconvenience without altering speed. Random azimuth avoids all stationary-camera shots converging on one deterministic point. This applies only when Player projectile spread is set to Worst spread; Vanilla bypasses the intervention.
 
 ## Hostile projectile leading
 
@@ -130,7 +130,7 @@
 
 **Mod.** For hostile-owned projectiles targeting a living player, the server's accepted movement vector is projected over estimated flight time with vanilla 0.99 drag. The desired intercept is clamped to the set of directions reachable inside the existing uncertainty cube. If exact interception is impossible, a sampled closest permitted direction is used.
 
-**Result.** Vanilla spread is spent to lead a moving player instead of missing randomly. Speed, gravity, drag, and in-flight direction are unchanged; this is not homing. Dispenser spread is not modified by this branch.
+**Result.** Vanilla spread is spent to lead a moving player instead of missing randomly. Speed, gravity, drag, and in-flight direction are unchanged; this is not homing. Dispenser spread is not modified by this branch. Hostile projectile aim = Vanilla bypasses the intervention.
 
 ## Critical projectile damage
 
@@ -138,7 +138,7 @@
 
 **Mod.** Player-owned critical projectiles receive zero bonus. Hostile-mob-owned projectiles receive `bound − 1`, the maximum. Other owners retain the vanilla call.
 
-**Result.** Player critical arrows lose their random upside, while hostile critical arrows gain the largest legal bonus.
+**Result.** Player critical arrows lose their random upside, while hostile critical arrows gain the largest legal bonus. Critical projectile damage = Vanilla restores the original roll.
 
 ## Ender Dragon
 
