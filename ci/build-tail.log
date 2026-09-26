@@ -22,7 +22,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :remapSourcesJar SKIPPED
 > Task :assemble
 > Task :build
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1790399787057.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1790401173565.json
 
 [Incubating] Problems report is available at: file:///home/runner/work/worst-luck-possible-port/worst-luck-possible-port/build/reports/problems/problems-report.html
 
@@ -32,5 +32,5 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.8.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 15s
+BUILD SUCCESSFUL in 17s
 5 actionable tasks: 5 executed
