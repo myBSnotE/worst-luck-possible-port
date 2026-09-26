@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(AnvilScreenHandler.class)
 public class AnvilAlwaysDamagesMixin {
 	@ModifyConstant(method = {"onTakeOutput", "method_24922"}, constant = @Constant(floatValue = 0.12F), require = 1)
-	private float worstluck$alwaysDamageAnvil(float original) {
+	private static float worstluck$alwaysDamageAnvil(float original) {
 		return 1.0F;
 	}
 }
