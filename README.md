@@ -2,9 +2,9 @@
 
 A modern Fabric port of **Worst Luck Possible**. Favorable randomness is replaced with the worst practical vanilla-compatible outcome: hostile spawns stay close, loot rolls low, mobs receive dangerous equipment, fire refuses to die, and useful random events become harmful.
 
-> **Current release:** 2.3.3 · Minecraft 1.21.11 · Fabric Loader 0.19.5+ · Java 21 · Fabric API is not required
+> **Current prerelease:** 2.4.0-beta.1 · Minecraft 1.21.11 · Fabric Loader 0.19.5+ · Java 21 · Fabric API is not required
 
-[Download the latest release](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest) · [Report a bug](https://github.com/myBSnotE/worst-luck-possible-port/issues)
+[Download releases](https://github.com/myBSnotE/worst-luck-possible-port/releases) · [Report a bug](https://github.com/myBSnotE/worst-luck-possible-port/issues)
 
 <details>
 <summary><strong>English</strong></summary>
@@ -12,7 +12,7 @@ A modern Fabric port of **Worst Luck Possible**. Favorable randomness is replace
 ## Install
 
 1. Install Fabric Loader for Minecraft **1.21.11**.
-2. Download `worst-luck-possible-2.3.3.jar` from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest).
+2. Download `worst-luck-possible-2.4.0-beta.1.jar` from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases).
 3. Put the JAR in the client or dedicated server `mods` folder.
 4. Start Minecraft with Java **21**.
 
@@ -36,12 +36,14 @@ The port supports multiplayer and dedicated servers.
 - Piglin bartering gives two magma cream.
 - Fishing gives one pair of leather boots with zero remaining durability, and the initial bite wait uses the vanilla maximum of 600 ticks.
 - Trial spawners give one baked potato as their post-combat reward.
+- Explosion rays use their maximum vanilla-random strength. Explosions that already create fire ignite every valid affected position, while explosion-dependent block drops fail whenever vanilla permits failure.
 - Eyes of Ender always break; successful Ender Pearl teleports create an endermite when monster spawning is enabled.
 - Unbreaking never prevents durability loss.
 - Eggs never hatch chicks. Bonemealed crops grow by the minimum two stages; supported trees and fungi choose their existing failure outcome.
 - Chorus fruit tries its vanilla-valid destinations from most dangerous to least dangerous.
 - Every eligible non-creative anvil use advances the anvil's damage state.
 - Tamed cats do not give morning gifts.
+- Foxes keep their vanilla 20% chance to spawn with an item, but every successful roll gives an egg.
 - New villager offers use deterministic worst-case pools. Existing stored offers are not rewritten.
 - Automatic wandering-trader spawning is disabled; existing and manually summoned traders are unaffected.
 
@@ -56,6 +58,7 @@ The port supports multiplayer and dedicated servers.
 - Naturally generated horses and bred horse-family children receive the lowest supported attributes.
 - Mob armor does not lose durability while worn. Naturally generated equipment does not drop, while foreign items picked up from the ground retain vanilla ownership and drop behavior.
 - Mob equipment receives strong item-valid enchantments. Player projectiles receive varied spread at the boundary of vanilla's uncertainty range without changing projectile speed.
+- Hostile projectiles use only their vanilla uncertainty allowance to lead a moving player; if an exact intercept does not fit, the closest permitted trajectory is chosen. Critical projectile bonus damage is minimized for players and maximized for hostile mobs.
 
 ### Spawning, raids, and server safeguards
 
@@ -90,7 +93,7 @@ The project uses Gradle, Fabric Loom, Yarn mappings, Java 21 bytecode, and Fabri
 gradle clean build
 ```
 
-The CI artifact is written to `dist/worst-luck-possible-2.3.3.jar`. End users should download the published release asset instead of the repository copy.
+The CI artifact is written to `dist/worst-luck-possible-2.4.0-beta.1.jar`. End users should download the published release asset instead of the repository copy.
 
 ## Original project and credits
 
@@ -110,7 +113,7 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 ## Установка
 
 1. Установите Fabric Loader для Minecraft **1.21.11**.
-2. Скачайте `worst-luck-possible-2.3.3.jar` со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest).
+2. Скачайте `worst-luck-possible-2.4.0-beta.1.jar` со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases).
 3. Поместите JAR в папку `mods` клиента или выделенного сервера.
 4. Запустите Minecraft с Java **21**.
 
@@ -134,12 +137,14 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 - Пиглины выдают два сгустка магмы.
 - Рыбалка даёт одну пару полностью сломанных кожаных ботинок, а начальное ожидание клёва получает ванильный максимум в 600 тиков.
 - Рассадники испытаний после боя выдают одну печёную картофелину.
+- Лучи взрыва получают максимальную ванильную случайную силу. Взрывы, которые уже способны создавать огонь, поджигают каждую подходящую затронутую позицию, а зависящий от взрыва лут блоков не выпадает во всех случаях, когда ваниль допускает неудачу.
 - Око Края всегда ломается; успешная телепортация жемчугом создаёт эндермита, если разрешён спавн монстров.
 - Прочность (Unbreaking) никогда не предотвращает износ.
 - Из яиц не вылупляются цыплята. Культуры от костной муки растут на минимальные две стадии; поддерживаемые деревья и грибы выбирают существующий исход с неудачей.
 - Плод хоруса перебирает ванильно допустимые точки от самой опасной к наименее опасной.
 - Каждое подходящее использование наковальни не в творческом режиме переводит её на следующую стадию повреждения.
 - Приручённые кошки не приносят утренние подарки.
+- Лисы сохраняют ванильный 20%-й шанс появиться с предметом, но при успешном броске всегда получают яйцо.
 - Новые сделки жителей создаются из детерминированных худших наборов. Уже сохранённые сделки не переписываются.
 - Автоматический спавн странствующего торговца отключён; существующие и призванные вручную торговцы не затронуты.
 
@@ -154,6 +159,7 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 - Естественные лошади и потомки семейства лошадей получают минимальные поддерживаемые характеристики.
 - Броня мобов не теряет прочность, пока надета. Естественная экипировка не выпадает, а подобранные с земли чужие предметы сохраняют ванильное владение и правила выпадения.
 - Экипировка мобов получает сильные допустимые для предмета зачарования. Снаряды игрока отклоняются в случайном направлении до границы ванильной неточности без изменения скорости.
+- Вражеские снаряды используют только допустимый ванильный разброс, чтобы взять упреждение по движущемуся игроку; если точное попадание невозможно, выбирается ближайшая разрешённая траектория. Случайная прибавка критического урона снаряда минимальна для игроков и максимальна для враждебных мобов.
 
 ### Спавн, рейды и защита сервера
 
@@ -188,7 +194,7 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 gradle clean build
 ```
 
-CI сохраняет файл как `dist/worst-luck-possible-2.3.3.jar`. Обычным пользователям следует скачивать опубликованный файл релиза, а не копию из репозитория.
+CI сохраняет файл как `dist/worst-luck-possible-2.4.0-beta.1.jar`. Обычным пользователям следует скачивать опубликованный файл релиза, а не копию из репозитория.
 
 ## Оригинальный проект и авторы
 
