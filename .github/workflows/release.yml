@@ -24,4 +24,4 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --target "$TARGET_SHA" \
             --title "Worst Luck Possible 2.3.2" \
-            --notes-file release-notes-v2.3.2.md
+            --notes-file release-notes/release-notes-v2.3.2.md

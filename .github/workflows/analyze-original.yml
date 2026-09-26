@@ -3,7 +3,7 @@ name: analyze original mod
 on:
   push:
     paths:
-      - 'worst-luck-possible-1.0.0.jar'
+      - 'dist/worst-luck-possible-1.0.0_original.jar'
       - '.github/workflows/analyze-original.yml'
   workflow_dispatch:
 
@@ -22,7 +22,7 @@ jobs:
       - name: Disassemble original mod
         run: |
           set -e
-          JAR=worst-luck-possible-1.0.0.jar
+          JAR=dist/worst-luck-possible-1.0.0_original.jar
           mkdir -p probe/original
           jar tf "$JAR" > probe/original/jar-contents.txt
           unzip -p "$JAR" worst-luck-possible.mixins.json > probe/original/mixins.json

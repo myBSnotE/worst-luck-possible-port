@@ -100,7 +100,7 @@ The CI artifact is written to `dist/worst-luck-possible-2.3.2.jar`. End users sh
 - **Original target:** Minecraft 1.16.1 with Fabric
 - **Port contributor:** HyBri:D
 
-The original compiled reference is preserved as [`worst-luck-possible-1.0.0.jar`](worst-luck-possible-1.0.0.jar). The Modrinth listing currently identifies the original project as MIT-licensed, while the embedded metadata in that JAR declares CC0-1.0. This port's metadata declares CC0-1.0.
+The original compiled reference is preserved as [`worst-luck-possible-1.0.0_original.jar`](dist/worst-luck-possible-1.0.0_original.jar). The Modrinth listing currently identifies the original project as MIT-licensed, while the embedded metadata in that JAR declares CC0-1.0. This port's metadata declares CC0-1.0.
 
 </details>
 
@@ -198,7 +198,7 @@ CI сохраняет файл как `dist/worst-luck-possible-2.3.2.jar`. Об
 - **Версия оригинала:** Minecraft 1.16.1 с Fabric
 - **Автор порта:** HyBri:D
 
-Оригинальный JAR, использованный как эталон поведения, сохранён в [`worst-luck-possible-1.0.0.jar`](worst-luck-possible-1.0.0.jar). На странице Modrinth сейчас указана лицензия MIT, а встроенные метаданные JAR указывают CC0-1.0. В метаданных этого порта указана CC0-1.0.
+Оригинальный JAR, использованный как эталон поведения, сохранён в [`worst-luck-possible-1.0.0_original.jar`](dist/worst-luck-possible-1.0.0_original.jar). На странице Modrinth сейчас указана лицензия MIT, а встроенные метаданные JAR указывают CC0-1.0. В метаданных этого порта указана CC0-1.0.
 
 </details>
 
