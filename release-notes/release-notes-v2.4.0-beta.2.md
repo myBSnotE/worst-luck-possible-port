@@ -24,6 +24,7 @@ Prerelease for Minecraft **1.21.11**, Fabric Loader **0.19.5+**, Fabric API **0.
 
 - Fire targeting at the feet of players and passive mobs now requires a positive vanilla burn chance at the exact target position.
 - Fire can still appear over a nonflammable solid floor when nearby fuel makes that position valid, but it can no longer bridge across an entirely nonflammable surface.
+- Restored Accelerated mode's visibly immediate 2.3.1 spread pass: direct flammable neighbors are forced first, followed by valid air positions, with a shared limit of eight placements.
 
 ## Client fix
 
@@ -40,7 +41,7 @@ Prerelease for Minecraft **1.21.11**, Fabric Loader **0.19.5+**, Fabric API **0.
 - Clean Gradle build passed without compiler or Gradle deprecation warnings.
 - Dedicated Fabric server with Fabric API reached `Done`, loaded and retained alternate world settings, and stopped normally.
 - The removed fishing command was rejected while the debug command tree remained registered.
-- A functional server test confirmed that accelerated fire did not appear at a cow's feet on a nonflammable floor without adjacent fuel.
+- Functional server tests confirmed both sides of the fix: accelerated fire does not appear at a cow's feet on a nonflammable floor without adjacent fuel, while a direct flammable neighbor is consumed during the accelerated post-tick pass.
 - The settings render path was checked against Minecraft 1.21.11 bytecode to ensure the screen no longer calls `renderBackground` itself.
 
 ## Русский
@@ -68,6 +69,7 @@ Prerelease for Minecraft **1.21.11**, Fabric Loader **0.19.5+**, Fabric API **0.
 
 - Поджигание у ног игроков и мирных мобов теперь требует положительного ванильного шанса горения в точной целевой позиции.
 - Огонь всё ещё может появиться над негорючим полом при наличии подходящего соседнего топлива, но больше не перескакивает через полностью негорючую поверхность.
+- В режим «Ускоренное» возвращён заметно мгновенный проход из 2.3.1: сначала принудительно обрабатываются прямые горючие соседи, затем допустимые воздушные точки; общий лимит — восемь установок.
 
 ### Исправление клиента
 
@@ -79,4 +81,4 @@ Prerelease for Minecraft **1.21.11**, Fabric Loader **0.19.5+**, Fabric API **0.
 - Добавлена подробная документация механик, настроек, прав доступа и границ вмешательства в случайность.
 - Чистая сборка и запуск выделенного сервера с Fabric API прошли успешно.
 - Сервер сохранил альтернативную конфигурацию мира и отверг удалённую команду рыбалки.
-- Функциональный тест подтвердил, что ускоренный огонь не появляется у ног коровы на негорючем полу без соседнего топлива.
+- Функциональные серверные тесты подтвердили обе стороны исправления: ускоренный огонь не появляется у ног коровы на негорючем полу без соседнего топлива, а прямой горючий сосед уничтожается ускоренным проходом после тика.

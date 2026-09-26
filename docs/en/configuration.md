@@ -88,9 +88,9 @@ Rain, sky access, Lure, and later fishing phases remain vanilla in all three mod
 | --- | --- | --- | --- |
 | Off | Vanilla | Vanilla | Vanilla |
 | Eternal | Up to eight extra vanilla-valid ignitions | Fueled fire is held at age 0; direct random fuel consumption is deferred until extinguishing | Up to eight extra valid ignitions |
-| Accelerated | Up to eight extra vanilla-valid ignitions | Vanilla aging and direct fuel consumption | Up to eight extra valid ignitions |
+| Accelerated | 2.3.1-style forced direct-neighbor pass, then extended valid air positions; eight placements total | Vanilla aging and direct fuel consumption | Up to eight extra valid ignitions |
 
-All modes obey the `doFireTick`/fire-spread world rule. The accelerated algorithms require the same nearby burnable support that vanilla checks; they cannot cross a completely nonflammable surface by themselves.
+All modes obey Minecraft 1.21.11's `fire_spread_radius_around_player` world rule (`-1` allows fire spread everywhere). Air targets still require the same nearby burnable support that vanilla checks, so the mod cannot cross a completely nonflammable surface by itself.
 
 ## Removed runtime commands
 

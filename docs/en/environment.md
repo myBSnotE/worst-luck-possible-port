@@ -30,9 +30,9 @@ Skeleton-horse traps are created only when a living player is close to the strik
 
 **Vanilla.** A scheduled fire tick directly tries six adjacent blocks, then evaluates the extended x/z ±1 and y −1…4 volume. Every candidate is probabilistic and depends on neighboring blocks' burn/spread values, age, rain, difficulty, and dimension attributes.
 
-**Mod.** Accelerated and Eternal modes scan that same extended volume before vanilla early exits and ignite up to eight valid candidates. Positions over nonflammable solid floors are prioritized only after they pass the vanilla neighboring-fuel test. Players and passive mobs are prioritized under the same validity rule.
+**Mod.** Accelerated mode restores the aggressive 2.3.1 post-tick pass: after vanilla finishes, every still-flammable direct neighbor is forced through first, then valid air positions in the same extended volume are filled, with one shared budget of eight successful placements. Eternal mode uses its own pre-tick prioritized scan. In both modes, entity-foot and air targets must pass vanilla's neighboring-fuel test.
 
-**Result.** Valid spread happens quickly and tends to threaten nearby entities, but the per-source budget prevents an unbounded block scan or write loop.
+**Result.** Accelerated fire once again has the visibly immediate 2.3.1 behavior while keeping vanilla aging and fuel consumption. It cannot create fire across a completely nonflammable surface, and the per-source budget prevents an unbounded block scan or write loop.
 
 ## Eternal fueled fire
 

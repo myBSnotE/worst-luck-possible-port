@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FireBlock;
+import net.minecraft.block.TntBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -104,9 +105,9 @@ public abstract class FireWorstSpreadMixin {
 	 * supports when an otherwise unreachable flammable block can sustain the new fire.
 	 */
 	@Inject(method = "scheduledTick", at = @At("HEAD"))
-	private void worstluck$forceDangerousSpread(BlockState state, ServerWorld world, BlockPos pos,
+	private void worstluck$forceEternalSpread(BlockState state, ServerWorld world, BlockPos pos,
 			Random random, CallbackInfo ci) {
-		if (worstluck$isVanilla(world)
+		if (!worstluck$isEternal(world)
 				|| !world.canFireSpread(pos)
 				|| !world.getBlockState(pos).isOf(Blocks.FIRE)) {
 			return;
@@ -164,6 +165,63 @@ public abstract class FireWorstSpreadMixin {
 		worstluck$ignite(world, otherTargets, budget);
 	}
 
+	/**
+	 * Reproduces the 2.3.1 accelerated-fire pass after vanilla has completed its
+	 * own tick. The only intentional difference is that entity-foot targets must
+	 * now pass vanilla's neighboring-fuel check.
+	 */
+	@Inject(method = "scheduledTick", at = @At("TAIL"))
+	private void worstluck$forceAcceleratedSpread(BlockState state, ServerWorld world, BlockPos pos,
+			Random random, CallbackInfo ci) {
+		if (!worstluck$isAccelerated(world)
+				|| !world.canFireSpread(pos)
+				|| !world.getBlockState(pos).isOf(Blocks.FIRE)) {
+			return;
+		}
+
+		int age = world.getBlockState(pos).get(FireBlock.AGE);
+		int budget = WORSTLUCK_MAX_SPREADS_PER_TICK;
+
+		List<LivingEntity> vulnerable = world.getEntitiesByClass(LivingEntity.class,
+				new Box(pos).expand(1.5D, 4.0D, 1.5D),
+				entity -> entity.isAlive() && (entity instanceof PlayerEntity || entity instanceof PassiveEntity));
+		for (LivingEntity entity : vulnerable) {
+			if (budget == 0) break;
+			BlockPos target = entity.getBlockPos();
+			if (world.isAir(target) && getBurnChance(world, target) > 0) {
+				world.setBlockState(target, getStateWithAge(world, target, age), Block.NOTIFY_ALL);
+				budget--;
+			}
+		}
+
+		// 2.3.1 forced every still-available direct vanilla spread target.
+		for (Direction direction : Direction.values()) {
+			if (budget == 0) break;
+			BlockPos target = pos.offset(direction);
+			BlockState targetState = world.getBlockState(target);
+			if (getSpreadChance(targetState) <= 0) continue;
+			world.setBlockState(target, getStateWithAge(world, target, age), Block.NOTIFY_ALL);
+			if (targetState.getBlock() instanceof TntBlock) {
+				TntBlock.primeTnt(world, target);
+			}
+			budget--;
+		}
+
+		// Fill valid air positions in the same extended volume as 2.3.1.
+		for (int y = -1; y <= 4 && budget > 0; y++) {
+			for (int x = -1; x <= 1 && budget > 0; x++) {
+				for (int z = -1; z <= 1 && budget > 0; z++) {
+					if (x == 0 && y == 0 && z == 0) continue;
+					BlockPos target = pos.add(x, y, z);
+					if (world.isAir(target) && getBurnChance(world, target) > 0) {
+						world.setBlockState(target, getStateWithAge(world, target, age), Block.NOTIFY_ALL);
+						budget--;
+					}
+				}
+			}
+		}
+	}
+
 	@Unique
 	private int worstluck$ignite(ServerWorld world, List<BlockPos> targets, int budget) {
 		for (BlockPos target : targets) {
@@ -192,7 +250,7 @@ public abstract class FireWorstSpreadMixin {
 	}
 
 	@Unique
-	private static boolean worstluck$isVanilla(ServerWorld world) {
-		return WorstLuckConfigManager.get(world.getServer()).fireMode == WorstLuckConfig.FireMode.VANILLA;
+	private static boolean worstluck$isAccelerated(ServerWorld world) {
+		return WorstLuckConfigManager.get(world.getServer()).fireMode == WorstLuckConfig.FireMode.ACCELERATED;
 	}
 }
