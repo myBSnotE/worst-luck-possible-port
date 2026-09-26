@@ -27,15 +27,15 @@ The port supports multiplayer and dedicated servers.
 
 - Fueled fire is kept at age 0 and no longer consumes adjacent fuel through vanilla's random direct-burn roll. It persists until extinguished.
 - When ordinary fire is extinguished, all adjacent flammable blocks are consumed in the same tick; adjacent TNT is primed first.
-- Each source-fire tick performs up to **eight** additional successful ignitions inside vanilla's local spread volume. It prioritizes fire at the feet of nearby players and passive mobs, including on solid non-flammable floors when adjacent fuel makes the exact position vanilla-valid.
-- Each random-ticking lava block can create up to **eight** fires in the volume reachable by vanilla lava ignition. Valid positions above solid non-flammable floors are tried first.
+- Each source-fire tick performs up to **eight** additional successful ignitions inside vanilla's local spread volume. New air fire in Eternal and Accelerated modes requires a flammable supporting block, so enhanced spread cannot crawl across stone or another non-flammable floor.
+- Each random-ticking lava block can create up to **eight** fires in the volume reachable by vanilla lava ignition, but only above flammable support in enhanced fire modes.
 - Fire behavior still respects the world's fire-spread rule, loaded terrain, and strict per-source budgets.
 - Thunderstorm timing, lightning targets, and lightning attempt frequency are configurable per world.
 - Skeleton-horse traps are guaranteed only near a living player and are suppressed under extreme persistent-mob pressure.
 
 ### Loot, items, and progression
 
-- Mob and block loot rolls choose the minimum result; gravel never drops flint.
+- Mob and block loot rolls choose the minimum result; gravel never drops flint. Looting remains useful and adds exactly one item per enchantment level, subject to the loot function's normal cap.
 - Piglin bartering gives two magma cream.
 - Fishing gives one pair of leather boots with zero remaining durability, and the initial bite wait uses the vanilla maximum of 600 ticks.
 - Trial spawners give one baked potato as their post-combat reward.
@@ -131,15 +131,15 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 
 - Огонь рядом с топливом сохраняет возраст 0 и больше не уничтожает соседнее топливо случайным ванильным броском. Он горит, пока его не потушат.
 - При тушении обычного огня все соседние горючие блоки уничтожаются в тот же тик; соседний TNT перед этим активируется.
-- Каждый тик источника огня выполняется до **восьми** дополнительных успешных поджогов в локальном ванильном объёме. В первую очередь огонь появляется у ног ближайших игроков и мирных животных, в том числе на плотном негорючем полу, если соседнее топливо делает точную позицию ванильно допустимой.
-- Каждый случайный тик лавы создаёт до **восьми** очагов в пределах ванильной области поджигания. Сначала выбираются подходящие позиции над плотным негорючим полом.
+- Каждый тик источника огня выполняется до **восьми** дополнительных успешных поджогов в локальном ванильном объёме. Новый огонь в воздухе в режимах «Вечное» и «Ускоренное» требует горючего блока прямо под ним, поэтому усиленное распространение не ползёт по камню и другому негорючему полу.
+- Каждый случайный тик лавы создаёт до **восьми** очагов в пределах ванильной области поджигания, но в усиленных режимах только над горючей опорой.
 - Логика огня учитывает правило распространения огня, загрузку местности и строгий лимит работы на каждый источник.
 - Частота гроз, цели молний и частота попыток удара настраиваются отдельно для каждого мира.
 - Лошади-ловушки гарантированно создаются только рядом с живым игроком и не появляются при чрезмерном количестве постоянных мобов.
 
 ### Лут, предметы и развитие
 
-- Броски лута мобов и блоков выбирают минимальный результат; из гравия не выпадает кремень.
+- Броски лута мобов и блоков выбирают минимальный результат; из гравия не выпадает кремень. «Добыча» остаётся полезной и добавляет ровно один предмет за уровень с учётом обычного лимита функции лута.
 - Пиглины выдают два сгустка магмы.
 - Рыбалка даёт одну пару полностью сломанных кожаных ботинок, а начальное ожидание клёва получает ванильный максимум в 600 тиков.
 - Рассадники испытаний после боя выдают одну печёную картофелину.

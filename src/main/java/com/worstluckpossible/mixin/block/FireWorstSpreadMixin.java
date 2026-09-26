@@ -100,10 +100,7 @@ public abstract class FireWorstSpreadMixin {
 		((FireBlockAccessor) instance).worstluck$trySpreadingFire(world, target, spreadFactor, random, currentAge);
 	}
 
-	/**
-	 * Runs before vanilla's early exits, allowing fire to bridge onto non-flammable
-	 * supports when an otherwise unreachable flammable block can sustain the new fire.
-	 */
+	/** Runs before vanilla's early exits while keeping every new air fire over actual fuel. */
 	@Inject(method = "scheduledTick", at = @At("HEAD"))
 	private void worstluck$forceEternalSpread(BlockState state, ServerWorld world, BlockPos pos,
 			Random random, CallbackInfo ci) {
@@ -129,40 +126,32 @@ public abstract class FireWorstSpreadMixin {
 			if (budget == 0) break;
 			BlockPos target = entity.getBlockPos();
 			if (world.isAir(target)
-					&& getBurnChance(world, target) > 0) {
+					&& getBurnChance(world, target) > 0
+					&& worstluck$hasFlammableSupport(world, target)) {
 				world.setBlockState(target, getStateWithAge(world, target, 0), Block.NOTIFY_ALL);
 				budget--;
 			}
 		}
 
-		List<BlockPos> nonFlammableSupports = new ArrayList<>();
-		List<BlockPos> otherTargets = new ArrayList<>();
+		List<BlockPos> targets = new ArrayList<>();
 
-		// Use the complete vanilla long-range volume. Air above a solid non-flammable
-		// support is explicitly eligible whenever nearby fuel can sustain fire there.
+		// Use the complete vanilla long-range volume, but never create a mod-forced
+		// fire whose supporting block is not itself flammable.
 		for (int y = -1; y <= 4; y++) {
 			for (int x = -1; x <= 1; x++) {
 				for (int z = -1; z <= 1; z++) {
 					if (x == 0 && y == 0 && z == 0) continue;
 					BlockPos target = pos.add(x, y, z);
-					if (!world.isAir(target) || getBurnChance(world, target) <= 0) continue;
-
-					BlockPos floor = target.down();
-					BlockState floorState = world.getBlockState(floor);
-					if (floorState.isSideSolidFullSquare(world, floor, Direction.UP)
-							&& getSpreadChance(floorState) == 0) {
-						nonFlammableSupports.add(target.toImmutable());
-					} else {
-						otherTargets.add(target.toImmutable());
-					}
+					if (!world.isAir(target)
+							|| getBurnChance(world, target) <= 0
+							|| !worstluck$hasFlammableSupport(world, target)) continue;
+					targets.add(target.toImmutable());
 				}
 			}
 		}
 
-		worstluck$shuffle(nonFlammableSupports, random);
-		worstluck$shuffle(otherTargets, random);
-		budget = worstluck$ignite(world, nonFlammableSupports, budget);
-		worstluck$ignite(world, otherTargets, budget);
+		worstluck$shuffle(targets, random);
+		worstluck$ignite(world, targets, budget);
 	}
 
 	/**
@@ -188,7 +177,9 @@ public abstract class FireWorstSpreadMixin {
 		for (LivingEntity entity : vulnerable) {
 			if (budget == 0) break;
 			BlockPos target = entity.getBlockPos();
-			if (world.isAir(target) && getBurnChance(world, target) > 0) {
+			if (world.isAir(target)
+					&& getBurnChance(world, target) > 0
+					&& worstluck$hasFlammableSupport(world, target)) {
 				world.setBlockState(target, getStateWithAge(world, target, age), Block.NOTIFY_ALL);
 				budget--;
 			}
@@ -213,7 +204,9 @@ public abstract class FireWorstSpreadMixin {
 				for (int z = -1; z <= 1 && budget > 0; z++) {
 					if (x == 0 && y == 0 && z == 0) continue;
 					BlockPos target = pos.add(x, y, z);
-					if (world.isAir(target) && getBurnChance(world, target) > 0) {
+					if (world.isAir(target)
+							&& getBurnChance(world, target) > 0
+							&& worstluck$hasFlammableSupport(world, target)) {
 						world.setBlockState(target, getStateWithAge(world, target, age), Block.NOTIFY_ALL);
 						budget--;
 					}
@@ -226,12 +219,41 @@ public abstract class FireWorstSpreadMixin {
 	private int worstluck$ignite(ServerWorld world, List<BlockPos> targets, int budget) {
 		for (BlockPos target : targets) {
 			if (budget == 0) break;
-			if (world.isAir(target) && getBurnChance(world, target) > 0) {
+			if (world.isAir(target)
+					&& getBurnChance(world, target) > 0
+					&& worstluck$hasFlammableSupport(world, target)) {
 				world.setBlockState(target, getStateWithAge(world, target, 0), Block.NOTIFY_ALL);
 				budget--;
 			}
 		}
 		return budget;
+	}
+
+	/**
+	 * Vanilla's extended branch can place fire in air over a nonflammable floor
+	 * when fuel is merely adjacent. Enhanced modes intentionally reject that case.
+	 */
+	@Redirect(
+			method = "scheduledTick",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z",
+					ordinal = 1
+			)
+	)
+	private boolean worstluck$rejectVanillaAirFireOverNonFlammableSupport(ServerWorld world,
+			BlockPos target, BlockState newState, int flags) {
+		if ((worstluck$isEternal(world) || worstluck$isAccelerated(world))
+				&& newState.isOf(Blocks.FIRE)
+				&& !worstluck$hasFlammableSupport(world, target)) {
+			return false;
+		}
+		return world.setBlockState(target, newState, flags);
+	}
+
+	@Unique
+	private boolean worstluck$hasFlammableSupport(ServerWorld world, BlockPos target) {
+		return getSpreadChance(world.getBlockState(target.down())) > 0;
 	}
 
 	@Unique

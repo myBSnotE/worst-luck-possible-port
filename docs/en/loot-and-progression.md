@@ -8,6 +8,7 @@
 | Binomial bonus counts | Perform repeated success/failure trials | Choose failed trials, producing the minimum bonus. |
 | Random chance conditions | Pass according to a configured runtime probability | Fail when failure is possible. |
 | Enchantment bonus chance | Uses a chance indexed by enchantment level | Chooses the unfavorable runtime outcome without rewriting the enchantment or table. |
+| Looting count increase | Adds `round(level × countProvider)`; common tables use a 0–1 provider, so vanilla usually adds a random 0…level items | Adds exactly one item per Looting level, then applies the loot function's existing cap. This special case prevents the global minimum provider from making Looting useless. |
 | Table bonus conditions | Select a probability from a table such as Fortune flint chances | Chooses failure when the selected vanilla probability allows it; gravel therefore does not yield flint. |
 
 These hooks affect runtime loot evaluation. They do not replace structure-loot seeds or rewrite already generated inventories.

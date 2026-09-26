@@ -22,9 +22,9 @@ Skeleton-horse traps are created only when a living player is close to the strik
 
 **Vanilla.** Fire may exist over a solid nonflammable top surface, but extended spread only considers an air position when a neighboring block gives that position a positive burn chance.
 
-**Earlier mod behavior.** The player/passive-mob priority path could create fire at an entity's feet on a solid nonflammable floor without checking adjacent fuel.
+**Earlier mod behavior.** Checking only neighboring burn chance still allowed enhanced fire to appear over stone and other nonflammable supporting blocks when fuel was beside the target.
 
-**Current result.** Entity targeting now also requires `getBurnChance(world, target) > 0`. Fire may be placed over stone when nearby fuel makes the exact position vanilla-valid, but it cannot bridge across a completely nonflammable floor.
+**Current result.** In Eternal and Accelerated modes, every new air-fire placement from fire or lava now also requires the block directly below it to be flammable. The mod redirects the corresponding vanilla writes during those enhanced ticks, so the original branch cannot reintroduce the same placement. Fire mode Off remains completely vanilla.
 
 ## Accelerated fire spread
 
@@ -32,7 +32,7 @@ Skeleton-horse traps are created only when a living player is close to the strik
 
 **Mod.** Accelerated mode restores the aggressive 2.3.1 post-tick pass: after vanilla finishes, every still-flammable direct neighbor is forced through first, then valid air positions in the same extended volume are filled, with one shared budget of eight successful placements. Eternal mode uses its own pre-tick prioritized scan. In both modes, entity-foot and air targets must pass vanilla's neighboring-fuel test.
 
-**Result.** Accelerated fire once again has the visibly immediate 2.3.1 behavior while keeping vanilla aging and fuel consumption. It cannot create fire across a completely nonflammable surface, and the per-source budget prevents an unbounded block scan or write loop.
+**Result.** Accelerated fire retains the visibly immediate 2.3.1 behavior and vanilla aging/fuel consumption, but new air fire cannot stand on a nonflammable support. The per-source budget prevents an unbounded block scan or write loop.
 
 ## Eternal fueled fire
 
@@ -46,7 +46,7 @@ Skeleton-horse traps are created only when a living player is close to the strik
 
 **Vanilla.** A random-ticking lava block takes one of two random branches and checks a small reachable volume for air with a burnable neighbor.
 
-**Mod.** Accelerated and Eternal modes enumerate positions reachable by the one- and two-step vanilla branches, prioritize valid positions over solid nonflammable floors, and ignite up to eight randomly ordered valid candidates.
+**Mod.** Accelerated and Eternal modes enumerate positions reachable by the one- and two-step vanilla branches and ignite up to eight randomly ordered candidates whose supporting block is itself flammable. The two original vanilla lava-fire writes are subject to the same support check in these modes.
 
 **Result.** A lava random tick is far more likely to start all useful nearby fires, without creating fire where no burnable neighbor exists.
 
