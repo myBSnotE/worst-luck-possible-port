@@ -1,6 +1,7 @@
 package com.worstluckpossible.mixin.loot;
 
-import com.worstluckpossible.feature.FishingLootMode;
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.entity.projectile.FishingBobberEntity;
 import net.minecraft.item.ItemStack;
@@ -26,7 +27,8 @@ public abstract class FishingBobberLootMixin {
 			LootTable lootTable,
 			LootWorldContext lootContext
 	) {
-		if (!FishingLootMode.shouldForceLeatherBoots(lootContext.getWorld().getServer())) {
+		if (WorstLuckConfigManager.get(lootContext.getWorld().getServer()).fishingMode
+				!= WorstLuckConfig.FishingMode.BAD) {
 			return lootTable.generateLoot(lootContext);
 		}
 
@@ -48,6 +50,10 @@ public abstract class FishingBobberLootMixin {
 	private int worstluck$maximizeRandomWait(Random random, int min, int max) {
 		// Only replace the initial 100..600-tick waiting roll. Rain, sky access,
 		// Lure and all later fishing phases retain their vanilla influence.
-		return min == 100 && max == 600 ? max : MathHelper.nextInt(random, min, max);
+		FishingBobberEntity self = (FishingBobberEntity) (Object) this;
+		WorstLuckConfig.FishingMode mode =
+				WorstLuckConfigManager.get(self.getEntityWorld().getServer()).fishingMode;
+		return mode != WorstLuckConfig.FishingMode.VANILLA && min == 100 && max == 600
+				? max : MathHelper.nextInt(random, min, max);
 	}
 }

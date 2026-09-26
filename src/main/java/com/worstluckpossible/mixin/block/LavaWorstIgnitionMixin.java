@@ -1,5 +1,7 @@
 package com.worstluckpossible.mixin.block;
 
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.block.AbstractFireBlock;
@@ -26,6 +28,9 @@ public abstract class LavaWorstIgnitionMixin {
 	private void worstluck$forceLavaIgnitions(ServerWorld world, BlockPos pos, FluidState state,
 			Random random, CallbackInfo ci) {
 		if (!world.canFireSpread(pos)) {
+			return;
+		}
+		if (WorstLuckConfigManager.get(world.getServer()).fireMode == WorstLuckConfig.FireMode.VANILLA) {
 			return;
 		}
 

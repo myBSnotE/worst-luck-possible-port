@@ -2,7 +2,9 @@
 
 A modern Fabric port of **Worst Luck Possible**. Favorable randomness is replaced with the worst practical vanilla-compatible outcome: hostile spawns stay close, loot rolls low, mobs receive dangerous equipment, fire refuses to die, and useful random events become harmful.
 
-> **Current prerelease:** 2.4.0-beta.1 · Minecraft 1.21.11 · Fabric Loader 0.19.5+ · Java 21 · Fabric API is not required
+> **Current prerelease:** 2.4.0-beta.1 · Minecraft 1.21.11 · Fabric Loader 0.19.5+ · Fabric API 0.141.6+ · Java 21
+>
+> **Development version:** 2.4.0-beta.2
 
 [Download releases](https://github.com/myBSnotE/worst-luck-possible-port/releases) · [Report a bug](https://github.com/myBSnotE/worst-luck-possible-port/issues)
 
@@ -11,10 +13,11 @@ A modern Fabric port of **Worst Luck Possible**. Favorable randomness is replace
 
 ## Install
 
-1. Install Fabric Loader for Minecraft **1.21.11**.
+1. Install Fabric Loader and Fabric API for Minecraft **1.21.11**.
 2. Download `worst-luck-possible-2.4.0-beta.1.jar` from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases).
 3. Put the JAR in the client or dedicated server `mods` folder.
-4. Start Minecraft with Java **21**.
+4. Optionally install Mod Menu to open the configuration from the mod list.
+5. Start Minecraft with Java **21**.
 
 The port supports multiplayer and dedicated servers.
 
@@ -24,7 +27,7 @@ The port supports multiplayer and dedicated servers.
 
 - Fueled fire is kept at age 0 and no longer consumes adjacent fuel through vanilla's random direct-burn roll. It persists until extinguished.
 - When ordinary fire is extinguished, all adjacent flammable blocks are consumed in the same tick; adjacent TNT is primed first.
-- Each source-fire tick performs up to **eight** additional successful ignitions inside vanilla's local spread volume. It prioritizes fire at the feet of nearby players and passive mobs, including on solid non-flammable floors.
+- Each source-fire tick performs up to **eight** additional successful ignitions inside vanilla's local spread volume. It prioritizes fire at the feet of nearby players and passive mobs, including on solid non-flammable floors when adjacent fuel makes the exact position vanilla-valid.
 - Each random-ticking lava block can create up to **eight** fires in the volume reachable by vanilla lava ignition. Valid positions above solid non-flammable floors are tried first.
 - Fire behavior still respects the world's fire-spread rule, loaded terrain, and strict per-source budgets.
 - Thunderstorms are frequent. Lightning attempts can be temporarily reduced 20× with an operator command.
@@ -71,29 +74,31 @@ The port supports multiplayer and dedicated servers.
 - Raid bonus rolls choose their vanilla maximum. Low active waves repeatedly try to add a witch at a valid dark village position without allowing unbounded entity growth.
 - Density scans are cached once per second. Replacement and pathfinding work use adaptive per-tick budgets and emergency limits.
 
+## Settings
+
+Open the settings through the optional Mod Menu integration or the configurable `L` key. Outside a world, the screen edits defaults for newly created worlds; inside a world, it edits the server-authoritative per-world configuration. Responsible mode locks world settings behind operator permissions.
+
+Weather, lightning targeting and frequency, fishing, and smart burning modes are currently configurable. Every option includes a hover tooltip in English and Russian.
+
+See the [complete mechanics and configuration documentation](docs/README.md).
+
 ## Operator commands
 
 | Command | Effect |
 | --- | --- |
-| `/worstluck lightning` | Show the current lightning mode. |
-| `/worstluck lightning full` | Restore one lightning attempt per ticking chunk per tick. |
-| `/worstluck lightning reduced` | Use a 5% attempt chance per ticking chunk per tick. |
-| `/worstluck fishing` | Show the current fishing mode. |
-| `/worstluck fishing boots` | Force ruined leather boots. |
-| `/worstluck fishing vanilla` | Temporarily restore vanilla fishing. |
 | `/worstluck debug spawning` | Show the invoking player's cached mob-pressure diagnostics. |
 
-Command overrides are temporary and reset after reopening the world or restarting the server.
+Gameplay modes are persistent settings rather than commands.
 
 ## Build and verification
 
-The project uses Gradle, Fabric Loom, Yarn mappings, Java 21 bytecode, and Fabric Loader 0.19.5. GitHub Actions builds the remapped JAR and starts a temporary dedicated server to catch mixin and startup failures.
+The project uses Gradle, Fabric Loom, Yarn mappings, Java 21 bytecode, Fabric Loader 0.19.5, and Fabric API 0.141.6. GitHub Actions builds the remapped JAR and starts a temporary dedicated server to catch mixin and startup failures.
 
 ```text
 gradle clean build
 ```
 
-The CI artifact is written to `dist/worst-luck-possible-2.4.0-beta.1.jar`. End users should download the published release asset instead of the repository copy.
+The CI artifact is written to `dist/worst-luck-possible-2.4.0-beta.2.jar`. End users should download the published release asset instead of the repository copy.
 
 ## Original project and credits
 
@@ -112,10 +117,11 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 
 ## Установка
 
-1. Установите Fabric Loader для Minecraft **1.21.11**.
+1. Установите Fabric Loader и Fabric API для Minecraft **1.21.11**.
 2. Скачайте `worst-luck-possible-2.4.0-beta.1.jar` со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases).
 3. Поместите JAR в папку `mods` клиента или выделенного сервера.
-4. Запустите Minecraft с Java **21**.
+4. При желании установите Mod Menu, чтобы открывать конфигурацию из списка модов.
+5. Запустите Minecraft с Java **21**.
 
 Порт поддерживает мультиплеер и выделенные серверы.
 
@@ -125,7 +131,7 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 
 - Огонь рядом с топливом сохраняет возраст 0 и больше не уничтожает соседнее топливо случайным ванильным броском. Он горит, пока его не потушат.
 - При тушении обычного огня все соседние горючие блоки уничтожаются в тот же тик; соседний TNT перед этим активируется.
-- Каждый тик источника огня выполняется до **восьми** дополнительных успешных поджогов в локальном ванильном объёме. В первую очередь огонь появляется у ног ближайших игроков и мирных животных, в том числе на плотном негорючем полу.
+- Каждый тик источника огня выполняется до **восьми** дополнительных успешных поджогов в локальном ванильном объёме. В первую очередь огонь появляется у ног ближайших игроков и мирных животных, в том числе на плотном негорючем полу, если соседнее топливо делает точную позицию ванильно допустимой.
 - Каждый случайный тик лавы создаёт до **восьми** очагов в пределах ванильной области поджигания. Сначала выбираются подходящие позиции над плотным негорючим полом.
 - Логика огня учитывает правило распространения огня, загрузку местности и строгий лимит работы на каждый источник.
 - Грозы происходят часто. Оператор может временно снизить число попыток удара молнии в 20 раз.
@@ -172,29 +178,31 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 - Бонусные броски рейда выбирают ванильный максимум. Малочисленная активная волна повторно пытается добавить ведьму в допустимой тёмной точке деревни, не создавая неограниченного роста сущностей.
 - Плотность кэшируется раз в секунду. Замена мобов и поиск пути используют адаптивные потиковые бюджеты и аварийные пределы.
 
+## Настройки
+
+Откройте настройки через необязательную интеграцию с Mod Menu или переназначаемую клавишу `L`. Вне мира экран меняет параметры новых миров, а внутри мира — серверную конфигурацию текущего мира. Ответственный режим разрешает менять настройки мира только оператору.
+
+Сейчас настраиваются погода, цели и частота молний, рыбалка и режим умного горения. У каждой опции есть всплывающая подсказка на русском и английском языках.
+
+См. [полную документацию механик и конфигурации](docs/README.md).
+
 ## Команды оператора
 
 | Команда | Действие |
 | --- | --- |
-| `/worstluck lightning` | Показать текущий режим молний. |
-| `/worstluck lightning full` | Вернуть одну попытку удара на каждый тикающий чанк за тик. |
-| `/worstluck lightning reduced` | Использовать 5%-ю вероятность попытки на тикающий чанк за тик. |
-| `/worstluck fishing` | Показать текущий режим рыбалки. |
-| `/worstluck fishing boots` | Принудительно включить сломанные кожаные ботинки. |
-| `/worstluck fishing vanilla` | Временно вернуть ванильную рыбалку. |
 | `/worstluck debug spawning` | Показать кэшированную диагностику давления мобов для вызвавшего игрока. |
 
-Изменения команд не сохраняются и сбрасываются после повторного открытия мира или перезапуска сервера.
+Игровые режимы теперь сохраняются в настройках, а не управляются командами.
 
 ## Сборка и проверка
 
-Проект использует Gradle, Fabric Loom, Yarn mappings, байткод Java 21 и Fabric Loader 0.19.5. GitHub Actions собирает ремапнутый JAR и запускает временный выделенный сервер, чтобы обнаружить ошибки миксинов и запуска.
+Проект использует Gradle, Fabric Loom, Yarn mappings, байткод Java 21, Fabric Loader 0.19.5 и Fabric API 0.141.6. GitHub Actions собирает ремапнутый JAR и запускает временный выделенный сервер, чтобы обнаружить ошибки миксинов и запуска.
 
 ```text
 gradle clean build
 ```
 
-CI сохраняет файл как `dist/worst-luck-possible-2.4.0-beta.1.jar`. Обычным пользователям следует скачивать опубликованный файл релиза, а не копию из репозитория.
+CI сохраняет файл как `dist/worst-luck-possible-2.4.0-beta.2.jar`. Обычным пользователям следует скачивать опубликованный файл релиза, а не копию из репозитория.
 
 ## Оригинальный проект и авторы
 

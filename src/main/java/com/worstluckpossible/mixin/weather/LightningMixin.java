@@ -1,15 +1,20 @@
 package com.worstluckpossible.mixin.weather;
 
-import com.worstluckpossible.feature.LightningRateMode;
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import com.worstluckpossible.feature.MobPressureCache;
+import java.util.List;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.SkeletonHorseEntity;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.chunk.WorldChunk;
@@ -28,27 +33,31 @@ public abstract class LightningMixin {
 			WORSTLUCK_TRAP_TRIGGER_RADIUS * WORSTLUCK_TRAP_TRIGGER_RADIUS;
 	// Trap riders never naturally despawn, so stop creating new groups before they become a lag machine.
 	private static final int WORSTLUCK_MAX_PERSISTENT_MOBS_NEAR_PLAYER = 96;
+	private static final int WORSTLUCK_FLAMMABLE_SEARCH_ATTEMPTS = 64;
 
 	@Shadow
 	protected abstract BlockPos getLightningPos(BlockPos pos);
 
 	@Inject(method = "tickThunder", at = @At("HEAD"), cancellable = true)
 	private void worstluck$controlLightningAndHorseTraps(WorldChunk chunk, CallbackInfo ci) {
+		ServerWorld world = (ServerWorld) (Object) this;
+		WorstLuckConfig config = WorstLuckConfigManager.get(world.getServer());
+		if (config.lightningTargets == WorstLuckConfig.LightningTargets.VANILLA) {
+			return;
+		}
 		ci.cancel();
 
-		ServerWorld world = (ServerWorld) (Object) this;
-		int interval = LightningRateMode.isReduced(world.getServer()) ? 20 : 1;
-		if (!world.isRaining() || !world.isThundering() || world.getRandom().nextInt(interval) != 0) {
+		if (!world.isRaining()
+				|| !world.isThundering()
+				|| world.getRandom().nextInt(100) >= config.lightningFrequencyPercent) {
 			return;
 		}
 
 		ChunkPos tickingChunk = chunk.getPos();
-		BlockPos randomPos = new BlockPos(
-				tickingChunk.getStartX() + world.getRandom().nextInt(16),
-				0,
-				tickingChunk.getStartZ() + world.getRandom().nextInt(16)
-		);
-		BlockPos lightningPos = this.getLightningPos(randomPos);
+		BlockPos lightningPos = worstluck$chooseLightningPos(world, tickingChunk, config.lightningTargets);
+		if (lightningPos == null) {
+			return;
+		}
 		if (!world.hasRain(lightningPos)) {
 			return;
 		}
@@ -76,6 +85,49 @@ public abstract class LightningMixin {
 			lightning.setCosmetic(spawnTrap);
 			world.spawnEntity(lightning);
 		}
+	}
+
+	private BlockPos worstluck$chooseLightningPos(ServerWorld world, ChunkPos chunk,
+			WorstLuckConfig.LightningTargets mode) {
+		if (mode == WorstLuckConfig.LightningTargets.LOADED_AREA) {
+			BlockPos randomPos = new BlockPos(
+					chunk.getStartX() + world.getRandom().nextInt(16),
+					0,
+					chunk.getStartZ() + world.getRandom().nextInt(16));
+			return this.getLightningPos(randomPos);
+		}
+
+		Box chunkBox = new Box(chunk.getStartX(), world.getBottomY(), chunk.getStartZ(),
+				chunk.getEndX() + 1, world.getTopYInclusive() + 1, chunk.getEndZ() + 1);
+		List<LivingEntity> candidates = world.getEntitiesByClass(LivingEntity.class, chunkBox,
+				entity -> entity.isAlive()
+						&& !entity.isSpectator()
+						&& (entity instanceof ServerPlayerEntity || entity instanceof PassiveEntity)
+						&& world.hasRain(entity.getBlockPos()));
+		List<LivingEntity> players = candidates.stream()
+				.filter(ServerPlayerEntity.class::isInstance)
+				.toList();
+		if (!players.isEmpty()) {
+			return players.get(world.getRandom().nextInt(players.size())).getBlockPos();
+		}
+		if (!candidates.isEmpty()) {
+			return candidates.get(world.getRandom().nextInt(candidates.size())).getBlockPos();
+		}
+
+		if (mode != WorstLuckConfig.LightningTargets.PLAYERS_PASSIVES_AND_FLAMMABLES) {
+			return null;
+		}
+
+		for (int attempt = 0; attempt < WORSTLUCK_FLAMMABLE_SEARCH_ATTEMPTS; attempt++) {
+			BlockPos surface = this.getLightningPos(new BlockPos(
+					chunk.getStartX() + world.getRandom().nextInt(16),
+					0,
+					chunk.getStartZ() + world.getRandom().nextInt(16)));
+			if (world.hasRain(surface) && world.getBlockState(surface.down()).isBurnable()) {
+				return surface;
+			}
+		}
+		return null;
 	}
 
 	private static ServerPlayerEntity worstluck$getNearbyPlayerInStrikeChunk(ServerWorld world, BlockPos lightningPos) {

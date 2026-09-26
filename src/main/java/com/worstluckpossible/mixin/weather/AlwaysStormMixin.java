@@ -1,5 +1,7 @@
 package com.worstluckpossible.mixin.weather;
 
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.level.ServerWorldProperties;
 import org.spongepowered.asm.mixin.Final;
@@ -16,6 +18,11 @@ public class AlwaysStormMixin {
 
 	@Inject(method = "tickWeather", at = @At("HEAD"))
 	private void worstluck$capClearWeatherTimers(CallbackInfo ci) {
+		ServerWorld world = (ServerWorld) (Object) this;
+		if (WorstLuckConfigManager.get(world.getServer()).stormFrequency
+				!= WorstLuckConfig.StormFrequency.MAXIMUM) {
+			return;
+		}
 		if (!worldProperties.isThundering() && worldProperties.getThunderTime() > 12_000) {
 			worldProperties.setThunderTime(12_000);
 		}

@@ -1,5 +1,7 @@
 package com.worstluckpossible.mixin.block;
 
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -33,6 +35,8 @@ public abstract class FireExtinguishConsumesFuelMixin {
 	private void worstluck$consumeFuelOnExtinguish(BlockPos pos, BlockState newState, int flags,
 			CallbackInfoReturnable<BlockState> cir) {
 		if (!(world instanceof ServerWorld serverWorld)
+				|| WorstLuckConfigManager.get(serverWorld.getServer()).fireMode
+						!= WorstLuckConfig.FireMode.ETERNAL
 				|| WORSTLUCK_CONSUMING_FUEL.get()
 				|| !getBlockState(pos).isOf(Blocks.FIRE)
 				|| newState.isOf(Blocks.FIRE)) {

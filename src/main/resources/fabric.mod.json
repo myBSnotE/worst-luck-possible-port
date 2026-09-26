@@ -23,6 +23,9 @@
 		],
 		"client": [
 			"com.worstluckpossible.WorstLuckPossibleClient"
+		],
+		"modmenu": [
+			"com.worstluckpossible.client.WorstLuckModMenu"
 		]
 	},
 	"mixins": [
@@ -30,7 +33,11 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",
+		"fabric-api": ">=0.141.6",
 		"minecraft": "~1.21.11",
 		"java": ">=21"
+	},
+	"suggests": {
+		"modmenu": ">=17.0.1"
 	}
 }

@@ -1,5 +1,7 @@
 package com.worstluckpossible.mixin.block;
 
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.block.Block;
@@ -54,7 +56,8 @@ public abstract class FireWorstSpreadMixin {
 	@ModifyVariable(method = "scheduledTick", at = @At("HEAD"), argsOnly = true, ordinal = 0)
 	private BlockState worstluck$keepFuelledFireYoung(BlockState state, BlockState originalState,
 			ServerWorld world, BlockPos pos, Random random) {
-		return areBlocksAroundFlammable(world, pos) ? state.with(FireBlock.AGE, 0) : state;
+		return worstluck$isEternal(world) && areBlocksAroundFlammable(world, pos)
+				? state.with(FireBlock.AGE, 0) : state;
 	}
 
 	/**
@@ -72,7 +75,7 @@ public abstract class FireWorstSpreadMixin {
 	)
 	private boolean worstluck$storeFuelledFireAtAgeZero(ServerWorld world, BlockPos pos,
 			BlockState state, int flags) {
-		if (areBlocksAroundFlammable(world, pos) && state.isOf(Blocks.FIRE)) {
+		if (worstluck$isEternal(world) && areBlocksAroundFlammable(world, pos) && state.isOf(Blocks.FIRE)) {
 			state = state.with(FireBlock.AGE, 0);
 		}
 		return world.setBlockState(pos, state, flags);
@@ -88,8 +91,12 @@ public abstract class FireWorstSpreadMixin {
 	)
 	private void worstluck$preserveBurningFuel(FireBlock instance, World world, BlockPos target,
 			int spreadFactor, Random random, int currentAge) {
-		// Intentionally empty: nearby fuel burns for the maximum duration and is
-		// consumed only if this fire is extinguished.
+		if (world instanceof ServerWorld serverWorld && worstluck$isEternal(serverWorld)) {
+			// Nearby fuel burns for the maximum duration and is consumed only when
+			// this fire is explicitly extinguished.
+			return;
+		}
+		((FireBlockAccessor) instance).worstluck$trySpreadingFire(world, target, spreadFactor, random, currentAge);
 	}
 
 	/**
@@ -99,7 +106,9 @@ public abstract class FireWorstSpreadMixin {
 	@Inject(method = "scheduledTick", at = @At("HEAD"))
 	private void worstluck$forceDangerousSpread(BlockState state, ServerWorld world, BlockPos pos,
 			Random random, CallbackInfo ci) {
-		if (!world.canFireSpread(pos) || !world.getBlockState(pos).isOf(Blocks.FIRE)) {
+		if (worstluck$isVanilla(world)
+				|| !world.canFireSpread(pos)
+				|| !world.getBlockState(pos).isOf(Blocks.FIRE)) {
 			return;
 		}
 
@@ -110,19 +119,16 @@ public abstract class FireWorstSpreadMixin {
 
 		int budget = WORSTLUCK_MAX_SPREADS_PER_TICK;
 
-		// First ignite the feet of nearby players and passive mobs even when they stand
-		// on otherwise non-flammable solid blocks.
+		// First ignite the feet of nearby players and passive mobs, but only when
+		// vanilla's burn-chance lookup finds adjacent fuel for that exact position.
 		List<LivingEntity> vulnerable = world.getEntitiesByClass(LivingEntity.class,
 				new Box(pos).expand(1.5D, 4.0D, 1.5D),
 				entity -> entity.isAlive() && (entity instanceof PlayerEntity || entity instanceof PassiveEntity));
 		for (LivingEntity entity : vulnerable) {
 			if (budget == 0) break;
 			BlockPos target = entity.getBlockPos();
-			BlockPos floor = target.down();
-			BlockState floorState = world.getBlockState(floor);
 			if (world.isAir(target)
-					&& floorState.isSideSolidFullSquare(world, floor, Direction.UP)
-					&& getSpreadChance(floorState) == 0) {
+					&& getBurnChance(world, target) > 0) {
 				world.setBlockState(target, getStateWithAge(world, target, 0), Block.NOTIFY_ALL);
 				budget--;
 			}
@@ -178,5 +184,15 @@ public abstract class FireWorstSpreadMixin {
 			values.set(i, values.get(j));
 			values.set(j, value);
 		}
+	}
+
+	@Unique
+	private static boolean worstluck$isEternal(ServerWorld world) {
+		return WorstLuckConfigManager.get(world.getServer()).fireMode == WorstLuckConfig.FireMode.ETERNAL;
+	}
+
+	@Unique
+	private static boolean worstluck$isVanilla(ServerWorld world) {
+		return WorstLuckConfigManager.get(world.getServer()).fireMode == WorstLuckConfig.FireMode.VANILLA;
 	}
 }
