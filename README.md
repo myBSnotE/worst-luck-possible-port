@@ -169,9 +169,9 @@ Version **2.2.0** promotes the tested beta mechanics to the stable release, incl
 
 Testing priorities: multiplayer density around separate players, raids through every difficulty and wave, zombie reinforcement placement, horse breeding, chorus fruit in caves/Nether/End, skeleton traps, and long thunder sessions.
 
-### Experimental 2.3.0 beta mechanics
+### Version 2.3.0 gameplay mechanics
 
-Version **2.3.0** remains a prerelease because it changes several independent vanilla RNG paths and needs focused gameplay testing.
+Version **2.3.0** promotes the tested beta mechanics to the stable release, including the projectile-spread, spear-enchantment and picked-up-equipment fixes.
 
 - Every thrown Eye of Ender chooses its vanilla break outcome instead of dropping.
 - A successful player Ender Pearl teleport always creates an endermite when monster spawning is allowed.
@@ -179,6 +179,7 @@ Version **2.3.0** remains a prerelease because it changes several independent va
 - Unbreaking never prevents durability loss. Mending is deliberately unchanged.
 - Armor worn by mobs takes no durability damage, including direct sunlight wear on skeleton and zombie helmets. The protection belongs to the wearer logic rather than the item component, so dropped armor is still ordinarily damageable.
 - Naturally generated mob equipment still never drops on death, but foreign items picked up from the ground retain vanilla guaranteed-drop ownership and are returned unchanged when the mob dies.
+- When a mob replaces naturally generated equipment with a better item, the old natural item never wins its vanilla 8.5% drop roll. Previously picked-up foreign equipment still returns normally when replaced.
 - Thrown eggs never hatch chicks.
 - Bonemealed crops receive the minimum vanilla growth of two stages. Saplings, azaleas, fungi and mushrooms choose their existing random bonemeal failure result.
 - Shulkers use the minimum random bullet interval of 20 ticks. Slimes use the minimum random jump delay of 10 ticks; magma cubes retain their vanilla four-times multiplier, giving 40 ticks.
@@ -200,7 +201,7 @@ Testing priorities: mob helmets through long daytime sessions, armor damaged by 
 The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
 
 ```text
-dist/worst-luck-possible-2.3.0-beta.4.jar
+dist/worst-luck-possible-2.3.0.jar
 ```
 
 End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
@@ -382,9 +383,9 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 Особенно важно проверить: плотность мобов вокруг разных игроков, все волны рейдов на разных сложностях, позиции подкреплений, разведение лошадей, плод хоруса в пещерах/Незере/Крае, ловушки-лошади и длительные грозы.
 
-### Экспериментальные механики беты 2.3.0
+### Игровые механики версии 2.3.0
 
-Версия **2.3.0** пока остаётся предварительной: она меняет несколько независимых путей ванильной случайности и требует отдельного игрового тестирования.
+Версия **2.3.0** переносит проверенные механики беты в стабильный релиз, включая исправления разброса снарядов, зачарований копий и возврата подобранных предметов.
 
 - Каждое брошенное Око Края выбирает ванильный исход с разрушением и не выпадает предметом.
 - Успешная телепортация игрока жемчугом Края всегда создаёт эндермита, если разрешён спавн монстров.
@@ -392,6 +393,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 - Прочность всегда тратится, даже при наличии Прочности (Unbreaking). Починка (Mending) намеренно не изменена.
 - Броня, надетая на мобов, не теряет прочность, включая прямой износ шлемов скелетов и зомби на солнце. Защита привязана к логике владельца, а не к компоненту предмета, поэтому выпавшая броня снова имеет обычную разрушаемость.
 - Естественно созданная экипировка мобов по-прежнему не выпадает после смерти, но подобранные с земли чужие предметы сохраняют ванильное гарантированное выпадение и возвращаются без изменений.
+- Когда моб заменяет естественно созданную экипировку более предпочтительным предметом, старый естественный предмет всегда проигрывает ванильный 8,5%-й бросок и исчезает. Ранее подобранные чужие предметы при последующей замене возвращаются как обычно.
 - Брошенные яйца никогда не создают цыплят.
 - Удобренные костной мукой культуры получают минимальные ванильные две стадии роста. Саженцы, азалии, грибы Нижнего мира и обычные грибы выбирают уже существующий ванильный случайный провал костной муки.
 - Шалкеры используют минимальный случайный интервал между пулями — 20 тиков. Слизни используют минимальную случайную задержку прыжка — 10 тиков; магмовые кубы сохраняют ванильный множитель ×4, то есть 40 тиков.
@@ -413,7 +415,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
 
 ```text
-dist/worst-luck-possible-2.3.0-beta.4.jar
+dist/worst-luck-possible-2.3.0.jar
 ```
 
 Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
