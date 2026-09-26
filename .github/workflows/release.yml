@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - ".github/release-v2.3.0-beta.3"
+      - ".github/release-v2.3.0-beta.4"
 
 permissions:
   contents: write
@@ -16,23 +16,23 @@ jobs:
       - uses: actions/checkout@v4
       - name: Update bilingual README
         run: |
-          python3 tools/update_readme_v2_3_0_beta_3.py
+          python3 tools/update_readme_v2_3_0_beta_4.py
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add README.md
           if ! git diff --cached --quiet; then
-            git commit -m "document 2.3.0 beta 3"
+            git commit -m "document 2.3.0 beta 4"
             git push
           fi
-      - name: Publish v2.3.0-beta.3 prerelease
+      - name: Publish v2.3.0-beta.4 prerelease
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TARGET_SHA="$(git rev-parse HEAD)"
-          gh release create v2.3.0-beta.3 \
-            dist/worst-luck-possible-2.3.0-beta.3.jar \
+          gh release create v2.3.0-beta.4 \
+            dist/worst-luck-possible-2.3.0-beta.4.jar \
             --repo "$GITHUB_REPOSITORY" \
             --target "$TARGET_SHA" \
-            --title "Worst Luck Possible 2.3.0-beta.3 — spear enchantments" \
-            --notes-file release-notes-v2.3.0-beta.3.md \
+            --title "Worst Luck Possible 2.3.0-beta.4 — picked-up equipment drops" \
+            --notes-file release-notes-v2.3.0-beta.4.md \
             --prerelease
