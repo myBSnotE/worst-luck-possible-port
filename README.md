@@ -30,7 +30,7 @@ The port supports multiplayer and dedicated servers.
 - Each source-fire tick performs up to **eight** additional successful ignitions inside vanilla's local spread volume. It prioritizes fire at the feet of nearby players and passive mobs, including on solid non-flammable floors when adjacent fuel makes the exact position vanilla-valid.
 - Each random-ticking lava block can create up to **eight** fires in the volume reachable by vanilla lava ignition. Valid positions above solid non-flammable floors are tried first.
 - Fire behavior still respects the world's fire-spread rule, loaded terrain, and strict per-source budgets.
-- Thunderstorms are frequent. Lightning attempts can be temporarily reduced 20× with an operator command.
+- Thunderstorm timing, lightning targets, and lightning attempt frequency are configurable per world.
 - Skeleton-horse traps are guaranteed only near a living player and are suppressed under extreme persistent-mob pressure.
 
 ### Loot, items, and progression
@@ -134,7 +134,7 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 - Каждый тик источника огня выполняется до **восьми** дополнительных успешных поджогов в локальном ванильном объёме. В первую очередь огонь появляется у ног ближайших игроков и мирных животных, в том числе на плотном негорючем полу, если соседнее топливо делает точную позицию ванильно допустимой.
 - Каждый случайный тик лавы создаёт до **восьми** очагов в пределах ванильной области поджигания. Сначала выбираются подходящие позиции над плотным негорючим полом.
 - Логика огня учитывает правило распространения огня, загрузку местности и строгий лимит работы на каждый источник.
-- Грозы происходят часто. Оператор может временно снизить число попыток удара молнии в 20 раз.
+- Частота гроз, цели молний и частота попыток удара настраиваются отдельно для каждого мира.
 - Лошади-ловушки гарантированно создаются только рядом с живым игроком и не появляются при чрезмерном количестве постоянных мобов.
 
 ### Лут, предметы и развитие
