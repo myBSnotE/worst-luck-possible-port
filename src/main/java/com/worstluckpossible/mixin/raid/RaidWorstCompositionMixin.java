@@ -146,7 +146,7 @@ public class RaidWorstCompositionMixin {
 				BlockPos floor = pos.down();
 				if (!world.getWorldBorder().contains(pos)
 						|| raid.getCenter().getSquaredDistance(pos) > 96.0D * 96.0D
-						|| !world.isRegionLoaded(x - 1, z - 1, x + 1, z + 1)
+						|| !worstluck$isAreaLoaded(world, pos)
 						|| !world.shouldTickEntityAt(pos)
 						|| !world.isNearOccupiedPointOfInterest(pos)
 						|| world.getLightLevel(pos) > WORSTLUCK_MAX_LIGHT
@@ -170,5 +170,17 @@ public class RaidWorstCompositionMixin {
 			}
 		}
 		return null;
+	}
+
+	@Unique
+	private static boolean worstluck$isAreaLoaded(ServerWorld world, BlockPos pos) {
+		int minChunkX = (pos.getX() - 1) >> 4;
+		int maxChunkX = (pos.getX() + 1) >> 4;
+		int minChunkZ = (pos.getZ() - 1) >> 4;
+		int maxChunkZ = (pos.getZ() + 1) >> 4;
+		return world.isChunkLoaded(minChunkX, minChunkZ)
+				&& world.isChunkLoaded(minChunkX, maxChunkZ)
+				&& world.isChunkLoaded(maxChunkX, minChunkZ)
+				&& world.isChunkLoaded(maxChunkX, maxChunkZ);
 	}
 }
