@@ -63,7 +63,7 @@ The mod works on dedicated servers and supports multiple players. The original M
 
 ### Other
 
-- Projectiles receive strongly randomized inaccuracy.
+- Player-fired projectiles choose the largest angular deviation permitted by vanilla projectile uncertainty; the former arbitrary ±180° yaw/pitch rotation has been removed.
 - Thunderstorms begin frequently, with lightning attempts across loaded chunks. Operators can temporarily reduce those attempts by 20× for the current server session.
 
 ## Additions and changes in this port
@@ -199,7 +199,7 @@ Testing priorities: mob helmets through long daytime sessions, armor damaged by 
 The repository uses Gradle and Fabric Loom. CI builds the mod and writes the remapped artifact to:
 
 ```text
-dist/worst-luck-possible-2.3.0-beta.1.jar
+dist/worst-luck-possible-2.3.0-beta.2.jar
 ```
 
 End users should download published builds from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), not from the repository's `dist` directory.
@@ -275,7 +275,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 
 ### Прочее
 
-- Снаряды получают сильно рандомизированную неточность.
+- Снаряды игрока выбирают наибольшее угловое отклонение, допускаемое ванильной формулой неточности; прежний произвольный поворот на ±180° по горизонтали и вертикали удалён.
 - Грозы начинаются часто, а в загруженных чанках регулярно предпринимаются попытки удара молнии. Оператор может временно снизить частоту этих попыток в 20 раз для текущей серверной сессии.
 
 ## Дополнения и изменения порта
@@ -411,7 +411,7 @@ This is an unofficial modernization of the original mod. Minecraft is a trademar
 Проект использует Gradle и Fabric Loom. CI собирает мод и сохраняет ремапнутый файл по адресу:
 
 ```text
-dist/worst-luck-possible-2.3.0-beta.1.jar
+dist/worst-luck-possible-2.3.0-beta.2.jar
 ```
 
 Обычным пользователям следует скачивать опубликованные сборки со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest), а не из каталога `dist` репозитория.
