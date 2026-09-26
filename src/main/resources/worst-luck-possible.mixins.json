@@ -7,6 +7,8 @@
 		"behavior.WanderTowardPlayerMixin",
 		"block.AnvilAlwaysDamagesMixin",
 		"block.CropWorstBoneMealMixin",
+		"block.FireBlockAccessor",
+		"block.FireExtinguishConsumesFuelMixin",
 		"block.FireWorstSpreadMixin",
 		"block.LavaWorstIgnitionMixin",
 		"block.TreeBoneMealFailureMixin",
