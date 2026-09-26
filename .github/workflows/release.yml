@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - ".github/release-v2.3.2"
+      - ".github/release-v2.3.3"
 
 permissions:
   contents: write
@@ -14,14 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Publish v2.3.2 release
+      - name: Publish v2.3.3 release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TARGET_SHA="$(git rev-parse HEAD)"
-          gh release create v2.3.2 \
-            dist/worst-luck-possible-2.3.2.jar \
+          gh release create v2.3.3 \
+            dist/worst-luck-possible-2.3.3.jar \
             --repo "$GITHUB_REPOSITORY" \
             --target "$TARGET_SHA" \
-            --title "Worst Luck Possible 2.3.2" \
-            --notes-file release-notes/release-notes-v2.3.2.md
+            --title "Worst Luck Possible 2.3.3" \
+            --notes-file release-notes/release-notes-v2.3.3.md

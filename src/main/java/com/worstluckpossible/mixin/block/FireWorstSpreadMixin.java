@@ -57,6 +57,27 @@ public abstract class FireWorstSpreadMixin {
 		return areBlocksAroundFlammable(world, pos) ? state.with(FireBlock.AGE, 0) : state;
 	}
 
+	/**
+	 * Vanilla derives a new age immediately after reading the method argument and
+	 * can therefore store age 1 even when the argument was reset to age 0 above.
+	 * Clamp that source-fire write as well.
+	 */
+	@Redirect(
+			method = "scheduledTick",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z",
+					ordinal = 0
+			)
+	)
+	private boolean worstluck$storeFuelledFireAtAgeZero(ServerWorld world, BlockPos pos,
+			BlockState state, int flags) {
+		if (areBlocksAroundFlammable(world, pos) && state.isOf(Blocks.FIRE)) {
+			state = state.with(FireBlock.AGE, 0);
+		}
+		return world.setBlockState(pos, state, flags);
+	}
+
 	/** Do not consume fuel through vanilla's random direct-burn roll. Extinguishing does that instead. */
 	@Redirect(
 			method = "scheduledTick",
@@ -80,6 +101,11 @@ public abstract class FireWorstSpreadMixin {
 			Random random, CallbackInfo ci) {
 		if (!world.canFireSpread(pos) || !world.getBlockState(pos).isOf(Blocks.FIRE)) {
 			return;
+		}
+
+		BlockState liveState = world.getBlockState(pos);
+		if (areBlocksAroundFlammable(world, pos) && liveState.get(FireBlock.AGE) != 0) {
+			world.setBlockState(pos, liveState.with(FireBlock.AGE, 0), Block.NOTIFY_ALL);
 		}
 
 		int budget = WORSTLUCK_MAX_SPREADS_PER_TICK;

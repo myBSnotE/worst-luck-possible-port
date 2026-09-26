@@ -2,7 +2,7 @@
 
 A modern Fabric port of **Worst Luck Possible**. Favorable randomness is replaced with the worst practical vanilla-compatible outcome: hostile spawns stay close, loot rolls low, mobs receive dangerous equipment, fire refuses to die, and useful random events become harmful.
 
-> **Current release:** 2.3.2 · Minecraft 1.21.11 · Fabric Loader 0.19.5+ · Java 21 · Fabric API is not required
+> **Current release:** 2.3.3 · Minecraft 1.21.11 · Fabric Loader 0.19.5+ · Java 21 · Fabric API is not required
 
 [Download the latest release](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest) · [Report a bug](https://github.com/myBSnotE/worst-luck-possible-port/issues)
 
@@ -12,7 +12,7 @@ A modern Fabric port of **Worst Luck Possible**. Favorable randomness is replace
 ## Install
 
 1. Install Fabric Loader for Minecraft **1.21.11**.
-2. Download `worst-luck-possible-2.3.2.jar` from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest).
+2. Download `worst-luck-possible-2.3.3.jar` from the [Releases page](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest).
 3. Put the JAR in the client or dedicated server `mods` folder.
 4. Start Minecraft with Java **21**.
 
@@ -90,7 +90,7 @@ The project uses Gradle, Fabric Loom, Yarn mappings, Java 21 bytecode, and Fabri
 gradle clean build
 ```
 
-The CI artifact is written to `dist/worst-luck-possible-2.3.2.jar`. End users should download the published release asset instead of the repository copy.
+The CI artifact is written to `dist/worst-luck-possible-2.3.3.jar`. End users should download the published release asset instead of the repository copy.
 
 ## Original project and credits
 
@@ -110,7 +110,7 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 ## Установка
 
 1. Установите Fabric Loader для Minecraft **1.21.11**.
-2. Скачайте `worst-luck-possible-2.3.2.jar` со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest).
+2. Скачайте `worst-luck-possible-2.3.3.jar` со [страницы Releases](https://github.com/myBSnotE/worst-luck-possible-port/releases/latest).
 3. Поместите JAR в папку `mods` клиента или выделенного сервера.
 4. Запустите Minecraft с Java **21**.
 
@@ -188,7 +188,7 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 gradle clean build
 ```
 
-CI сохраняет файл как `dist/worst-luck-possible-2.3.2.jar`. Обычным пользователям следует скачивать опубликованный файл релиза, а не копию из репозитория.
+CI сохраняет файл как `dist/worst-luck-possible-2.3.3.jar`. Обычным пользователям следует скачивать опубликованный файл релиза, а не копию из репозитория.
 
 ## Оригинальный проект и авторы
 
