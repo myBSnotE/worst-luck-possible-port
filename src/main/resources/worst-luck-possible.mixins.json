@@ -8,6 +8,7 @@
 		"block.AnvilAlwaysDamagesMixin",
 		"block.CropWorstBoneMealMixin",
 		"block.FireWorstSpreadMixin",
+		"block.LavaWorstIgnitionMixin",
 		"block.TreeBoneMealFailureMixin",
 		"command.CommandManagerMixin",
 		"dragon.DragonHoldingHeightMixin",
