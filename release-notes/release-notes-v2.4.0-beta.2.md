@@ -25,6 +25,11 @@ Prerelease for Minecraft **1.21.11**, Fabric Loader **0.19.5+**, Fabric API **0.
 - Fire targeting at the feet of players and passive mobs now requires a positive vanilla burn chance at the exact target position.
 - Fire can still appear over a nonflammable solid floor when nearby fuel makes that position valid, but it can no longer bridge across an entirely nonflammable surface.
 
+## Client fix
+
+- Fixed the settings screen requesting a second background blur during the same frame.
+- Minecraft 1.21.11 already renders the screen background from `Screen#renderWithTooltip`; the duplicate call caused `IllegalStateException: Can only blur once per frame`, especially visible with screen-modifying clients such as SpruceUI.
+
 ## Documentation
 
 - Added detailed documentation for configuration, permissions, responsible mode, weather, fire, lava, explosions, loot, progression, mobs, combat, spawning, raids, and the runtime-randomness boundary.
@@ -36,6 +41,7 @@ Prerelease for Minecraft **1.21.11**, Fabric Loader **0.19.5+**, Fabric API **0.
 - Dedicated Fabric server with Fabric API reached `Done`, loaded and retained alternate world settings, and stopped normally.
 - The removed fishing command was rejected while the debug command tree remained registered.
 - A functional server test confirmed that accelerated fire did not appear at a cow's feet on a nonflammable floor without adjacent fuel.
+- The settings render path was checked against Minecraft 1.21.11 bytecode to ensure the screen no longer calls `renderBackground` itself.
 
 ## Русский
 
@@ -62,6 +68,11 @@ Prerelease for Minecraft **1.21.11**, Fabric Loader **0.19.5+**, Fabric API **0.
 
 - Поджигание у ног игроков и мирных мобов теперь требует положительного ванильного шанса горения в точной целевой позиции.
 - Огонь всё ещё может появиться над негорючим полом при наличии подходящего соседнего топлива, но больше не перескакивает через полностью негорючую поверхность.
+
+### Исправление клиента
+
+- Экран настроек больше не запрашивает повторное размытие фона в том же кадре.
+- В Minecraft 1.21.11 фон уже отрисовывается через `Screen#renderWithTooltip`; повторный вызов приводил к `IllegalStateException: Can only blur once per frame`, особенно с модами интерфейса вроде SpruceUI.
 
 ### Документация и проверка
 

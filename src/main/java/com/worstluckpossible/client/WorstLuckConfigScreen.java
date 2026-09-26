@@ -101,14 +101,16 @@ public final class WorstLuckConfigScreen extends Screen {
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-		renderBackground(context, mouseX, mouseY, delta);
+		// Screen#renderWithTooltip draws and blurs the background before calling this
+		// method in 1.21.11. Calling renderBackground here would request a second blur
+		// in the same frame and crash with "Can only blur once per frame".
+		super.render(context, mouseX, mouseY, delta);
 		context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 15, 0xFFFFFF);
 		Text scope = Text.translatable(worldSettings
 				? (editable ? "worstluck.config.scope.world" : "worstluck.config.scope.world_locked")
 				: "worstluck.config.scope.defaults");
 		context.drawCenteredTextWithShadow(textRenderer, scope, width / 2, 30,
 				editable ? 0xA0A0A0 : 0xFF8080);
-		super.render(context, mouseX, mouseY, delta);
 	}
 
 	@Override
