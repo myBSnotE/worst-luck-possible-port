@@ -1,0 +1,9 @@
+from pathlib import Path
+p = Path('README.md')
+s = p.read_text(encoding='utf-8')
+s = s.replace('Version **2.3.0-beta.1** is a prerelease because it changes several independent vanilla RNG paths and needs focused gameplay testing.', 'Version **2.3.0** remains a prerelease because it changes several independent vanilla RNG paths and needs focused gameplay testing.')
+s = s.replace('- Mob weapon enchantments are now limited to combinations valid for the item type: swords receive Sharpness V, Fire Aspect II and Knockback II; axes receive Sharpness V; tridents receive Impaling V, Loyalty III and Channeling I.', '- Mob weapon enchantments are limited to combinations valid for the item type: swords receive Sharpness V, Fire Aspect II and Knockback II; spears receive Sharpness V, Fire Aspect II, Knockback II and Lunge III; axes receive Sharpness V; tridents receive Impaling V, Loyalty III and Channeling I.')
+s = s.replace('Версия **2.3.0-beta.1** выпущена как предварительная: она меняет несколько независимых путей ванильной случайности и требует отдельного игрового тестирования.', 'Версия **2.3.0** пока остаётся предварительной: она меняет несколько независимых путей ванильной случайности и требует отдельного игрового тестирования.')
+s = s.replace('- Зачарования оружия мобов теперь ограничены допустимыми для предмета сочетаниями: мечи получают Остроту V, Заговор огня II и Отбрасывание II; топоры — Остроту V; трезубцы — Пронзатель V, Верность III и Громовержец I.', '- Зачарования оружия мобов ограничены допустимыми для предмета сочетаниями: мечи получают Остроту V, Заговор огня II и Отбрасывание II; копья — Остроту V, Заговор огня II, Отбрасывание II и Выпад III; топоры — Остроту V; трезубцы — Пронзатель V, Верность III и Громовержец I.')
+s = s.replace('dist/worst-luck-possible-2.3.0-beta.2.jar', 'dist/worst-luck-possible-2.3.0-beta.3.jar')
+p.write_text(s, encoding='utf-8')
