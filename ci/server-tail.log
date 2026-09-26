@@ -7,7 +7,6 @@ Downloading library org.ow2.asm:asm-commons:9.10.1
 Downloading library org.ow2.asm:asm-tree:9.10.1
 Downloading library org.ow2.asm:asm-util:9.10.1
 Downloading library net.fabricmc:sponge-mixin:0.17.4+mixin.0.8.7
-service FabricService{meta='https://meta.fabricmc.net/', maven='https://maven.fabricmc.net/'} failed: java.io.IOException: Request to https://maven.fabricmc.net/net/fabricmc/sponge-mixin/0.17.4+mixin.0.8.7/sponge-mixin-0.17.4+mixin.0.8.7.jar failed: Read timed out
 Downloading library net.fabricmc:intermediary:1.21.11
 Downloading library net.fabricmc:fabric-loader:0.19.5
 Generating server launch JAR
@@ -52,45 +51,45 @@ Unpacking org/joml/joml/1.10.8/joml-1.10.8.jar (libraries:org.joml:joml:1.10.8) 
 Unpacking org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar (libraries:org.jspecify:jspecify:1.0.0) to libraries/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar
 Unpacking org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar (libraries:org.slf4j:slf4j-api:2.0.17) to libraries/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar
 Starting net.fabricmc.loader.impl.game.minecraft.BundlerClassPathCapture
-[06:04:25] [main/INFO]: Loading Minecraft 1.21.11 with Fabric Loader 0.19.5
-[06:04:25] [main/INFO]: Fabric is preparing JARs on first launch, this may take a few seconds...
-[06:04:25] [main/INFO]: Loading 5 mods:
+[06:20:24] [main/INFO]: Loading Minecraft 1.21.11 with Fabric Loader 0.19.5
+[06:20:24] [main/INFO]: Fabric is preparing JARs on first launch, this may take a few seconds...
+[06:20:24] [main/INFO]: Loading 5 mods:
 	- fabricloader 0.19.5
 	   \-- mixinextras 0.5.5
 	- java 21
 	- minecraft 1.21.11
 	- worst-luck-possible 2.3.2
-[06:04:25] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/server/libraries/net/fabricmc/sponge-mixin/0.17.4+mixin.0.8.7/sponge-mixin-0.17.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
-[06:04:26] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
-[06:04:30] [main/INFO]: Worst luck possible: good luck disabled.
-[06:04:31] [main/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
-[06:04:31] [main/INFO]: No existing world data, creating new world
-[06:04:32] [main/INFO]: Loaded 1470 recipes
-[06:04:32] [main/INFO]: Loaded 1584 advancements
-[06:04:32] [Server thread/INFO]: Starting minecraft server version 1.21.11
-[06:04:32] [Server thread/INFO]: Loading properties
-[06:04:32] [Server thread/INFO]: Default game type: SURVIVAL
-[06:04:32] [Server thread/INFO]: Generating keypair
-[06:04:32] [Server thread/INFO]: Starting Minecraft server on *:25565
-[06:04:32] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[06:04:32] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
-[06:04:32] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[06:04:32] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
-[06:04:32] [Server thread/INFO]: Preparing level "world"
-[06:04:33] [Server thread/INFO]: Selecting global world spawn...
-[06:04:37] [Server thread/INFO]: Loading 0 persistent chunks...
-[06:04:37] [Server thread/INFO]: Preparing spawn area: 100%
-[06:04:37] [Server thread/INFO]: Time elapsed: 4285 ms
-[06:04:37] [Server thread/INFO]: Done (4.612s)! For help, type "help"
-[06:05:37] [Server thread/INFO]: Server empty for 60 seconds, pausing
-[06:05:58] [Server thread/INFO]: Stopping the server
-[06:05:58] [Server thread/INFO]: Stopping server
-[06:05:58] [Server thread/INFO]: Saving players
-[06:05:58] [Server thread/INFO]: Saving worlds
-[06:05:58] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
-[06:05:58] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
-[06:05:58] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
-[06:05:58] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
-[06:05:58] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[06:05:58] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[06:05:58] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
+[06:20:24] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/runner/work/worst-luck-possible-port/worst-luck-possible-port/server/libraries/net/fabricmc/sponge-mixin/0.17.4+mixin.0.8.7/sponge-mixin-0.17.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[06:20:26] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[06:20:31] [main/INFO]: Worst luck possible: good luck disabled.
+[06:20:31] [main/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[06:20:31] [main/INFO]: No existing world data, creating new world
+[06:20:32] [main/INFO]: Loaded 1470 recipes
+[06:20:32] [main/INFO]: Loaded 1584 advancements
+[06:20:32] [Server thread/INFO]: Starting minecraft server version 1.21.11
+[06:20:32] [Server thread/INFO]: Loading properties
+[06:20:32] [Server thread/INFO]: Default game type: SURVIVAL
+[06:20:32] [Server thread/INFO]: Generating keypair
+[06:20:32] [Server thread/INFO]: Starting Minecraft server on *:25565
+[06:20:33] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[06:20:33] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[06:20:33] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[06:20:33] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[06:20:33] [Server thread/INFO]: Preparing level "world"
+[06:20:33] [Server thread/INFO]: Selecting global world spawn...
+[06:20:38] [Server thread/INFO]: Loading 0 persistent chunks...
+[06:20:38] [Server thread/INFO]: Preparing spawn area: 100%
+[06:20:38] [Server thread/INFO]: Time elapsed: 4313 ms
+[06:20:38] [Server thread/INFO]: Done (4.656s)! For help, type "help"
+[06:21:38] [Server thread/INFO]: Server empty for 60 seconds, pausing
+[06:22:46] [Server thread/INFO]: Stopping the server
+[06:22:46] [Server thread/INFO]: Stopping server
+[06:22:46] [Server thread/INFO]: Saving players
+[06:22:46] [Server thread/INFO]: Saving worlds
+[06:22:46] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[06:22:46] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[06:22:46] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[06:22:46] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[06:22:46] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[06:22:46] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[06:22:46] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
