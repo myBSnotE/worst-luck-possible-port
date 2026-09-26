@@ -52,8 +52,8 @@ public abstract class FireWorstSpreadMixin {
 
 	/** Fuelled fire always uses the youngest possible age, so it lasts until extinguished. */
 	@ModifyVariable(method = "scheduledTick", at = @At("HEAD"), argsOnly = true, ordinal = 0)
-	private BlockState worstluck$keepFuelledFireYoung(BlockState state, ServerWorld world, BlockPos pos,
-			Random random) {
+	private BlockState worstluck$keepFuelledFireYoung(BlockState state, BlockState originalState,
+			ServerWorld world, BlockPos pos, Random random) {
 		return areBlocksAroundFlammable(world, pos) ? state.with(FireBlock.AGE, 0) : state;
 	}
 
