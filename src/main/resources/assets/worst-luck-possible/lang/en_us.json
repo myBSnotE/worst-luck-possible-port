@@ -97,6 +97,6 @@
   "worstluck.config.phantoms": "Phantoms",
   "worstluck.config.phantoms.vanilla": "Vanilla",
   "worstluck.config.phantoms.vanilla.tooltip": "Uses Minecraft’s normal phantom cooldown, chance, and group-size calculation.",
-  "worstluck.config.phantoms.four": "Four, minimum interval",
+  "worstluck.config.phantoms.four": "Always",
   "worstluck.config.phantoms.four.tooltip": "After three sleepless days, every eligible player receives four phantoms at a guaranteed 1200–1400 tick interval while vanilla darkness and spawn-space checks still pass."
 }

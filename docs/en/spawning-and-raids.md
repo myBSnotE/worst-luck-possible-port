@@ -58,7 +58,7 @@ Density snapshots are cached once per second per player. Replacement, candidate 
 
 **Mod.** After three sleepless in-game days, each eligible player receives four phantoms at a guaranteed interval selected from the vanilla 1,200–1,400 tick range. Vanilla night/darkness and eligibility checks remain.
 
-**Result.** Four, minimum interval reliably produces the largest supported attack group instead of frequently rolling no attack. Vanilla restores the original spawner unchanged.
+**Result.** Always reliably produces the largest supported attack group instead of frequently rolling no attack. Vanilla restores the original spawner unchanged.
 
 ## Raids
 

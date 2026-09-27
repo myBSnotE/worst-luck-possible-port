@@ -175,7 +175,7 @@ When enabled, a full hostile cap may admit a valid close spawn only if a safe di
 | Value | Behavior |
 | --- | --- |
 | Vanilla | Keeps the original cooldown, random chance, and group-size calculation. |
-| Four, minimum interval | After three sleepless days, gives each eligible player four phantoms every 1200–1400 ticks when vanilla darkness and spawn-space checks pass. |
+| Always | After three sleepless days, gives each eligible player four phantoms every 1200–1400 ticks when vanilla darkness and spawn-space checks pass. |
 
 ## Removed runtime commands
 

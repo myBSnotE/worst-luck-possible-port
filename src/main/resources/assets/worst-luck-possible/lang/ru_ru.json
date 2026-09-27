@@ -97,6 +97,6 @@
   "worstluck.config.phantoms": "Фантомы",
   "worstluck.config.phantoms.vanilla": "Ванильные",
   "worstluck.config.phantoms.vanilla.tooltip": "Использует ванильные задержку, шанс и расчёт размера группы фантомов.",
-  "worstluck.config.phantoms.four": "Четыре, минимальный интервал",
+  "worstluck.config.phantoms.four": "Всегда",
   "worstluck.config.phantoms.four.tooltip": "После трёх бессонных дней каждый подходящий игрок получает четырёх фантомов с гарантированным интервалом 1200–1400 тиков при сохранении ванильных проверок темноты и места."
 }
