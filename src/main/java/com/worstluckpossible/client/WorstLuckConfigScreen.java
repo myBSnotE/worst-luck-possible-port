@@ -16,7 +16,7 @@ import net.minecraft.text.Text;
 public final class WorstLuckConfigScreen extends Screen {
 	private static final int CONTROL_WIDTH = 310;
 	private static final int ROW_HEIGHT = 22;
-	private enum Page { GENERAL, COMBAT }
+	private enum Page { GENERAL, COMBAT, SPAWNING, LOOT }
 	private enum Profile { MAXIMUM, VANILLA, CUSTOM }
 
 	private final Screen parent;
@@ -39,25 +39,27 @@ public final class WorstLuckConfigScreen extends Screen {
 		int y = 40;
 		addProfile(x, y);
 		y += 22;
-		int tabWidth = (CONTROL_WIDTH - 4) / 2;
-		ButtonWidget general = ButtonWidget.builder(Text.translatable("worstluck.config.page.general"), button -> {
-			page = Page.GENERAL;
-			clearAndInit();
-		}).dimensions(x, y, tabWidth, 20).build();
-		general.active = page != Page.GENERAL;
-		addDrawableChild(general);
-		ButtonWidget combat = ButtonWidget.builder(Text.translatable("worstluck.config.page.combat"), button -> {
-			page = Page.COMBAT;
-			clearAndInit();
-		}).dimensions(x + tabWidth + 4, y, tabWidth, 20).build();
-		combat.active = page != Page.COMBAT;
-		addDrawableChild(combat);
+		int tabGap = 2;
+		int tabWidth = (CONTROL_WIDTH - tabGap * (Page.values().length - 1)) / Page.values().length;
+		int tabIndex = 0;
+		for (Page value : Page.values()) {
+			int tabX = x + tabIndex * (tabWidth + tabGap);
+			ButtonWidget tab = ButtonWidget.builder(
+					Text.translatable("worstluck.config.page." + value.name().toLowerCase(Locale.ROOT)), button -> {
+						page = value;
+						clearAndInit();
+					}).dimensions(tabX, y, tabWidth, 20).build();
+			tab.active = page != value;
+			addDrawableChild(tab);
+			tabIndex++;
+		}
 		y += 22;
 
-		if (page == Page.GENERAL) {
-			addGeneralControls(x, y);
-		} else {
-			addCombatControls(x, y);
+		switch (page) {
+			case GENERAL -> addGeneralControls(x, y);
+			case COMBAT -> addCombatControls(x, y);
+			case SPAWNING -> addSpawningControls(x, y);
+			case LOOT -> addLootControls(x, y);
 		}
 
 		int bottom = height - 24;
@@ -124,6 +126,38 @@ public final class WorstLuckConfigScreen extends Screen {
 		y += ROW_HEIGHT;
 		addEnum(x, y, "explosions", config.explosionMode,
 				WorstLuckConfig.ExplosionMode.values(), value -> config.explosionMode = value);
+	}
+
+	private void addSpawningControls(int x, int y) {
+		addEnum(x, y, "passive_spawns", config.passiveSpawnMode,
+				WorstLuckConfig.PassiveSpawnMode.values(), value -> config.passiveSpawnMode = value);
+		y += ROW_HEIGHT;
+		addEnum(x, y, "hostile_distance", config.hostileSpawnDistance,
+				WorstLuckConfig.HostileSpawnDistance.values(), value -> config.hostileSpawnDistance = value);
+		y += ROW_HEIGHT;
+		addEnum(x, y, "hostile_packs", config.hostilePackMode,
+				WorstLuckConfig.HostilePackMode.values(), value -> config.hostilePackMode = value);
+		y += ROW_HEIGHT;
+		CyclingButtonWidget<Boolean> replacement =
+				CyclingButtonWidget.onOffBuilder(config.distantHostileReplacement)
+						.tooltip(value -> Tooltip.of(Text.translatable(
+								"worstluck.config.distant_replacement." + (value ? "on" : "off") + ".tooltip")))
+						.build(x, y, CONTROL_WIDTH, 20,
+								Text.translatable("worstluck.config.distant_replacement"),
+								(button, value) -> config.distantHostileReplacement = value);
+		replacement.active = editable;
+		if (!editable) replacement.setTooltip(Tooltip.of(Text.translatable("worstluck.config.read_only.tooltip")));
+		addDrawableChild(replacement);
+		y += ROW_HEIGHT;
+		addEnum(x, y, "phantoms", config.phantomMode,
+				WorstLuckConfig.PhantomMode.values(), value -> config.phantomMode = value);
+	}
+
+	private void addLootControls(int x, int y) {
+		LootingLevelSlider looting = new LootingLevelSlider(x, y, CONTROL_WIDTH, config.mobLootingLevel);
+		looting.active = editable;
+		looting.setTooltip(Tooltip.of(Text.translatable("worstluck.config.mob_looting.tooltip")));
+		addDrawableChild(looting);
 	}
 
 	private void addProfile(int x, int y) {
@@ -202,6 +236,43 @@ public final class WorstLuckConfigScreen extends Screen {
 
 		private int percent() {
 			return 1 + (int) Math.round(value * 99.0D);
+		}
+	}
+
+	private final class LootingLevelSlider extends SliderWidget {
+		private final int originalLevel;
+		private boolean changed;
+
+		private LootingLevelSlider(int x, int y, int width, int level) {
+			super(x, y, width, 20, Text.empty(), Math.min(level, 3) / 3.0D);
+			this.originalLevel = level;
+			updateMessage();
+		}
+
+		@Override protected void updateMessage() {
+			int shown = originalLevel > 3 && !changed ? originalLevel : level();
+			setMessage(shown == 0
+					? Text.translatable("worstluck.config.mob_looting.off")
+					: Text.translatable("worstluck.config.mob_looting.level", roman(shown)));
+		}
+
+		@Override protected void applyValue() {
+			changed = true;
+			config.mobLootingLevel = level();
+			updateMessage();
+		}
+
+		private int level() {
+			return (int) Math.round(value * 3.0D);
+		}
+
+		private String roman(int number) {
+			return switch (number) {
+				case 1 -> "I";
+				case 2 -> "II";
+				case 3 -> "III";
+				default -> Integer.toString(number);
+			};
 		}
 	}
 }

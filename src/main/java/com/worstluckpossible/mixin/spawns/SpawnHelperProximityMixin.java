@@ -1,5 +1,7 @@
 package com.worstluckpossible.mixin.spawns;
 
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import com.worstluckpossible.feature.MobPressureCache;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,6 +24,10 @@ public class SpawnHelperProximityMixin {
 			StructureAccessor structures, ChunkGenerator generator, SpawnSettings.SpawnEntry entry,
 			BlockPos.Mutable pos, double squaredDistance, CallbackInfoReturnable<Boolean> cir) {
 		if (group != SpawnGroup.MONSTER) {
+			return;
+		}
+		if (WorstLuckConfigManager.get(world.getServer()).hostileSpawnDistance
+				== WorstLuckConfig.HostileSpawnDistance.VANILLA) {
 			return;
 		}
 		if (squaredDistance < 576.0D) {

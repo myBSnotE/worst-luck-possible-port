@@ -35,7 +35,7 @@ The port supports multiplayer and dedicated servers.
 
 ### Loot, items, and progression
 
-- Mob and block loot rolls choose the minimum result; gravel never drops flint. Looting remains useful and adds exactly one item per enchantment level, subject to the loot function's normal cap.
+- Mob and block loot rolls choose the minimum result; gravel never drops flint. Mob Looting is configurable as Off or a fixed effective Looting I–III bonus; config files accept higher nonnegative levels for modpacks.
 - Piglin bartering gives two magma cream.
 - Fishing gives one pair of leather boots with zero remaining durability, and the initial bite wait uses the vanilla maximum of 600 ticks.
 - Trial spawners give one baked potato as their post-combat reward.
@@ -78,7 +78,7 @@ The port supports multiplayer and dedicated servers.
 
 Open the settings through the optional Mod Menu integration or the configurable `L` key. Outside a world, the screen edits defaults for newly created worlds; inside a world, it edits the server-authoritative per-world configuration. Responsible mode locks world settings behind operator permissions.
 
-The screen is split into General and Combat & explosions pages. Weather, lightning, fishing, smart burning, player spread, hostile leading, critical projectile damage, and explosion destruction are configurable. Vanilla and Maximum bad luck profiles update all gameplay settings together; mixed values are shown as Custom. Every option includes a hover tooltip in English and Russian.
+The screen is split into General, Combat & explosions, Spawning, and Loot pages. Weather, lightning, fishing, fire, projectiles, explosions, mob Looting, passive spawning, hostile distance/intensity/replacement, and phantoms are configurable. Vanilla and Maximum bad luck profiles update all gameplay settings together; mixed values are shown as Custom. Every option includes a hover tooltip in English and Russian.
 
 See the [complete mechanics and configuration documentation](docs/README.md).
 
@@ -139,7 +139,7 @@ The original compiled reference is preserved as [`dist/worst-luck-possible-1.0.0
 
 ### Лут, предметы и развитие
 
-- Броски лута мобов и блоков выбирают минимальный результат; из гравия не выпадает кремень. «Добыча» остаётся полезной и добавляет ровно один предмет за уровень с учётом обычного лимита функции лута.
+- Броски лута мобов и блоков выбирают минимальный результат; из гравия не выпадает кремень. Влияние «Добычи» на лут мобов настраивается как «Выкл.» либо фиксированный эффективный уровень I–III; файл конфига принимает и более высокие неотрицательные уровни для сборок.
 - Пиглины выдают два сгустка магмы.
 - Рыбалка даёт одну пару полностью сломанных кожаных ботинок, а начальное ожидание клёва получает ванильный максимум в 600 тиков.
 - Рассадники испытаний после боя выдают одну печёную картофелину.

@@ -2,9 +2,17 @@
 
 Development notes for Minecraft **1.21.11**, Fabric Loader **0.19.5+**, Fabric API **0.141.6+**, and Java **21**.
 
-## Looting and fire fixes
+## Configurable mob Looting and spawning
 
-- Looting now adds exactly one item per enchantment level, subject to the loot function's existing cap. Vanilla actually uses `round(level × countProvider)`—commonly a random 0…level bonus—but the previous global minimum provider reduced it to zero every time.
+- Replaced the temporary weapon-level Looting fix with a Mob Looting slider: Off, Looting I, II, or III.
+- The default fixed effective Looting I bonus keeps blaze rods obtainable despite global minimum loot rolls.
+- JSON field `mobLootingLevel` accepts any nonnegative integer, including values above the UI range for modpacks.
+- Added a Spawning page for passive spawning, hostile distance, hostile intensity, distant-hostile replacement, and phantom behavior.
+- Each spawning intervention now has a true vanilla bypass.
+- Config format is now 3; existing worlds migrate with the safe Looting I default and the previous spawning behavior.
+
+## Fire fixes
+
 - Eternal and Accelerated fire, including lava ignition, now require the block directly below every new air fire to be flammable. The matching vanilla placement writes are constrained during enhanced ticks as well, preventing fire from returning over stone and other nonflammable supports.
 - Fire mode Off remains fully vanilla.
 
@@ -23,9 +31,17 @@ Development notes for Minecraft **1.21.11**, Fabric Loader **0.19.5+**, Fabric A
 
 ## Русский
 
-### Исправления «Добычи» и огня
+### Настраиваемая «Добыча» мобов и спавн
 
-- «Добыча» теперь добавляет ровно один предмет за уровень с учётом существующего лимита функции лута. Ванилла на самом деле использует `round(уровень × числовой провайдер)` — обычно случайную прибавку 0…уровень, — но прежний общий выбор минимума всегда сводил её к нулю.
+- Временное исправление по уровню оружия заменено ползунком «Добыча мобов»: «Выкл.», «Добыча I», II или III.
+- Стандартная фиксированная «Добыча I» сохраняет возможность получать огненные стержни при общем выборе минимального лута.
+- Поле JSON `mobLootingLevel` принимает любое неотрицательное целое, включая уровни выше диапазона интерфейса для сборок.
+- Добавлена страница «Спавн» с настройками мирных мобов, расстояния и интенсивности врагов, замены дальних врагов и фантомов.
+- Каждая механика спавна получила настоящий ванильный режим.
+- Формат конфигурации повышен до 3; существующие миры получают безопасную «Добычу I» и прежние параметры спавна.
+
+### Исправления огня
+
 - Вечный и ускоренный огонь, включая возгорание от лавы, теперь требует горючего блока прямо под каждой новой воздушной позицией. Соответствующие ванильные установки тоже ограничены во время усиленных тиков, поэтому огонь не возвращается над камнем и другой негорючей опорой.
 - Режим «Выкл.» остаётся полностью ванильным.
 

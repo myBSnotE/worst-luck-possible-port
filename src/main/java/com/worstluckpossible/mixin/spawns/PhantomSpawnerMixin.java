@@ -1,5 +1,7 @@
 package com.worstluckpossible.mixin.spawns;
 
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
@@ -36,6 +38,10 @@ public class PhantomSpawnerMixin {
 
 	@Inject(method = "spawn", at = @At("HEAD"), cancellable = true)
 	private void worstluck$guaranteedPhantoms(ServerWorld world, boolean spawnMonsters, CallbackInfo ci) {
+		if (WorstLuckConfigManager.get(world.getServer()).phantomMode
+				== WorstLuckConfig.PhantomMode.VANILLA) {
+			return;
+		}
 		ci.cancel();
 		if (!spawnMonsters || !world.getGameRules().getValue(GameRules.SPAWN_PHANTOMS)) {
 			return;

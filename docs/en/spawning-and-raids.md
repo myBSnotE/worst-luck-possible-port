@@ -6,13 +6,13 @@
 
 **Mod.** Runtime natural-spawn cycles reject animal/fish groups. Chunk-generation animals are not modified because those placements are tied to world generation and seed-derived state.
 
-**Result.** Ordinary replenishment of passive mobs stops, but a world's generated population is not retrospectively or seed-independently rewritten.
+**Result.** With Natural passive spawning = Disabled, ordinary replenishment stops, but a world's generated population is not retrospectively or seed-independently rewritten. Vanilla bypasses this intervention.
 
 ## Hostile pack size and attempts
 
 **Vanilla.** A natural-spawn cycle uses multiple waves, preliminary attempts, coordinate jitter, and each entry's configured minimum/maximum pack size.
 
-**Mod.** The number of supported waves/attempts is intensified and the configured pack-size roll selects its maximum. Coordinate jitter remains a vanilla runtime roll.
+**Mod.** Maximum intensity doubles supported waves and preliminary attempts, selects the maximum configured pack-size roll, and tightens coordinate jitter. Vanilla bypasses all four changes.
 
 **Result.** Valid hostile groups tend to be as large as their spawn entry allows, without bypassing biome pools, collision, light, placement, or difficulty checks.
 
@@ -28,7 +28,7 @@
 
 **Mod.** Ordinary hostile placement prefers valid positions 24–32 blocks from a real player. An empty hostile population permits a limited fallback so a strict close search cannot permanently deadlock the cap.
 
-**Result.** Hostiles appear just outside the vanilla safety radius whenever valid terrain exists.
+**Result.** In 24–32 blocks mode, hostiles appear just outside the vanilla safety radius whenever valid terrain exists. Vanilla bypasses the proximity gate.
 
 ## Mob-cap replacement
 
@@ -36,7 +36,7 @@
 
 **Mod.** The system first proves that a valid closer replacement has spawned, then selects an eligible distant hostile for removal. Named, persistent, raid, protected, and otherwise nonreplaceable mobs are excluded.
 
-**Result.** The cap shifts pressure toward players without deleting an old mob before a replacement actually exists.
+**Result.** When Replace distant hostiles is enabled, the cap shifts pressure toward players without deleting an old mob before a replacement actually exists. Disabled restores vanilla cap denial.
 
 ## Despawning reservoir
 
@@ -44,7 +44,7 @@
 
 **Mod.** The immediate >128 rule remains unchanged. In the 32–128 band, eligible hostiles can be temporarily protected when too few enemies are near the nearest assigned player.
 
-**Result.** The world maintains a limited reserve that can move back toward players without making every distant entity permanent.
+**Result.** The same Replace distant hostiles option maintains this limited reserve. Disabled restores vanilla distance-based despawning.
 
 ## Caching and safety budgets
 
@@ -58,7 +58,7 @@ Density snapshots are cached once per second per player. Replacement, candidate 
 
 **Mod.** After three sleepless in-game days, each eligible player receives four phantoms at a guaranteed interval selected from the vanilla 1,200–1,400 tick range. Vanilla night/darkness and eligibility checks remain.
 
-**Result.** Insomnia reliably produces the largest supported attack group instead of frequently rolling no attack.
+**Result.** Four, minimum interval reliably produces the largest supported attack group instead of frequently rolling no attack. Vanilla restores the original spawner unchanged.
 
 ## Raids
 

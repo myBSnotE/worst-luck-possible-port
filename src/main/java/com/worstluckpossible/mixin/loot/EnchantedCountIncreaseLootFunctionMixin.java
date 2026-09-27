@@ -1,7 +1,7 @@
 package com.worstluckpossible.mixin.loot;
 
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -39,7 +39,7 @@ public abstract class EnchantedCountIncreaseLootFunctionMixin {
 			return;
 		}
 
-		int level = EnchantmentHelper.getEquipmentLevel(enchantment, living);
+		int level = WorstLuckConfigManager.get(context.getWorld().getServer()).mobLootingLevel;
 		if (level > 0) {
 			stack.increment(level);
 			if (limit > 0) {

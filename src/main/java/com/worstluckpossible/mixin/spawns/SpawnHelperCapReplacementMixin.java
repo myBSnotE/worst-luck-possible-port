@@ -1,5 +1,7 @@
 package com.worstluckpossible.mixin.spawns;
 
+import com.worstluckpossible.config.WorstLuckConfig;
+import com.worstluckpossible.feature.SpawnConfigContext;
 import com.worstluckpossible.feature.MobPressureCache;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SpawnGroup;
@@ -24,6 +26,11 @@ public class SpawnHelperCapReplacementMixin {
 	@Inject(method = "isBelowCap", at = @At("RETURN"), cancellable = true)
 	private void worstluck$allowHostileReplacement(SpawnGroup group, CallbackInfoReturnable<Boolean> cir) {
 		if (group != SpawnGroup.MONSTER) return;
+		WorstLuckConfig config = SpawnConfigContext.current();
+		if (config == null || !config.distantHostileReplacement) {
+			worstluck$replacementMode = false;
+			return;
+		}
 		worstluck$replacementMode = !Boolean.TRUE.equals(cir.getReturnValue());
 		if (worstluck$replacementMode) cir.setReturnValue(true);
 	}
@@ -40,6 +47,8 @@ public class SpawnHelperCapReplacementMixin {
 	private void worstluck$replaceFarthestHostile(MobEntity spawned, Chunk chunk, CallbackInfo ci) {
 		if (spawned.getType().getSpawnGroup() != SpawnGroup.MONSTER
 				|| !(spawned.getEntityWorld() instanceof ServerWorld world)) return;
+		WorstLuckConfig config = SpawnConfigContext.current();
+		if (config == null || !config.distantHostileReplacement) return;
 		PlayerEntity player = world.getClosestPlayer(spawned, -1.0D);
 
 		if (!worstluck$replacementMode) {

@@ -11,7 +11,7 @@ The settings screen can be opened in two ways:
 
 Every control has a hover tooltip. Tooltips describe the selected value, not merely the option name. English and Russian translations are included.
 
-The screen has **General** and **Combat & explosions** pages. Switching pages does not save early; the **Save** button submits the complete configuration.
+The screen has **General**, **Combat & explosions**, **Spawning**, and **Loot** pages. Switching pages does not save early; the **Save** button submits the complete configuration.
 
 ## Profiles
 
@@ -131,6 +131,51 @@ All modes obey Minecraft 1.21.11's `fire_spread_radius_around_player` world rule
 | --- | --- |
 | Vanilla | Keeps random explosion-ray strength, fire rolls, and explosion-dependent block-drop rolls unchanged. |
 | Maximum destruction | Uses maximum vanilla-random ray strength, succeeds every valid fire roll for explosions that already create fire, and fails explosion-dependent drops whenever vanilla permits failure. |
+
+### Mob Looting
+
+The slider selects a fixed effective Looting level for mob `enchanted_count_increase` functions, independently of the attacker's weapon.
+
+| Value | Added count |
+| --- | --- |
+| Off | 0 |
+| Looting I | 1 (default; keeps blaze rods obtainable) |
+| Looting II | 2 |
+| Looting III | 3 |
+
+`mobLootingLevel` in the JSON accepts any nonnegative integer. Values above 3 are preserved when the screen is opened and saved, unless the slider itself is moved; this supports modpacks with higher Looting levels.
+
+### Natural passive spawning
+
+| Value | Behavior |
+| --- | --- |
+| Vanilla | Keeps ordinary runtime passive spawning. |
+| Disabled | Removes land and water passive groups from ordinary spawn cycles without changing seed-dependent chunk-generation animals. |
+
+### Hostile spawn distance
+
+| Value | Behavior |
+| --- | --- |
+| Vanilla | Keeps normal distance and vertical checks. |
+| 24–32 blocks | Prefers valid positions in that band, while allowing one vanilla-range seed spawn when the nearest player has no hostiles. |
+
+### Hostile spawn intensity
+
+| Value | Behavior |
+| --- | --- |
+| Vanilla | Keeps pack-size rolls, waves, preliminary attempts, and coordinate jitter. |
+| Maximum | Chooses the maximum pack roll, doubles waves and preliminary attempts, and tightens jitter. |
+
+### Distant hostile replacement
+
+When enabled, a full hostile cap may admit a valid close spawn only if a safe distant hostile is removed afterward. The same option controls protection of the 32–128 block hostile reservoir when nearby pressure is low. Disabled restores vanilla cap denial and despawning.
+
+### Phantoms
+
+| Value | Behavior |
+| --- | --- |
+| Vanilla | Keeps the original cooldown, random chance, and group-size calculation. |
+| Four, minimum interval | After three sleepless days, gives each eligible player four phantoms every 1200–1400 ticks when vanilla darkness and spawn-space checks pass. |
 
 ## Removed runtime commands
 

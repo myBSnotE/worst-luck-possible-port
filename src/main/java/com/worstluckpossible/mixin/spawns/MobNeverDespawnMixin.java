@@ -1,5 +1,6 @@
 package com.worstluckpossible.mixin.spawns;
 
+import com.worstluckpossible.config.WorstLuckConfigManager;
 import com.worstluckpossible.feature.MobPressureCache;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,9 @@ public class MobNeverDespawnMixin {
 		if (self.getType().getSpawnGroup() != SpawnGroup.MONSTER || self.isPersistent()
 				|| self.cannotDespawn() || self.getEntityWorld().getDifficulty() == Difficulty.PEACEFUL
 				|| !(self.getEntityWorld() instanceof ServerWorld world)) {
+			return;
+		}
+		if (!WorstLuckConfigManager.get(world.getServer()).distantHostileReplacement) {
 			return;
 		}
 		PlayerEntity closest = world.getClosestPlayer(self, -1.0D);
